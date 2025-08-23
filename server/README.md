@@ -62,3 +62,13 @@ Key variables in `server/.env`:
 - Logging via `morgan` (dev-friendly).
 - Security headers via `helmet`.
 - CORS configured via `CORS_ORIGIN`.
+
+<h2>OpenAPI Spec & Client Generation</h2>
+
+- Spec location: `server/docs/Expense Tracker API.yaml`
+- To regenerate the client SDK after spec changes:
+
+```bash
+cd ../client
+npm run api:generate
+```

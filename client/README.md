@@ -29,6 +29,16 @@
 - preview: `npm run preview`
 - storybook: `npm run storybook`
 
+<h2>API Client SDK</h2>
+
+- Regenerate the client from the server OpenAPI spec:
+
+```bash
+npm run api:generate
+```
+
+- Source spec: `server/docs/Expense Tracker API.yaml`
+
 <h2>UI Components Overview (<code>client/src/ui/</code>)</h2>
 
 - Tooltip (`Tooltip.tsx`)
