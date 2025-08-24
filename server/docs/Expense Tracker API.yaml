@@ -23,7 +23,6 @@ paths:
                   type: string
       responses:
         "201":
-        "201":
           description: User created
   /auth/login:
     post:
@@ -42,8 +41,8 @@ paths:
                   type: string
       responses:
         "200":
-        "200":
           description: Token returned
+
   /expenses:
     get:
       summary: List all user expenses
@@ -52,12 +51,12 @@ paths:
           name: start
           schema:
             type: string
-          description: Start date
+          description: Start date (ISO string)
         - in: query
           name: end
           schema:
             type: string
-          description: End date
+          description: End date (ISO string)
         - in: query
           name: category
           schema:
@@ -68,7 +67,6 @@ paths:
             type: string
             enum: [recurring, one-time]
       responses:
-        "200":
         "200":
           description: List of expenses
     post:
@@ -100,15 +98,10 @@ paths:
                   format: binary
       responses:
         "201":
-        "201":
           description: Expense created
+
   /expenses/{id}:
     parameters:
-      - in: path
-        name: id
-        required: true
-        schema:
-          type: string
       - in: path
         name: id
         required: true
@@ -117,7 +110,6 @@ paths:
     get:
       summary: Get a single expense
       responses:
-        "200":
         "200":
           description: Expense data
     put:
@@ -148,20 +140,20 @@ paths:
                   format: binary
       responses:
         "200":
-        "200":
           description: Expense updated
     delete:
       summary: Delete an expense
       responses:
         "204":
-        "204":
           description: Expense deleted
+
   /incomes/categories:
     get:
       summary: Get system income categories
       responses:
         "200":
-          description: List of system income categories"
+          description: List of system income categories
+
   /incomes/custom-categories:
     get:
       summary: Get user's custom income categories
@@ -185,6 +177,7 @@ paths:
       responses:
         "201":
           description: Income category created
+
   /incomes/custom-categories/{id}:
     parameters:
       - in: path
@@ -214,64 +207,7 @@ paths:
       responses:
         "204":
           description: Income category deleted
-  /incomes/categories:
-    get:
-      summary: Get system income categories
-      responses:
-        "200":
-          description: List of system income categories"
-  /incomes/custom-categories:
-    get:
-      summary: Get user's custom income categories
-      responses:
-        "200":
-          description: List of user's custom income categories
-    post:
-      summary: Create a new custom income category
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [category_name]
-              properties:
-                category_name:
-                  type: string
-                icon_url:
-                  type: string
-      responses:
-        "201":
-          description: Income category created
-  /incomes/custom-categories/{id}:
-    parameters:
-      - in: path
-        name: id
-        required: true
-        schema:
-          type: string
-    put:
-      summary: Update an income category
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [category_name]
-              properties:
-                category_name:
-                  type: string
-                icon_url:
-                  type: string
-      responses:
-        "200":
-          description: Income category updated
-    delete:
-      summary: Delete an income category
-      responses:
-        "204":
-          description: Income category deleted
+
   /incomes:
     get:
       summary: List all incomes
@@ -285,7 +221,6 @@ paths:
           schema:
             type: string
       responses:
-        "200":
         "200":
           description: List of incomes
     post:
@@ -307,19 +242,12 @@ paths:
                   type: string
                 category_id:
                   type: number
-                category_id:
-                  type: number
       responses:
         "201":
-        "201":
           description: Income created
+
   /incomes/{id}:
     parameters:
-      - in: path
-        name: id
-        required: true
-        schema:
-          type: string
       - in: path
         name: id
         required: true
@@ -328,7 +256,6 @@ paths:
     get:
       summary: Get an income entry
       responses:
-        "200":
         "200":
           description: Income data
     put:
@@ -349,19 +276,17 @@ paths:
                   type: string
       responses:
         "200":
-        "200":
           description: Income updated
     delete:
       summary: Delete an income entry
       responses:
         "204":
-        "204":
           description: Income deleted
+
   /categories:
     get:
       summary: List user categories
       responses:
-        "200":
         "200":
           description: List of categories
     post:
@@ -377,8 +302,8 @@ paths:
                   type: string
       responses:
         "201":
-        "201":
           description: Category created
+
   /categories/{id}:
     put:
       summary: Rename a category
@@ -398,7 +323,6 @@ paths:
                   type: string
       responses:
         "200":
-        "200":
           description: Category updated
     delete:
       summary: Delete a category
@@ -410,8 +334,8 @@ paths:
             type: string
       responses:
         "204":
-        "204":
           description: Category deleted
+
   /summary/monthly:
     get:
       summary: Get current month summary
@@ -422,8 +346,8 @@ paths:
             type: string
       responses:
         "200":
-        "200":
           description: Monthly summary
+
   /summary:
     get:
       summary: Get summary for custom range
@@ -438,15 +362,15 @@ paths:
             type: string
       responses:
         "200":
-        "200":
           description: Summary
+
   /summary/alerts:
     get:
       summary: Budget overrun alert
       responses:
         "200":
-        "200":
           description: Alert info
+
   /receipts/{id}:
     get:
       summary: Download/view receipt
@@ -458,13 +382,11 @@ paths:
             type: string
       responses:
         "200":
-        "200":
           description: Receipt file
+
   /user/profile:
     get:
       summary: Get user profile
       responses:
         "200":
-        "200":
           description: Profile info
-
