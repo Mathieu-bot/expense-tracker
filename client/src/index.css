@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: "Clash Grotesk", system-ui, sans-serif;
+  --color-primary-dark: #010c19;
+  --color-primary: #01153e;
+  --color-primary-light: #052261;
+  --color-light: #e0e9f5;
+}
+
+
 @layer base {
   button {
     border-radius: 8px;
