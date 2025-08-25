@@ -1,4 +1,5 @@
 import { prisma } from '../db/prisma.js';
+import { NotFoundError, ConflictError } from '../utils/errors.js';
 
 // return global (user_id null) + user categories
 export const getExpenseCategories = async (userId) => {
@@ -17,9 +18,12 @@ export const getExpenseCategoriesByUser = async (userId) => {
 
 export const createExpenseCategory = async (userId, data) => {
   const exists = await prisma.expenseCategory.findFirst({
-    where: { category_name: data.category_name, user_id: userId },
+    where: {
+      category_name: { equals: data.category_name, mode: 'insensitive' },
+      user_id: userId,
+    },
   });
-  if (exists) throw new Error('Category already exists');
+    if (exists) throw new ConflictError('Category already exists');
 
   return prisma.expenseCategory.create({
     data: {
@@ -36,17 +40,17 @@ export const updateExpenseCategory = async (id, userId, data) => {
   const category = await prisma.expenseCategory.findFirst({
     where: { category_id: categoryId, user_id: userId },
   });
-  if (!category) throw new Error('Category not found or not authorized');
+  if (!category) throw new NotFoundError('Category not found or not authorized');
 
   if (data.category_name) {
     const dup = await prisma.expenseCategory.findFirst({
       where: {
-        category_name: data.category_name,
+        category_name: { equals: data.category_name, mode: 'insensitive' },
         user_id: userId,
         NOT: { category_id: categoryId },
       },
     });
-    if (dup) throw new Error('Category name already exists');
+        if (dup) throw new ConflictError('Category name already exists');
   }
 
   return prisma.expenseCategory.update({
@@ -60,10 +64,10 @@ export const deleteExpenseCategory = async (id, userId) => {
   const category = await prisma.expenseCategory.findFirst({
     where: { category_id: categoryId, user_id: userId },
   });
-  if (!category) throw new Error('Category not found or not authorized');
+  if (!category) throw new NotFoundError('Category not found or not authorized');
 
   const used = await prisma.expense.count({ where: { category_id: categoryId } });
-  if (used > 0) throw new Error('Cannot delete category that is being used');
+    if (used > 0) throw new ConflictError('Cannot delete category that is being used');
 
   await prisma.expenseCategory.delete({ where: { category_id: categoryId } });
 };

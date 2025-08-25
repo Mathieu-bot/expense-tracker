@@ -1,6 +1,8 @@
-import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { prisma } from '../db/prisma.js';
+import { signupUser, loginUser, getPublicUser } from '../services/auth.service.js';
+import { asyncHandler } from '../utils/asyncHandler.js';
+import { BadRequestError } from '../utils/errors.js';
+import isStrongPassword from 'validator/lib/isStrongPassword.js';
 
 const TOKEN_COOKIE_NAME = 'token';
 
@@ -21,98 +23,31 @@ const setAuthCookie = (res, payload) => {
   });
 }
 
-export const signup = async (req, res) => {
-  try {
-    const { email, password, username, firstname, lastname } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password are required' });
-    }
-    const emailOk = /.+@.+\..+/.test(email);
-    if (!emailOk) {
-      return res.status(400).json({ error: 'Invalid email format' });
-    }
-    if (String(password).length < 6) {
-      return res.status(400).json({ error: 'Password must be at least 6 characters' });
-    }
-
-    const existing = await prisma.user.findUnique({ where: { email } });
-    if (existing) {
-      return res.status(409).json({ error: 'Email already in use' });
-    }
-
-    const hashed_password = await bcrypt.hash(password, 10);
-    const user = await prisma.user.create({
-      data: {
-        email,
-        hashed_password,
-        username: username || email.split('@')[0],
-        firstname: firstname || '',
-        lastname: lastname || '',
-      },
-      select: { user_id: true, email: true, username: true, firstname: true, lastname: true, created_at: true },
-    });
-
-    setAuthCookie(res, { user_id: user.user_id, email: user.email });
-    return res.status(201).json(user);
-  } catch (err) {
-    console.error('Signup error:', err);
-    return res.status(500).json({ error: 'Failed to sign up' });
+export const signup = asyncHandler(async (req, res) => {
+  const { email, password, username, firstname, lastname } = req.body;
+  if (!email || !password) throw new BadRequestError('Email and password are required');
+  if (!isStrongPassword(String(password), { minLength: 6, minLowercase: 0, minUppercase: 1, minNumbers: 1, minSymbols: 0 })) {
+    throw new BadRequestError('Password must be at least 6 characters and include at least one uppercase letter and one number');
   }
-};
+  const user = await signupUser({ email: req.body.email, password, username, firstname, lastname });
+  setAuthCookie(res, { user_id: user.user_id, email: user.email });
+  return res.status(201).json(user);
+});
 
-export const login = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password are required' });
-    }
-    const emailOk = /.+@.+\..+/.test(email);
-    if (!emailOk) {
-      return res.status(400).json({ error: 'Invalid email format' });
-    }
+export const login = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) throw new BadRequestError('Email and password are required');
+  const publicUser = await loginUser({ email: req.body.email, password });
+  setAuthCookie(res, { user_id: publicUser.user_id, email: publicUser.email });
+  return res.json(publicUser);
+});
 
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) return res.status(401).json({ error: 'Invalid credentials' });
+export const me = asyncHandler(async (req, res) => {
+  const user = await getPublicUser(req.user.user_id);
+  return res.json(user);
+});
 
-    const ok = await bcrypt.compare(password, user.hashed_password);
-    if (!ok) return res.status(401).json({ error: 'Invalid credentials' });
-
-    const publicUser = {
-      user_id: user.user_id,
-      email: user.email,
-      username: user.username,
-      firstname: user.firstname,
-      lastname: user.lastname,
-      created_at: user.created_at,
-    };
-
-    setAuthCookie(res, { user_id: user.user_id, email: user.email });
-    return res.json(publicUser);
-  } catch (err) {
-    console.error('Login error:', err);
-    return res.status(500).json({ error: 'Failed to log in' });
-  }
-};
-
-export const me = async (req, res) => {
-  try {
-    const user = await prisma.user.findUnique({
-      where: { user_id: req.user.user_id },
-      select: { user_id: true, email: true, username: true, firstname: true, lastname: true, created_at: true },
-    });
-    if (!user) return res.status(404).json({ error: 'User not found' });
-    return res.json(user);
-  } catch (err) {
-    console.error('Me error:', err);
-    return res.status(500).json({ error: 'Failed to load profile' });
-  }
-};
-
-export const logout = async (_req, res) => {
-  try {
-    res.clearCookie(TOKEN_COOKIE_NAME, { path: '/', sameSite: 'lax' });
-    return res.status(204).send();
-  } catch {
-    return res.status(204).send();
-  }
-};
+export const logout = asyncHandler(async (_req, res) => {
+  res.clearCookie(TOKEN_COOKIE_NAME, { path: '/', sameSite: 'lax' });
+  return res.status(204).send();
+});
