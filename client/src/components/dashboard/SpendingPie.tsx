@@ -31,7 +31,7 @@ export default function SpendingPie() {
   return (
     <div className="flex flex-row gap-6 items-start">
       {/* Chart */}
-      <Layout title="Spending Pie - by category">
+      <Layout title="Spending Pie - by category" graphClassName="h-[250px]">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
