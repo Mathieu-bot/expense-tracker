@@ -25,6 +25,16 @@ app.use('/api/auth', authRoutes);
 app.use('/api/incomes', requireAuth, incomeRoutes);
 app.use('/api/categories', categoryRoutes);
 
+//temporary middleware for testing
+app.use((req, res, next) => {
+  req.user = { user_id: 4 }; // fake user, but you have to create a fake user with id 4 as well in your local database
+  next();
+});
+
+app.use('/api/auth', authRoutes)
+//Routes
+app.use('/api/incomes', incomeRoutes);
+
 // Initialize a single Prisma client instance
 const prisma = new PrismaClient();
 

@@ -1,19 +1,19 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { ToastProvider } from "./ui";
 import { IncomesPage } from "./pages/IncomesPage";
 import Sidebar from "./components/common/Sidebar";
 import Dashboard from "./pages/Dashboard";
-import DashboardHeader from "./components/common/Header";
 import BackgroundImage from "./components/common/BackgroundImage";
 import { CreateIncomePage } from "./pages/CreateIncomePage";
 import { EditIncomePage } from "./pages/EditIncomePage";
+import Mascot from "./components/common/Mascot";
+import DashboardHeader from "./components/common/Header";
+import RequireAuth from "./components/common/RequireAuth";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
+import DashboardLayout from "./components/common/DashboardLayout";
 
 function App() {
-  /*
-    TODO: check auth then redirect to /login when not authenticated
-    TODO: use different layout for auth page and dashboard page
-  */
-  const location = useLocation();
   return (
     <ToastProvider
       max={4}
@@ -30,12 +30,21 @@ function App() {
             <Sidebar />
           </>
         )}
-
+        <Mascot className="z-50" />
         <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/incomes" element={<IncomesPage />} />
-          <Route path="/incomes/new" element={<CreateIncomePage />} />
-          <Route path="/incomes/:id/edit" element={<EditIncomePage />} />
+          {/* Public routes */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+
+          {/* Protected routes */}
+          <Route element={<RequireAuth />}>
+            <Route element={<DashboardLayout />}>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/incomes" element={<IncomesPage />} />
+              <Route path="/incomes/new" element={<CreateIncomePage />} />
+              <Route path="/incomes/:id/edit" element={<EditIncomePage />} />
+            </Route>
+          </Route>
         </Routes>
       </div>
     </ToastProvider>
