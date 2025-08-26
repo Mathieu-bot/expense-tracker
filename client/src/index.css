@@ -6,6 +6,7 @@
   --color-primary: #01153e;
   --color-primary-light: #052261;
   --color-light: #e0e9f5;
+  --color-accent: #FFDD33
 }
 
 @layer base {
