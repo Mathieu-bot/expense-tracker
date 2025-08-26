@@ -1,4 +1,5 @@
 import SoldChart from "../components/dashboard/SoldChart";
+import SpendingPie from "../components/dashboard/SpendingPie";
 
 function Dashboard() {
   return (
@@ -10,6 +11,7 @@ function Dashboard() {
             { amount: 12000, createdAt: "2025-08-22T08:03:00Z" },
           ]}
         />
+        <SpendingPie />
       </div>
       <div className="grid grid-cols-3"></div>
     </div>
