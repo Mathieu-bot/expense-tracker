@@ -7,6 +7,7 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
+import Layout from "./Layout";
 
 type Tx = {
   amount: number;
@@ -54,45 +55,37 @@ export default function SoldChart({
   }));
 
   return (
-    <div className="w-full max-w-2xl mx-auto flex flex-col items-center gap-5">
-      <h2 className="text-white font-semibold text-2xl text-center">{title}</h2>
+    <Layout title={title}>
+      <ResponsiveContainer width="100%" height="100%">
+        <LineChart
+          data={data}
+          margin={{ top: 10, right: 8, bottom: 0, left: 0 }}
+        >
+          <defs>
+            <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="currentColor" stopOpacity={0.9} />
+              <stop offset="100%" stopColor="currentColor" stopOpacity={0.2} />
+            </linearGradient>
+          </defs>
 
-      <div className="w-[400px] h-[250px] rounded-xl bg-white/5 p-2">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart
-            data={data}
-            margin={{ top: 10, right: 8, bottom: 0, left: 0 }}
-          >
-            <defs>
-              <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="currentColor" stopOpacity={0.9} />
-                <stop
-                  offset="100%"
-                  stopColor="currentColor"
-                  stopOpacity={0.2}
-                />
-              </linearGradient>
-            </defs>
-
-            <CartesianGrid stroke="#999" strokeDasharray="4 4" opacity={0.25} />
-            <XAxis dataKey="name" tickMargin={8} />
-            <YAxis width={72} tickFormatter={formatAr} tickMargin={8} />
-            <Tooltip
-              formatter={(value: number) => [formatAr(value), "Income"]}
-              labelClassName="font-semibold"
-            />
-            <Line
-              type="monotone"
-              dataKey="amount"
-              stroke="purple"
-              strokeWidth={2}
-              dot={{ r: 3 }}
-              activeDot={{ r: 5 }}
-              name="Income"
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-    </div>
+          <CartesianGrid stroke="#999" strokeDasharray="4 4" opacity={0.25} />
+          <XAxis dataKey="name" tickMargin={8} />
+          <YAxis width={72} tickFormatter={formatAr} tickMargin={8} />
+          <Tooltip
+            formatter={(value: number) => [formatAr(value), "Income"]}
+            labelClassName="font-semibold"
+          />
+          <Line
+            type="monotone"
+            dataKey="amount"
+            stroke="purple"
+            strokeWidth={2}
+            dot={{ r: 3 }}
+            activeDot={{ r: 5 }}
+            name="Income"
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    </Layout>
   );
 }
