@@ -1,3 +1,4 @@
+import dns from 'node:dns';
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -7,8 +8,18 @@ import { PrismaClient } from '@prisma/client';
 import incomeRoutes from './routes/income.route.js';
 import authRoutes from './routes/auth.route.js';
 import categoryRoutes from './routes/category.route.js';
+import { configureNetwork } from './utils/network.js';
 
 dotenv.config();
+
+// Prefer IPv4 to mitigate environments where IPv6 routes time out
+try {
+  dns.setDefaultResultOrder('ipv4first');
+} catch {}
+
+try {
+  await configureNetwork();
+} catch {}
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -24,16 +35,6 @@ app.use(cookieParser());
 app.use('/api/auth', authRoutes);
 app.use('/api/incomes', requireAuth, incomeRoutes);
 app.use('/api/categories', categoryRoutes);
-
-//temporary middleware for testing
-app.use((req, res, next) => {
-  req.user = { user_id: 4 }; // fake user, but you have to create a fake user with id 4 as well in your local database
-  next();
-});
-
-app.use('/api/auth', authRoutes)
-//Routes
-app.use('/api/incomes', incomeRoutes);
 
 // Initialize a single Prisma client instance
 const prisma = new PrismaClient();
