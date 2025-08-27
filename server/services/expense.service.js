@@ -16,7 +16,7 @@ export const createExpense = async (userId,expenseData) => {
         end_date: expenseData.end_date ? new Date(expenseData.end_date) : null,
         user_id: expenseData.user_id,
         category_id: expenseData.category_id,
-        user: {connect:{ user_id: userId}}
+        user: { connect: { user_id: userId } },
       },
       include: {
         category: true,
@@ -24,18 +24,26 @@ export const createExpense = async (userId,expenseData) => {
     });
     return { success: true, data: expense };
   } catch (error) {
-    return {success: false, error: error} 
- }
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P2002') {
+        return { success: false, error: 'Expense already exists' };
+      }
+      if (error.code === 'P2003') {
+        return { success: false, error: 'Invalid user_id or category_id' };
+      }
+    }
+    return { success: false, error: error.message};
+  }
 };
 
-//Get by id
+//Get expense by id
 
 export const getExpenseById = async (expenseId, userId) => {
   try {
     const expense = await prisma.expense.findFirst({
       where: {
         expense_id: parseInt(expenseId),
-        user_id: userId,
+        user_id: parseInt(userId),
       },
       include: {
         category: true,
@@ -48,7 +56,7 @@ export const getExpenseById = async (expenseId, userId) => {
 
     return { success: true, data: expense };
   } catch (error) {
-    return { success: false, error: error };
+    return { success: false, error: error.message };
   }
 };
 
@@ -59,7 +67,7 @@ export const getAllExpenses = async (userId, filters = {}) => {
     const { startDate, endDate, categoryId, type } = filters;
     
     const where = {
-      user_id: parseInt(userId)
+      user_id: parseInt(userId),
     };
 
     if (startDate || endDate) {
@@ -83,7 +91,7 @@ export const getAllExpenses = async (userId, filters = {}) => {
 
     return { success: true, data: expenses };
   } catch (error) {
-    return { success: false, error: error};
+    return { success: false, error: error.message };
   }
 };
 
@@ -130,7 +138,15 @@ export const updateExpense = async (expenseId, userId, updateData) => {
 
     return { success: true, data: updatedExpense };
   } catch (error) {
-    return { success: false, error: error };
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P2025') {
+        return { success: false, error: 'Expense not found' };
+      }
+      if (error.code === 'P2003') {
+        return { success: false, error: 'Invalid category_id' };
+      }
+    }
+    return { success: false, error: error.message };
   }
 };
 
@@ -158,7 +174,10 @@ export const deleteExpense = async (expenseId, userId) => {
 
     return { success: true, data: deletedExpense};
   } catch (error) {
-   return { success: false, error: error};
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+      return { success: false, error: 'Expense not found' };
+    }
+    return { success: false, error: error.message };
   }
 };
 
