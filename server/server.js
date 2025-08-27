@@ -7,7 +7,7 @@ import { PrismaClient } from '@prisma/client';
 import incomeRoutes from './routes/income.route.js';
 import authRoutes from './routes/auth.route.js';
 import categoryRoutes from './routes/category.route.js';
-
+import expenseRoutes from './routes/expense.route.js';
 dotenv.config();
 
 const app = express();
@@ -24,6 +24,7 @@ app.use(cookieParser());
 app.use('/api/auth', authRoutes);
 app.use('/api/incomes', requireAuth, incomeRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/expenses', expenseRoutes)
 
 // Initialize a single Prisma client instance
 const prisma = new PrismaClient();
