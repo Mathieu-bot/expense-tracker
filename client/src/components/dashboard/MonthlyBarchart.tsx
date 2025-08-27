@@ -54,7 +54,11 @@ export function MonthlyBarChart({ data }: { data: Row[] }) {
         </button>
       </div>
 
-      <ResponsiveContainer width="100%" height="100%" className={"outline-none"}>
+      <ResponsiveContainer
+        width="100%"
+        height="100%"
+        className={"outline-none"}
+      >
         <BarChart data={data} barCategoryGap="22%" barGap={2}>
           <defs>
             <linearGradient id="gradSpending" x1="0" y1="0" x2="0" y2="1">
@@ -89,10 +93,7 @@ export function MonthlyBarChart({ data }: { data: Row[] }) {
               borderRadius: 8,
               color: "#fff",
             }}
-            formatter={(v, name: string) => [
-              fmtAr(Number(v)),
-              name == "spending" ? "Spending" : "Income",
-            ]}
+            formatter={(v, name: string) => [fmtAr(Number(v)), String(name)]}
           />
 
           {show.spending && (
