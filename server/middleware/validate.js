@@ -1,6 +1,7 @@
 import { BadRequestError } from '../utils/errors.js';
 import isEmail from 'validator/lib/isEmail.js';
 import normalizeEmail from 'validator/lib/normalizeEmail.js';
+import isURL from 'validator/lib/isURL.js';
 
 export const requireFields = (...fields) => (req, _res, next) => {
   for (const f of fields) {
@@ -46,6 +47,52 @@ export const validateTextMaxLengths = (limits) => (req, _res, next) => {
   }
   next();
 };
+
+export const validateIdParam = (paramName) => (req, _res, next) => {
+  const id = req.params[paramName];
+  if (!id || isNaN(parseInt(id, 10))) {
+    return next(new BadRequestError(`Invalid ID in parameter: ${paramName}`));
+  }
+  next();
+};
+
+export const validateCategoryCreate = [
+  requireFields('name'),
+  sanitizeBody('name', 'icon_url'),
+  validateTextMaxLengths({ name: 50 }),
+  (_req, _res, next) => {
+    const { icon_url } = _req.body;
+    if (icon_url) {
+      if (typeof icon_url !== 'string' || icon_url.length > 255) {
+        return next(new BadRequestError('icon_url is too long (max 255 characters)'));
+      }
+      if (!isURL(icon_url, { require_protocol: true })) {
+        return next(new BadRequestError('Invalid URL format for icon_url'));
+      }
+    }
+    next();
+  },
+];
+
+export const validateCategoryUpdate = [
+  sanitizeBody('name', 'icon_url'),
+  validateTextMaxLengths({ name: 50 }),
+  (_req, _res, next) => {
+    const { name, icon_url } = _req.body;
+    if (name != null && name === '') {
+      return next(new BadRequestError('name cannot be empty'));
+    }
+    if (icon_url) {
+      if (typeof icon_url !== 'string' || icon_url.length > 255) {
+        return next(new BadRequestError('icon_url is too long (max 255 characters)'));
+      }
+      if (!isURL(icon_url, { require_protocol: true })) {
+        return next(new BadRequestError('Invalid URL format for icon_url'));
+      }
+    }
+    next();
+  },
+];
 
 // Combined middlewares for cleaner routes
 export const validateSignup = [

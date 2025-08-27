@@ -137,7 +137,6 @@ export class DefaultService {
   /**
    * Delete an expense
    * @param id
-   * @param id
    * @returns void
    * @throws ApiError
    */
@@ -232,7 +231,6 @@ export class DefaultService {
   }
   /**
    * Delete an income entry
-   * @param id
    * @param id
    * @returns void
    * @throws ApiError
