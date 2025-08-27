@@ -2,23 +2,31 @@ import { useState } from "react";
 import StatCard, {
   type MiniStatItem,
 } from "../components/dashboard/DisplayCard";
-import SpendingPie, { type PieItem } from "../components/dashboard/PieGraph";
-import { MonthlyBarChart } from "../components/dashboard/MonthlyBarchart";
+import { type PieItem } from "../components/dashboard/PieGraph";
+import {
+  MonthlyBarChart,
+  type Row,
+} from "../components/dashboard/MonthlyBarchart";
 import { Percent, ReceiptCent, Wallet } from "lucide-react";
+import PieGraph from "../components/dashboard/PieGraph";
 
 const mockTotals: MiniStatItem[] = [
   { label: "Revenue", value: 82450, icon: Wallet, deltaPct: 6.4 },
   { label: "Expenses", value: 24780, icon: ReceiptCent, deltaPct: -0.11 },
   {
-    label: "Spending Rate",
+    label: "Sold",
     value: 65,
     icon: Percent,
     deltaPct: -0.8,
-    valueSuffix: "%",
-    formatValue: (v) => v.toFixed(0),
   },
 ];
 
+const monthlyData: Row[] = [
+  { month: "Avril", spending: 120000, income: 180000 },
+  { month: "Mai", spending: 95000, income: 165000 },
+  { month: "Juin", spending: 110000, income: 170000 },
+  { month: "Juil", spending: 130000, income: 190000 },
+];
 const expensesByCat: PieItem[] = [
   { name: "Food", value: 45000, color: "#FF8042" },
   { name: "Transport", value: 20000, color: "#0088FE" },
@@ -54,9 +62,8 @@ function Dashboard() {
             <StatCard key={item.label} {...item} />
           ))}
         </div>
-        <MonthlyBarChart />
+        <MonthlyBarChart data={monthlyData} />
       </div>
-
 
       <div className="col-span-1 flex flex-col items-center gap-4 w-full bg-primary/30 py-2 px-5 rounded-lg">
         <div className="rounded-xl bg-white/5 p-1 w-full max-w-xs ">
@@ -85,7 +92,7 @@ function Dashboard() {
             </button>
           </div>
         </div>
-        <SpendingPie title={currentTitle} data={currentPieData} />
+        <PieGraph title={currentTitle} data={currentPieData} />
       </div>
     </div>
   );

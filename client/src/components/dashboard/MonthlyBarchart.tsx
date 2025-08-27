@@ -9,38 +9,23 @@ import {
   YAxis,
 } from "recharts";
 import Layout from "./Layout";
-
-type Row = { month: string; spending: number; income: number };
-
-const monthlyData: Row[] = [
-  { month: "Avril", spending: 120000, income: 180000 },
-  { month: "Mai", spending: 95000, income: 165000 },
-  { month: "Juin", spending: 110000, income: 170000 },
-  { month: "Juil", spending: 130000, income: 190000 },
-];
+import { fmtAr, fmtShort } from "../../utils/formatter";
+export type Row = { month: string; spending: number; income: number };
 
 const COLORS = {
   spending: "#FF8042",
   income: "#00C49F",
 };
 
-const fmtShort = (n: number) =>
-  n >= 1_000_000
-    ? `${(n / 1_000_000).toFixed(1)}M`
-    : n >= 1_000
-    ? `${(n / 1_000).toFixed(1)}k`
-    : `${n}`;
-const fmtAr = (n: number) => `Ar ${n.toLocaleString("fr-MG")}`;
-
-export function MonthlyBarChart() {
+export function MonthlyBarChart({ data }: { data: Row[] }) {
   const [show, setShow] = useState({ spending: true, income: true });
 
   const totals = useMemo(
     () => ({
-      spending: monthlyData.reduce((a, c) => a + c.spending, 0),
-      income: monthlyData.reduce((a, c) => a + c.income, 0),
+      spending: data.reduce((a, c) => a + c.spending, 0),
+      income: data.reduce((a, c) => a + c.income, 0),
     }),
-    []
+    [data]
   );
 
   return (
@@ -49,7 +34,7 @@ export function MonthlyBarChart() {
       <div className="flex items-center justify-end gap-2 px-2 pb-2">
         <button
           onClick={() => setShow((s) => ({ ...s, spending: !s.spending }))}
-          className={`text-xs px-2 py-1 rounded-md transition ${
+          className={`text-sm font-semibold px-2 py-1 rounded-md transition outline-none ${
             show.spending
               ? "bg-white text-slate-900"
               : "bg-white/10 text-white/80 hover:text-white"
@@ -59,7 +44,7 @@ export function MonthlyBarChart() {
         </button>
         <button
           onClick={() => setShow((s) => ({ ...s, income: !s.income }))}
-          className={`text-xs px-2 py-1 rounded-md transition ${
+          className={`text-sm font-semibold px-2 py-1 rounded-md transition outline-none ${
             show.income
               ? "bg-white text-slate-900"
               : "bg-white/10 text-white/80 hover:text-white"
@@ -69,9 +54,8 @@ export function MonthlyBarChart() {
         </button>
       </div>
 
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={monthlyData} barCategoryGap="22%" barGap={2}>
-          {/* Gradients */}
+      <ResponsiveContainer width="100%" height="100%" className={"outline-none"}>
+        <BarChart data={data} barCategoryGap="22%" barGap={2}>
           <defs>
             <linearGradient id="gradSpending" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor={COLORS.spending} stopOpacity={0.9} />
@@ -105,9 +89,9 @@ export function MonthlyBarChart() {
               borderRadius: 8,
               color: "#fff",
             }}
-            formatter={(v: any, name: string) => [
+            formatter={(v, name: string) => [
               fmtAr(Number(v)),
-              name === "spending" ? "Spending" : "Income",
+              name == "spending" ? "Spending" : "Income",
             ]}
           />
 

@@ -1,6 +1,14 @@
 import { useMemo } from "react";
 import Layout from "./Layout";
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+} from "recharts";
+import { fmtAr } from "../../utils/formatter";
 
 export type PieItem = { name: string; value: number; color?: string };
 
@@ -17,10 +25,9 @@ export default function PieGraph({
   heightClass?: string;
 }) {
   const total = useMemo(
-    () => data.reduce((acc, cur) => acc + (cur.value ?? 0), 0),
+    () => data.reduce((acc, item) => acc + item.value, 0),
     [data]
   );
-
   return (
     <Layout
       title={title}
@@ -28,17 +35,14 @@ export default function PieGraph({
       titleClassName="text-center!"
     >
       <ResponsiveContainer width="100%" height="100%">
-        <PieChart>
+        <PieChart margin={{ top: 10, right: 10, bottom: 10, left: 10 }}>
           <Pie
             data={data}
             cx="50%"
             cy="50%"
-            labelLine={false}
-            label={({ name, percent = 0 }) =>
-              `${name} ${(percent * 100).toFixed(0)}%`
-            }
+            innerRadius={50}
             outerRadius={80}
-            fill="#8884d8"
+            label={false}
             dataKey="value"
           >
             {data.map((d, i) => (
@@ -48,14 +52,46 @@ export default function PieGraph({
               />
             ))}
           </Pie>
+
           <Tooltip formatter={(v: number) => formatAr(v)} />
+
+          <Legend
+            verticalAlign="bottom"
+            align="center"
+            iconType="circle"
+            wrapperStyle={{ color: "rgba(255,255,255,0.9)" }}
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            content={({ payload }) => (
+              <ul style={{ listStyle: "none", padding: 0, marginTop: 0 }}>
+                {data.map((d, i) => (
+                  <li
+                    key={d.name}
+                    style={{
+                      color:
+                        d.color ?? FALLBACK_COLORS[i % FALLBACK_COLORS.length],
+                    }}
+                  >
+                    <span
+                      style={{
+                        display: "inline-block",
+                        width: 10,
+                        height: 10,
+                        backgroundColor:
+                          d.color ??
+                          FALLBACK_COLORS[i % FALLBACK_COLORS.length],
+                        borderRadius: "50%",
+                        marginRight: 8,
+                      }}
+                    ></span>
+                    {d.name}
+                  </li>
+                ))}
+              </ul>
+            )}
+          />
         </PieChart>
       </ResponsiveContainer>
-
-      <div className="mt-2 text-right text-xs text-white/70">
-        Total:{" "}
-        <span className="font-semibold text-white">{formatAr(total)}</span>
-      </div>
+      <span className="text-white text-center">Total: {fmtAr(total)}</span>
     </Layout>
   );
 }
