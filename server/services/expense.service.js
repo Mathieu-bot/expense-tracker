@@ -1,22 +1,25 @@
-import { Prisma } from '@prisma/client';
+import { Prisma } from "@prisma/client";
 import { prisma } from "../db/prisma.js";
 
 //Post
 
-export const createExpense = async (userId,expenseData) => {
+export const createExpense = async (userId, expenseData) => {
   try {
     const expense = await prisma.expense.create({
       data: {
         amount: expenseData.amount,
         description: expenseData.description,
-        type: expenseData.type || 'ONE_TIME',
+        type: expenseData.type || "ONE_TIME",
         receipt_upload: expenseData.receipt_upload,
-        expense_date: expenseData.expense_date ? new Date(expenseData.expense_date) : null,
-        start_date: expenseData.start_date ? new Date(expenseData.start_date) : null,
+        expense_date: expenseData.expense_date
+          ? new Date(expenseData.expense_date)
+          : null,
+        start_date: expenseData.start_date
+          ? new Date(expenseData.start_date)
+          : null,
         end_date: expenseData.end_date ? new Date(expenseData.end_date) : null,
         user_id: expenseData.user_id,
         category_id: expenseData.category_id,
-        user: { connect: { user_id: userId } },
       },
       include: {
         category: true,
@@ -25,14 +28,14 @@ export const createExpense = async (userId,expenseData) => {
     return { success: true, data: expense };
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === 'P2002') {
-        return { success: false, error: 'Expense already exists' };
+      if (error.code === "P2002") {
+        return { success: false, error: "Expense already exists" };
       }
-      if (error.code === 'P2003') {
-        return { success: false, error: 'Invalid user_id or category_id' };
+      if (error.code === "P2003") {
+        return { success: false, error: "Invalid user_id or category_id" };
       }
     }
-    return { success: false, error: error.message};
+    return { success: false, error: error.message };
   }
 };
 
@@ -51,7 +54,7 @@ export const getExpenseById = async (expenseId, userId) => {
     });
 
     if (!expense) {
-      return { success: false, error: 'Expense not found' };
+      return { success: false, error: "Expense not found" };
     }
 
     return { success: true, data: expense };
@@ -65,7 +68,7 @@ export const getExpenseById = async (expenseId, userId) => {
 export const getAllExpenses = async (userId, filters = {}) => {
   try {
     const { startDate, endDate, categoryId, type } = filters;
-    
+
     const where = {
       user_id: parseInt(userId),
     };
@@ -85,7 +88,7 @@ export const getAllExpenses = async (userId, filters = {}) => {
         category: true,
       },
       orderBy: {
-        expense_date: 'desc',
+        expense_date: "desc",
       },
     });
 
@@ -108,17 +111,26 @@ export const updateExpense = async (expenseId, userId, updateData) => {
     });
 
     if (!existingExpense) {
-      return { success: false, error: 'Expense not found or access denied' };
+      return { success: false, error: "Expense not found or access denied" };
     }
 
     // Prepare the data to update
     const dataToUpdate = {};
-    const allowedFields = ['amount', 'description', 'type', 'receipt_upload', 'expense_date', 'start_date', 'end_date', 'category_id'];
-    
-    Object.keys(updateData).forEach(key => {
+    const allowedFields = [
+      "amount",
+      "description",
+      "type",
+      "receipt_upload",
+      "expense_date",
+      "start_date",
+      "end_date",
+      "category_id",
+    ];
+
+    Object.keys(updateData).forEach((key) => {
       if (allowedFields.includes(key) && updateData[key] !== undefined) {
         // Handle date fields
-        if (key.endsWith('_date') && updateData[key]) {
+        if (key.endsWith("_date") && updateData[key]) {
           dataToUpdate[key] = new Date(updateData[key]);
         } else {
           dataToUpdate[key] = updateData[key];
@@ -139,11 +151,11 @@ export const updateExpense = async (expenseId, userId, updateData) => {
     return { success: true, data: updatedExpense };
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === 'P2025') {
-        return { success: false, error: 'Expense not found' };
+      if (error.code === "P2025") {
+        return { success: false, error: "Expense not found" };
       }
-      if (error.code === 'P2003') {
-        return { success: false, error: 'Invalid category_id' };
+      if (error.code === "P2003") {
+        return { success: false, error: "Invalid category_id" };
       }
     }
     return { success: false, error: error.message };
@@ -163,7 +175,7 @@ export const deleteExpense = async (expenseId, userId) => {
     });
 
     if (!existingExpense) {
-      return { success: false, error: 'Expense not found or access denied' };
+      return { success: false, error: "Expense not found or access denied" };
     }
 
     const deletedExpense = await prisma.expense.delete({
@@ -172,12 +184,14 @@ export const deleteExpense = async (expenseId, userId) => {
       },
     });
 
-    return { success: true, data: deletedExpense};
+    return { success: true, data: deletedExpense };
   } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
-      return { success: false, error: 'Expense not found' };
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2025"
+    ) {
+      return { success: false, error: "Expense not found" };
     }
     return { success: false, error: error.message };
   }
 };
-

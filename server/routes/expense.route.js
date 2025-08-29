@@ -14,7 +14,6 @@ import {
   deleteExpenseValidator,
   listExpensesValidator
 } from '../validators/expense.validator.js';
-import { validate } from '../middleware/validation.middleware.js';
 
 const router = express.Router();
 
@@ -27,7 +26,6 @@ router.use(requireAuth);
 router.post(
   '/',
   createExpenseValidator,
-  validate,
   createExpenseController
 );
 
@@ -37,7 +35,6 @@ router.post(
 router.get(
   '/:id',
   getExpenseValidator,
-  validate,
   getExpenseController
 );
 
@@ -47,7 +44,6 @@ router.get(
 router.get(
   '/',
   listExpensesValidator,
-  validate,
   getAllExpensesController
 );
 
@@ -57,7 +53,6 @@ router.get(
 router.put(
   '/:id',
   updateExpenseValidator,
-  validate,
   updateExpenseController
 );
 
@@ -67,7 +62,6 @@ router.put(
 router.delete(
   '/:id',
   deleteExpenseValidator,
-  validate,
   deleteExpenseController
 );
 
