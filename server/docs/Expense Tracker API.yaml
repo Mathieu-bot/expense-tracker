@@ -338,3 +338,27 @@ paths:
       responses:
         "200":
           description: Profile info
+    put:
+      summary: Update user profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: Profile updated
+
+  /user/profile/password:
+    patch:
+      summary: Update user password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: Password updated

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import type { Income, IncomeFormData } from "../types/Income";
-import { Button, TextField, Dialog, DatePicker } from "../ui";
-import { useMascot } from "../hooks/useMascot";
-import { validateIncomeData } from "../utils/validators";
+import type { Income, IncomeFormData } from "../../types/Income";
+import { Button, TextField, Dialog, DatePicker } from "../../ui";
+import { useMascot } from "../../hooks/useMascot";
+import { validateIncomeData } from "../../utils/validators";
 
 interface IncomeFormProps {
   income?: Income;

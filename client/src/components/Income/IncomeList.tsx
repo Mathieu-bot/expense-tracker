@@ -1,7 +1,7 @@
 import { forwardRef, useImperativeHandle } from "react";
-import type { Income } from "../types/Income";
-import { useIncomes } from "../hooks/useIncomes";
-import { Button } from "../ui";
+import type { Income } from "../../types/Income";
+import { useIncomes } from "../../hooks/useIncomes";
+import { Button } from "../../ui";
 
 interface IncomeListProps {
   startDate?: string;

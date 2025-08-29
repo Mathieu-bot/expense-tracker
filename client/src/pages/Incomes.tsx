@@ -1,12 +1,12 @@
 import { useState, useRef } from "react";
 import type { Income } from "../types/Income";
-import { IncomeList } from "../components/IncomeList";
+import { IncomeList } from "../components/Income/IncomeList";
 import { Button, Dialog, useToast, DatePicker } from "../ui";
 import { IncomeService } from "../services/IncomeService";
 import { useNavigate } from "react-router-dom";
 import { validateDateRange } from "../utils/validators";
 
-export const IncomesPage = () => {
+export const Incomes = () => {
   const [dateFilter, setDateFilter] = useState<{
     start?: string;
     end?: string;

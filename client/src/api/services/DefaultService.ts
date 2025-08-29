@@ -42,8 +42,8 @@ export class DefaultService {
   }
   /**
    * List all user expenses
-   * @param start Start date
-   * @param end End date
+   * @param start Start date (ISO string)
+   * @param end End date (ISO string)
    * @param category
    * @param type
    * @returns any List of expenses
@@ -381,6 +381,38 @@ export class DefaultService {
     return __request(OpenAPI, {
       method: "GET",
       url: "/user/profile",
+    });
+  }
+  /**
+   * Update user profile
+   * @param requestBody
+   * @returns any Profile updated
+   * @throws ApiError
+   */
+  public static putUserProfile(
+    requestBody: Record<string, any>
+  ): CancelablePromise<any> {
+    return __request(OpenAPI, {
+      method: "PUT",
+      url: "/user/profile",
+      body: requestBody,
+      mediaType: "application/json",
+    });
+  }
+  /**
+   * Update user password
+   * @param requestBody
+   * @returns any Password updated
+   * @throws ApiError
+   */
+  public static patchUserProfilePassword(
+    requestBody: Record<string, any>
+  ): CancelablePromise<any> {
+    return __request(OpenAPI, {
+      method: "PATCH",
+      url: "/user/profile/password",
+      body: requestBody,
+      mediaType: "application/json",
     });
   }
 }
