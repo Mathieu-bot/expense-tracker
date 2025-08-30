@@ -236,6 +236,9 @@ paths:
               properties:
                 name:
                   type: string
+                icon_url:
+                  type: string
+                  nullable: true
       responses:
         "201":
           description: Category created
@@ -358,9 +361,6 @@ paths:
           description: Invalid username
         "401":
           description: Unauthorized
-        "409":
-          description: Username already taken
-
   /user/profile/password:
     patch:
       summary: Update user password
