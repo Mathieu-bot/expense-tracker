@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { ToastProvider } from "./ui";
 import { IncomesPage } from "./pages/IncomesPage";
 import Sidebar from "./components/common/Sidebar";
@@ -14,6 +14,7 @@ import SignupPage from "./pages/SignupPage";
 import DashboardLayout from "./components/common/DashboardLayout";
 
 function App() {
+  const location = useLocation();
   return (
     <ToastProvider
       max={4}
@@ -23,14 +24,16 @@ function App() {
     >
       <div className="App min-h-screen relative">
         {location.pathname.includes("/login") ||
-        location.pathname.includes("/register") ? null : (
+        location.pathname.includes("/signup") ? null : (
           <>
             <BackgroundImage />
             <DashboardHeader />
             <Sidebar />
           </>
         )}
-        <Mascot className="z-50" />
+        {location.pathname.includes("/login") || location.pathname.includes("/signup") ? null : (
+          <Mascot className="z-50" />
+        )}
         <Routes>
           {/* Public routes */}
           <Route path="/login" element={<LoginPage />} />
