@@ -51,7 +51,7 @@ export default function SignupForm({
       await onSubmit({ ...payload, confirmPassword });
       setUsernameModal("");
       setPostSignupOpen(true);
-    } catch (err) {
+    } catch {
       // error is handled by useAuth and displayed in error div
       // don't open username modal on error
     }
