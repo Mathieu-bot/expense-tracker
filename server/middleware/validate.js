@@ -2,21 +2,24 @@ import { BadRequestError } from '../utils/errors.js';
 import isEmail from 'validator/lib/isEmail.js';
 import normalizeEmail from 'validator/lib/normalizeEmail.js';
 import isURL from 'validator/lib/isURL.js';
+import isStrongPassword from 'validator/lib/isStrongPassword.js';
 
-export const requireFields = (...fields) => (req, _res, next) => {
-  for (const f of fields) {
-    const v = req.body?.[f];
-    if (v == null || v === '') {
-      return next(new BadRequestError(`Missing field: ${f}`));
+export const requireFields =
+  (...fields) =>
+  (req, _res, next) => {
+    for (const f of fields) {
+      const v = req.body?.[f];
+      if (v == null || v === "") {
+        return next(new BadRequestError(`Missing field: ${f}`));
+      }
     }
-  }
-  next();
-};
+    next();
+  };
 
 // Normalize and validate email. Sets req.body.email to the normalized lowercase value.
 export const validateEmail = () => (req, _res, next) => {
-  const raw = String(req.body.email || '').trim();
-  if (!isEmail(raw)) return next(new BadRequestError('Invalid email format'));
+  const raw = String(req.body.email || "").trim();
+  if (!isEmail(raw)) return next(new BadRequestError("Invalid email format"));
   const normalized = normalizeEmail(raw, {
     all_lowercase: true,
     gmail_remove_dots: false,
@@ -29,20 +32,24 @@ export const validateEmail = () => (req, _res, next) => {
   next();
 };
 
-export const sanitizeBody = (...fields) => (req, _res, next) => {
-  for (const f of fields) {
-    if (typeof req.body?.[f] === 'string') {
-      req.body[f] = req.body[f].trim();
+export const sanitizeBody =
+  (...fields) =>
+  (req, _res, next) => {
+    for (const f of fields) {
+      if (typeof req.body?.[f] === "string") {
+        req.body[f] = req.body[f].trim();
+      }
     }
-  }
-  next();
-};
+    next();
+  };
 
 export const validateTextMaxLengths = (limits) => (req, _res, next) => {
   for (const [field, max] of Object.entries(limits || {})) {
     const v = req.body?.[field];
-    if (typeof v === 'string' && v.length > max) {
-      return next(new BadRequestError(`${field} is too long (max ${max} characters)`));
+    if (typeof v === "string" && v.length > max) {
+      return next(
+        new BadRequestError(`${field} is too long (max ${max} characters)`)
+      );
     }
   }
   next();
@@ -96,13 +103,68 @@ export const validateCategoryUpdate = [
 
 // Combined middlewares for cleaner routes
 export const validateSignup = [
-  requireFields('email', 'password'),
+  requireFields("email", "password"),
   validateEmail(),
-  sanitizeBody('username', 'firstname', 'lastname'),
-  validateTextMaxLengths({ username: 50, firstname: 50}),
+  sanitizeBody("username", "firstname", "lastname"),
+  validateTextMaxLengths({ username: 50, firstname: 50 }),
 ];
 
 export const validateLogin = [
-  requireFields('email', 'password'),
+  requireFields("email", "password"),
   validateEmail(),
+];
+
+//--------------------USER PROFILE VALIDATIONS
+export const validateUpdateProfile = [
+  sanitizeBody("firstname", "lastname", "username"),
+  validateTextMaxLengths({
+    firstname: 100,
+    lastname: 100,
+    username: 50,
+  }),
+  (req, _res, next) => {
+    const { firstname, lastname, username } = req.body;
+
+    //check if at least one field is provided
+    if (
+      firstname === undefined &&
+      lastname === undefined &&
+      username === undefined
+    ) {
+      return next(
+        new BadRequestError("At least one field is required for update")
+      );
+    }
+
+    if (username !== undefined && username === "") {
+      return next(new BadRequestError("Username cannot be empty"));
+    }
+
+    next();
+  },
+];
+
+export const validateChangePassword = [
+  requireFields("currentPassword", "newPassword"),
+  (req, _res, next) => {
+    const { newPassword } = req.body;
+
+    if (
+      !isStrongPassword(String(newPassword), {
+        minLength: 6,
+        minLowercase: 0,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 0,
+      })
+    ) {
+      return next(
+        new BadRequestError(
+          "New password must be at least 6 characters and include at least one uppercase letter and one number"
+        )
+      );
+    }
+
+    next();
+  },
 ];
