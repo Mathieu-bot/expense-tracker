@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
 import { requireAuth } from './middleware/auth.middleware.js';
 import { PrismaClient } from '@prisma/client';
 import incomeRoutes from './routes/income.route.js';
@@ -23,6 +24,12 @@ try {
 
 const app = express();
 const PORT = process.env.PORT || 8080;
+
+app.use(
+  helmet({
+    contentSecurityPolicy: process.env.NODE_ENV === 'production' ? undefined : false,
+  })
+);
 
 app.use(cors({
   origin: process.env.CORS_ORIGIN || true,

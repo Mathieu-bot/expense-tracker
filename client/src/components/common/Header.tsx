@@ -2,7 +2,6 @@ import { assets } from "../../assets/images";
 import { Link } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
 import { useAuth } from "../../hooks/useAuth";
-import LogoutButton from "./LogoutButton";
 
 function Header() {
   const { user } = useAuth();
@@ -24,7 +23,6 @@ function Header() {
           </div>
         </Link>
         <ThemeToggle />
-        <LogoutButton size="small">Logout</LogoutButton>
       </div>
     </header>
   );

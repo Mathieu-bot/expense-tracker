@@ -21,7 +21,7 @@
     transition: border-color 0.25s;
   }
   button:hover {
-    border-color: #646cff;
+    border-color: #052261;
   }
   button:focus,
   button:focus-visible {
@@ -66,14 +66,31 @@
     box-shadow: 0 0 0 1000px rgba(255,255,255,0.8) inset !important;
     -webkit-box-shadow: 0 0 0 1000px rgba(255,255,255,0.8) inset !important;
   }
+  
   .auth-form input:-moz-autofill,
   .auth-form input:-moz-autofill:focus {
     box-shadow: 0 0 0 1000px rgba(255,255,255,0.8) inset !important;
   }
+
+  .auth-form input:focus {
+    border-color: var(--color-primary-light) !important;
+    --tw-ring-color: var(--color-primary-light) !important;
+    outline: none !important;
+  }
+
   @keyframes ripple {
     to {
       opacity: 0;
       transform: translate(-50%, -50%) scale(8);
+    }
+  }
+
+  @keyframes slide {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
     }
   }
   .btn-icon {
