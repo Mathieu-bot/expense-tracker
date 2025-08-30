@@ -1,8 +1,9 @@
 import jwt from 'jsonwebtoken';
-import { signupUser, loginUser, getPublicUser } from '../services/auth.service.js';
+import { signupUser, loginUser, getPublicUser, upsertOAuthUser } from '../services/auth.service.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { BadRequestError } from '../utils/errors.js';
 import isStrongPassword from 'validator/lib/isStrongPassword.js';
+import { buildGoogleAuthUrl, exchangeGoogleCodeForProfile } from '../services/oauth.service.js';
 
 const TOKEN_COOKIE_NAME = 'token';
 
@@ -50,4 +51,43 @@ export const me = asyncHandler(async (req, res) => {
 export const logout = asyncHandler(async (_req, res) => {
   res.clearCookie(TOKEN_COOKIE_NAME, { path: '/', sameSite: 'lax' });
   return res.status(204).send();
+});
+
+const getFrontendBase = () => process.env.FRONTEND_URL || process.env.CORS_ORIGIN || 'http://localhost:5173';
+
+const oauthCookieOpts = () => {
+  const isProd = process.env.NODE_ENV === 'production';
+  return { httpOnly: true, secure: isProd, sameSite: isProd ? 'none' : 'lax', path: '/', maxAge: 10 * 60 * 1000 };
+}
+
+export const googleAuth = asyncHandler(async (req, res) => {
+  const redirectUri = `${req.protocol}://${req.get('host')}/api/auth/google/callback`;
+  const { url, state } = buildGoogleAuthUrl({ redirectUri });
+  res.cookie('g_state', state, oauthCookieOpts());
+  return res.redirect(url);
+});
+
+export const googleCallback = asyncHandler(async (req, res) => {
+  const { code, state } = req.query;
+  const savedState = req.cookies?.g_state;
+  if (!code || !state || !savedState || state !== savedState) {
+    throw new BadRequestError('Invalid OAuth state');
+  }
+  res.clearCookie('g_state', { path: '/' });
+
+  const redirectUri = `${req.protocol}://${req.get('host')}/api/auth/google/callback`;
+  const profile = await exchangeGoogleCodeForProfile({ code, redirectUri });
+  const email = profile?.email;
+  if (!email) throw new BadRequestError('Email not available from Google');
+
+  const publicUser = await upsertOAuthUser({
+    email,
+    given_name: profile?.given_name,
+    family_name: profile?.family_name,
+    name: profile?.name,
+  });
+
+  setAuthCookie(res, { user_id: publicUser.user_id, email: publicUser.email });
+  const frontend = getFrontendBase();
+  return res.redirect(302, `${frontend.replace(/\/$/, '')}/auth/callback`);
 });

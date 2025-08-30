@@ -52,3 +52,37 @@ export const getPublicUser = async (userId) => {
   if (!user) throw new NotFoundError('User not found');
   return user;
 };
+
+export const upsertOAuthUser = async ({ email, given_name, family_name, name }) => {
+  const existing = await prisma.user.findUnique({ where: { email } });
+  if (existing) {
+    return {
+      user_id: existing.user_id,
+      email: existing.email,
+      username: existing.username,
+      firstname: existing.firstname,
+      lastname: existing.lastname,
+      created_at: existing.created_at,
+    };
+  }
+
+  const randomPass = `oauth-${Math.random().toString(36).slice(2)}-${Date.now()}`;
+  const hashed_password = await bcrypt.hash(randomPass, 10);
+  const preferred = (given_name && String(given_name).trim())
+    || (name && String(name).trim())
+    || (email && String(email).split('@')[0])
+    || 'user';
+  const username = preferred.slice(0, 50);
+
+  const user = await prisma.user.create({
+    data: {
+      email,
+      hashed_password,
+      username,
+      firstname: given_name || name || '',
+      lastname: family_name || '',
+    },
+    select: publicUserSelect,
+  });
+  return user;
+};

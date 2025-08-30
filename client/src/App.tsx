@@ -11,6 +11,7 @@ import DashboardHeader from "./components/common/Header";
 import RequireAuth from "./components/common/RequireAuth";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
+import AuthCallback from "./pages/AuthCallback";
 import DashboardLayout from "./components/common/DashboardLayout";
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
           {/* Public routes */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
 
           {/* Protected routes */}
           <Route element={<RequireAuth />}>
