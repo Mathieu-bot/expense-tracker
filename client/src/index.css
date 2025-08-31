@@ -19,21 +19,102 @@
     cursor: pointer;
     transition: border-color 0.25s;
   }
+  button:hover {
+    border-color: #052261;
+  }
   button:focus,
   button:focus-visible {
-    outline: 4px auto -webkit-focus-ring-color;
+    outline: none;
+  }
+
+  /* Remove browser autofill background to keep underline-only TextField style */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-text-fill-color: currentColor !important;
+    caret-color: currentColor !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: 0 0 0 1000px transparent inset !important;
+    -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+    -webkit-background-clip: content-box !important;
+    transition: background-color 9999s ease-out 0s !important;
+  }
+  /* Firefox */
+  input:-moz-autofill,
+  input:-moz-autofill:focus {
+    -moz-text-fill-color: currentColor !important;
+    caret-color: currentColor !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: 0 0 0 1000px transparent inset !important;
+    transition: background-color 9999s ease-out 0s !important;
   }
 }
 
 /* Minimal utilities */
 @layer utilities {
+  /* Auth forms use semi-transparent white background; mask autofill with same color */
+  .auth-form input:-webkit-autofill,
+  .auth-form input:-webkit-autofill:hover,
+  .auth-form input:-webkit-autofill:focus {
+    -webkit-text-fill-color: currentColor !important;
+    caret-color: currentColor !important;
+    background-image: none !important;
+    /* Match bg-white/80 ≈ rgba(255,255,255,0.8) */
+    box-shadow: 0 0 0 1000px rgba(255,255,255,0.8) inset !important;
+    -webkit-box-shadow: 0 0 0 1000px rgba(255,255,255,0.8) inset !important;
+  }
+  
+  .auth-form input:-moz-autofill,
+  .auth-form input:-moz-autofill:focus {
+    box-shadow: 0 0 0 1000px rgba(255,255,255,0.8) inset !important;
+  }
+
+  .auth-form input:focus {
+    border-color: var(--color-primary-light) !important;
+    --tw-ring-color: var(--color-primary-light) !important;
+    outline: none !important;
+  }
+
   @keyframes ripple {
     to {
       opacity: 0;
       transform: translate(-50%, -50%) scale(8);
     }
   }
+
+  @keyframes slide {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
   .btn-icon {
     @apply rounded-full p-3;
+  }
+
+  .scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-accent) transparent;
+  }
+
+  .scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar::-webkit-scrollbar-thumb {
+    background-color: var(--color-accent);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  .scrollbar:hover::-webkit-scrollbar-thumb {
+    background-color: var(--color-accent);
   }
 }

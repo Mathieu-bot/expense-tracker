@@ -64,7 +64,7 @@ const DashboardHeader = () => {
             </span>
           )}
         </h1>
-        <p className="text-indigo-100/90 font-light">
+        <p className="text-indigo-100/90 font-light text-sm">
           Track all your transactions with PennyPal
         </p>
       </div>

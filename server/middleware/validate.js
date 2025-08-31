@@ -1,7 +1,7 @@
-import { BadRequestError } from "../utils/errors.js";
-import isEmail from "validator/lib/isEmail.js";
-import normalizeEmail from "validator/lib/normalizeEmail.js";
-import isURL from "validator/lib/isURL.js";
+import { BadRequestError } from '../utils/errors.js';
+import isEmail from 'validator/lib/isEmail.js';
+import normalizeEmail from 'validator/lib/normalizeEmail.js';
+import isURL from 'validator/lib/isURL.js';
 import isStrongPassword from 'validator/lib/isStrongPassword.js';
 
 export const requireFields =

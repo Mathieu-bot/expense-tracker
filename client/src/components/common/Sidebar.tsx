@@ -5,13 +5,13 @@ import {
   User,
   LogOut,
 } from "lucide-react";
+import LogoutButton from "./LogoutButton";
 
 const items = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/" },
   { label: "Expenses", icon: CreditCard, href: "/expenses" },
   { label: "Incomes", icon: DollarSign, href: "/incomes" },
   { label: "Profile", icon: User, href: "/profile" },
-  { label: "Logout", icon: LogOut, href: "#" },
 ];
 
 export default function Sidebar() {
@@ -44,23 +44,35 @@ export default function Sidebar() {
 
               <div className="flex flex-col gap-3">
                 {items.slice(3).map(({ label, icon: Icon, href }) => (
-                  <a
+                <a
                     key={label}
                     href={href}
-                    className="
-                      flex items-center gap-3 rounded-xl px-3 py-3
-                      hover:bg-white/15 focus:outline-none focus:ring-2 ring-white/30
-                      transition-colors text-white
-                    "
+                  className="
+                    flex items-center gap-3 rounded-xl px-3 py-3
+                    hover:bg-white/15 focus:outline-none focus:ring-2 ring-white/30
+                    transition-colors text-white
+                  "
                     title={label}
                     aria-label={label}
-                  >
+                >
                     <Icon className="size-5 shrink-0" aria-hidden />
-                    <span className="opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                  <span className="opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-200 whitespace-nowrap">
                       {label}
-                    </span>
-                  </a>
+                  </span>
+                </a>
                 ))}
+
+                <LogoutButton
+                  size="large"
+                  className="text-left w-full flex items-center !justify-start gap-3 
+                    rounded-xl !p-3 hover:bg-white/15 focus:outline-none focus:ring-2 
+                    ring-white/30 transition-colors text-white border-none font-normal"
+                  startIcon={<LogOut className="size-5 shrink-0" aria-hidden />}
+                >
+                  <span className="opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                    Logout
+                  </span>
+                </LogoutButton>
               </div>
             </div>
           </nav>

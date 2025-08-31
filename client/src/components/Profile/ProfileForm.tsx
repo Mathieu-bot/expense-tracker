@@ -26,28 +26,18 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
   });
   const [message, setMessage] = useState("");
   const [formError, setFormError] = useState("");
-  const [usernameError, setUsernameError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage("");
     setFormError("");
-    setUsernameError("");
-
-    if (!formData.username.trim()) {
-      setUsernameError("Username cannot be empty");
-      setFormData((prev) => ({ ...prev, username: profile.username })); // revert to last valid
-      return;
-    }
 
     const result = await onUpdate(formData);
-
     if (result.success) {
       setMessage("Profile updated successfully!");
       setTimeout(() => setMessage(""), 3000);
     } else {
       setFormError(result.error || "Failed to update profile");
-      setFormData((prev) => ({ ...prev, username: profile.username }));
     }
   };
 
@@ -59,9 +49,12 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
     setFormData,
     "lastname"
   );
-  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({ ...prev, username: e.target.value }));
-    if (usernameError) setUsernameError("");
+  const handleUsernameChange = createFieldChangeHandler(
+    setFormData,
+    "username"
+  );
+
+  const clearError = () => {
     if (formError) setFormError("");
   };
 
@@ -77,6 +70,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
             label="First Name"
             value={formData.firstname}
             onChange={handleFirstNameChange}
+            onFocus={clearError}
             placeholder="Enter your first name"
             variant="outlined"
             size="medium"
@@ -87,6 +81,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
             label="Last Name"
             value={formData.lastname}
             onChange={handleLastNameChange}
+            onFocus={clearError}
             placeholder="Enter your last name"
             variant="outlined"
             size="medium"
@@ -98,12 +93,11 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
           label="Username"
           value={formData.username}
           onChange={handleUsernameChange}
+          onFocus={clearError}
           placeholder="Enter your username"
           variant="outlined"
           size="medium"
           fullWidth
-          error={!!usernameError}
-          helperText={usernameError}
         />
 
         <div>

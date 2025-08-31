@@ -54,7 +54,7 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(({
     inline-flex items-center justify-center
     rounded-full
     transition-all duration-200 ease-in-out
-    focus:outline-none focus:ring-2 focus:ring-offset-2
+    outline-none focus:outline-none focus:ring-0 focus:ring-offset-0
     disabled:pointer-events-none disabled:opacity-60
     ${sizeClasses[size]}
     ${edgeClasses[edge]}

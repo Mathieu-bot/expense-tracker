@@ -30,7 +30,7 @@ export class UserService {
     profileData: UpdateProfileRequest
   ): Promise<UserProfile> {
     try {
-      const response = await DefaultService.putUserProfile(profileData);
+      const response = await DefaultService.patchUserProfile(profileData);
       useMascotStore.getState().setExpression("success");
       return response as UserProfile;
     } catch (error: unknown) {

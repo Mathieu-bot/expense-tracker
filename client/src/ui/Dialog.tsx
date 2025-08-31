@@ -9,6 +9,7 @@ export interface DialogClasses {
   body?: string;
   footer?: string;
   close?: string;
+  panel?: string;
 }
 
 export interface DialogProps {
@@ -62,7 +63,8 @@ const Dialog: React.FC<DialogProps> = ({
   const panelCls = [
     'w-full max-w-lg rounded-lg bg-white shadow-xl',
     'border border-gray-200',
-  ].join(' ');
+    classes?.panel,
+  ].filter(Boolean).join(' ');
 
   const headerCls = ['px-5 pt-4 pb-2 flex items-start justify-between', classes?.header].filter(Boolean).join(' ');
   const titleCls = ['text-base font-semibold text-gray-900', classes?.title].filter(Boolean).join(' ');
