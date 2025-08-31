@@ -10,9 +10,7 @@ import { useIncomes } from "../hooks/useIncomes";
 import { computeValueTotal } from "../utils/computeValueTotal";
 import MiniStatCard from "../components/dashboard/DisplayCard";
 import { useToast } from "../ui";
-import { getAlert } from "../services/SummaryService";
 import { useSummaryAlert } from "../hooks/useSummaryAlert";
-import { data } from "react-router-dom";
 import SummaryAlert from "../components/dashboard/SummaryAlert";
 
 const monthlyData: Row[] = [
