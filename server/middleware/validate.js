@@ -64,17 +64,19 @@ export const validateIdParam = (paramName) => (req, _res, next) => {
 };
 
 export const validateCategoryCreate = [
-  requireFields('name'),
-  sanitizeBody('name', 'icon_url'),
+  requireFields("name"),
+  sanitizeBody("name", "icon_url"),
   validateTextMaxLengths({ name: 50 }),
   (_req, _res, next) => {
     const { icon_url } = _req.body;
     if (icon_url) {
-      if (typeof icon_url !== 'string' || icon_url.length > 255) {
-        return next(new BadRequestError('icon_url is too long (max 255 characters)'));
+      if (typeof icon_url !== "string" || icon_url.length > 255) {
+        return next(
+          new BadRequestError("icon_url is too long (max 255 characters)")
+        );
       }
       if (!isURL(icon_url, { require_protocol: true })) {
-        return next(new BadRequestError('Invalid URL format for icon_url'));
+        return next(new BadRequestError("Invalid URL format for icon_url"));
       }
     }
     next();
@@ -82,19 +84,21 @@ export const validateCategoryCreate = [
 ];
 
 export const validateCategoryUpdate = [
-  sanitizeBody('name', 'icon_url'),
+  sanitizeBody("name", "icon_url"),
   validateTextMaxLengths({ name: 50 }),
   (_req, _res, next) => {
     const { name, icon_url } = _req.body;
-    if (name != null && name === '') {
-      return next(new BadRequestError('name cannot be empty'));
+    if (name != null && name === "") {
+      return next(new BadRequestError("name cannot be empty"));
     }
     if (icon_url) {
-      if (typeof icon_url !== 'string' || icon_url.length > 255) {
-        return next(new BadRequestError('icon_url is too long (max 255 characters)'));
+      if (typeof icon_url !== "string" || icon_url.length > 255) {
+        return next(
+          new BadRequestError("icon_url is too long (max 255 characters)")
+        );
       }
       if (!isURL(icon_url, { require_protocol: true })) {
-        return next(new BadRequestError('Invalid URL format for icon_url'));
+        return next(new BadRequestError("Invalid URL format for icon_url"));
       }
     }
     next();

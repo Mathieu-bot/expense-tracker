@@ -72,7 +72,7 @@ const DashboardHeader = () => {
       <div className="flex items-center gap-5">
         <div className="flex items-center gap-6">
           <DateDropdown />
-          <SearchInput />
+          <SearchInput placeholder="Search transactions..."/>
         </div>
 
         <div className="flex items-center gap-5">

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import type { Income } from "../types/Income";
 import { IncomeService } from "../services/IncomeService";
 
@@ -7,41 +7,26 @@ export const useIncomes = (startDate?: string, endDate?: string) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchIncomes = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await IncomeService.getIncomes(startDate, endDate);
-        setIncomes(data);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Failed to fetch incomes"
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchIncomes();
-  }, [startDate, endDate]);
-
-  const refetch = async () => {
+  const fetchIncomes = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
       const data = await IncomeService.getIncomes(startDate, endDate);
       setIncomes(data);
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Failed to refetch incomes"
-      );
+      setError(err instanceof Error ? err.message : "Failed to fetch incomes");
     } finally {
       setLoading(false);
     }
-  };
+  }, [startDate, endDate]);
+
+  useEffect(() => {
+    fetchIncomes();
+  }, [fetchIncomes]);
+
+  const refetch = useCallback(async () => {
+    await fetchIncomes();
+  }, [fetchIncomes]);
 
   return { incomes, loading, error, refetch };
 };
-
-
