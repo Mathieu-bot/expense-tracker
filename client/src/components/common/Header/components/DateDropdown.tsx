@@ -4,19 +4,19 @@ import { useState } from "react";
 const DateDropdown = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
 
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
-  };
-
   const formatDate = (date: Date) => {
-    return date.toLocaleDateString([], {
+    return date.toLocaleDateString("en-US", {
       day: "numeric",
       month: "long",
       year: "numeric",
+    });
+  };
+
+  const formatTime = (date: Date) => {
+    return date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
     });
   };
 
