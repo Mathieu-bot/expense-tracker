@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import type { Income } from "../types/Income";
 import { validateDateRange } from "../utils/validators";
 
@@ -18,29 +18,36 @@ export const useIncomeFilters = ({ incomes }: UseIncomeFiltersProps) => {
   });
   const [dateError, setDateError] = useState<string | null>(null);
 
-  const handleStartDateChange = (date: Date | null) => {
-    const newStart = date ? date.toISOString().split("T")[0] : undefined;
-    const err = validateDateRange(
-      newStart,
-      dateRange.end?.toISOString().split("T")[0]
-    );
-    setDateError(err);
-    setDateRange((prev) => ({ ...prev, start: date }));
-  };
+  const handleStartDateChange = useCallback(
+    (date: Date | null) => {
+      const newStart = date ? date.toISOString().split("T")[0] : undefined;
+      const err = validateDateRange(
+        newStart,
+        dateRange.end?.toISOString().split("T")[0]
+      );
+      setDateError(err);
+      setDateRange((prev) => ({ ...prev, start: date }));
+    },
+    [dateRange.end]
+  );
 
-  const handleEndDateChange = (date: Date | null) => {
-    const newEnd = date ? date.toISOString().split("T")[0] : undefined;
-    const err = validateDateRange(
-      dateRange.start?.toISOString().split("T")[0],
-      newEnd
-    );
-    setDateError(err);
-    setDateRange((prev) => ({ ...prev, end: date }));
-  };
+  const handleEndDateChange = useCallback(
+    (date: Date | null) => {
+      const newEnd = date ? date.toISOString().split("T")[0] : undefined;
+      const err = validateDateRange(
+        dateRange.start?.toISOString().split("T")[0],
+        newEnd
+      );
+      setDateError(err);
+      setDateRange((prev) => ({ ...prev, end: date }));
+    },
+    [dateRange.start]
+  );
 
-  const clearDateFilter = () => {
+  const clearDateFilter = useCallback(() => {
     setDateRange({ start: null, end: null });
-  };
+    setDateError(null);
+  }, []);
 
   const filteredAndSortedIncomes = useMemo(() => {
     const filtered = incomes.filter((income) => {
@@ -49,7 +56,12 @@ export const useIncomeFilters = ({ incomes }: UseIncomeFiltersProps) => {
         (income.description &&
           income.description.toLowerCase().includes(searchQuery.toLowerCase()));
 
-      return matchesSearch;
+      const incomeDate = new Date(income.date);
+      const matchesDateRange =
+        (!dateRange.start || incomeDate >= dateRange.start) &&
+        (!dateRange.end || incomeDate <= dateRange.end);
+
+      return matchesSearch && matchesDateRange;
     });
 
     return filtered.sort((a, b) => {
@@ -57,11 +69,11 @@ export const useIncomeFilters = ({ incomes }: UseIncomeFiltersProps) => {
       const dateB = new Date(b.date).getTime();
       return sortOrder === "recent" ? dateB - dateA : dateA - dateB;
     });
-  }, [incomes, searchQuery, sortOrder]);
+  }, [incomes, searchQuery, sortOrder, dateRange.start, dateRange.end]);
 
   const totalIncome = useMemo(
-    () => incomes.reduce((sum, item) => sum + item.amount, 0),
-    [incomes]
+    () => filteredAndSortedIncomes.reduce((sum, item) => sum + item.amount, 0),
+    [filteredAndSortedIncomes]
   );
 
   const totalIncomeThisMonth = useMemo(() => {
@@ -69,7 +81,7 @@ export const useIncomeFilters = ({ incomes }: UseIncomeFiltersProps) => {
     const currentMonth = now.getMonth();
     const currentYear = now.getFullYear();
 
-    return incomes.reduce((sum, income) => {
+    return filteredAndSortedIncomes.reduce((sum, income) => {
       const incomeDate = new Date(income.date);
       if (
         incomeDate.getMonth() === currentMonth &&
@@ -79,7 +91,7 @@ export const useIncomeFilters = ({ incomes }: UseIncomeFiltersProps) => {
       }
       return sum;
     }, 0);
-  }, [incomes]);
+  }, [filteredAndSortedIncomes]);
 
   return {
     searchQuery,
@@ -93,6 +105,6 @@ export const useIncomeFilters = ({ incomes }: UseIncomeFiltersProps) => {
     clearDateFilter,
     filteredAndSortedIncomes,
     totalIncome,
-    totalIncomeThisMonth
+    totalIncomeThisMonth,
   };
 };

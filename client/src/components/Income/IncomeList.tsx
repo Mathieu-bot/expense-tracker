@@ -28,17 +28,7 @@ export interface IncomeListRef {
 
 export const IncomeList = forwardRef<IncomeListRef, IncomeListProps>(
   (
-    {
-      incomes,
-      loading,
-      error,
-      searchQuery = "",
-      sortOrder = "recent",
-      onEdit,
-      onDelete,
-      onViewReceipt,
-      onRefetch,
-    },
+    { incomes, loading, error, onEdit, onDelete, onViewReceipt, onRefetch },
     ref
   ) => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -48,46 +38,22 @@ export const IncomeList = forwardRef<IncomeListRef, IncomeListProps>(
       refetch: onRefetch,
     }));
 
-    const filteredAndSortedIncomes = useMemo(() => {
-      if (!incomes) return [];
-
-      const filteredIncomes = incomes.filter((income) => {
-        const matchesSearch =
-          income.source.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          (income.description &&
-            income.description
-              .toLowerCase()
-              .includes(searchQuery.toLowerCase()));
-
-        return matchesSearch;
-      });
-
-      return [...filteredIncomes].sort((a, b) => {
-        const dateA = new Date(a.date).getTime();
-        const dateB = new Date(b.date).getTime();
-        return sortOrder === "recent" ? dateB - dateA : dateA - dateB;
-      });
-    }, [incomes, searchQuery, sortOrder]);
-
     const displayedItems = useMemo(() => {
       const startIndex = (currentPage - 1) * itemsPerPage;
       const endIndex = startIndex + itemsPerPage;
-      return filteredAndSortedIncomes.slice(startIndex, endIndex);
-    }, [filteredAndSortedIncomes, currentPage, itemsPerPage]);
+      return incomes.slice(startIndex, endIndex);
+    }, [incomes, currentPage, itemsPerPage]);
 
-    const totalPages = Math.ceil(
-      filteredAndSortedIncomes.length / itemsPerPage
-    );
+    const totalPages = Math.ceil(incomes.length / itemsPerPage);
 
     useEffect(() => {
       if (
         currentPage > 1 &&
-        (currentPage - 1) * itemsPerPage >= filteredAndSortedIncomes.length
+        (currentPage - 1) * itemsPerPage >= incomes.length
       ) {
         setCurrentPage(1);
       }
-    }, [filteredAndSortedIncomes.length, currentPage, itemsPerPage]);
-
+    }, [incomes.length, currentPage, itemsPerPage]);
     if (loading) {
       return (
         <div className="w-full h-96 flex items-center justify-center">
@@ -121,11 +87,7 @@ export const IncomeList = forwardRef<IncomeListRef, IncomeListProps>(
               <Eye className="w-8 h-8" />
             </div>
             <p className="text-lg mb-2">No incomes found</p>
-            <p className="text-sm">
-              {searchQuery
-                ? "Try adjusting your search"
-                : "Add your first income"}
-            </p>
+            <p className="text-sm">Try adjusting your search"</p>
           </div>
         ) : (
           <>

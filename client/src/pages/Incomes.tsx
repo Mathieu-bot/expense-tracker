@@ -26,7 +26,6 @@ export const Incomes = () => {
   const { incomes: fetchedIncomes, loading, refetch } = useIncomes();
 
   const localIncomes = useMemo(() => fetchedIncomes || [], [fetchedIncomes]);
-
   const {
     searchQuery,
     setSearchQuery,
@@ -37,6 +36,7 @@ export const Incomes = () => {
     handleStartDateChange,
     handleEndDateChange,
     clearDateFilter,
+    filteredAndSortedIncomes,
     totalIncome,
     totalIncomeThisMonth,
   } = useIncomeFilters({ incomes: localIncomes });
@@ -176,7 +176,7 @@ export const Incomes = () => {
           <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full -translate-y-16 translate-x-16"></div>
 
           <IncomeList
-            incomes={localIncomes}
+            incomes={filteredAndSortedIncomes}
             loading={loading}
             error={null}
             searchQuery={searchQuery}
