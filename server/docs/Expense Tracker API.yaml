@@ -330,14 +330,9 @@ paths:
       responses:
         "200":
           description: Profile info
-<<<<<<< HEAD
-    put:
-      summary: Update user profile
-=======
     patch:
       summary: Update user profile
       description: Update username for the authenticated user
->>>>>>> 4f1ff1098e64f7feee04c94977f358fa4b1c0bb6
       requestBody:
         required: true
         content:
