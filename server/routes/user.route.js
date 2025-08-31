@@ -12,7 +12,7 @@ import {
 const router = Router();
 
 router.get("/profile", getUserProfile);
-router.put("/profile", validateUpdateProfile, updateProfile);
+router.patch("/profile", validateUpdateProfile, updateProfile);
 router.patch("/profile/password", validateChangePassword, changePassword);
 
 export default router;

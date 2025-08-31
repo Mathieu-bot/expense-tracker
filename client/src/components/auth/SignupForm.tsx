@@ -8,6 +8,8 @@ import ShowPasswordBtn from "./ShowPasswordBtn";
 import PasswordStrength from "./PasswordStrength";
 import { useToast } from "../../ui";
 import UsernameModal from "./UsernameModal";
+import { useAuth } from "../../hooks/useAuth";
+import CategoriesOnboardingModal from "./CategoriesOnboardingModal";
 
 export default function SignupForm({
   onSubmit,
@@ -25,9 +27,11 @@ export default function SignupForm({
   const [emailError, setEmailError] = useState<string | null>(null);
   const [confirmPasswordError, setConfirmPasswordError] = useState<string | null>(null);
   const [postSignupOpen, setPostSignupOpen] = useState(false);
+  const [postCategoriesOpen, setPostCategoriesOpen] = useState(false);
   const [usernameModal, setUsernameModal] = useState("");
   const [savingUsername, setSavingUsername] = useState(false);
   const toast = useToast()
+  const { updateProfile } = useAuth();
 
   const isValidEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
 
@@ -51,9 +55,7 @@ export default function SignupForm({
       await onSubmit({ ...payload, confirmPassword });
       setUsernameModal("");
       setPostSignupOpen(true);
-    } catch (err) {
-      // error is handled by useAuth and displayed in error div
-      // don't open username modal on error
+    } catch {
     }
   }
 
@@ -159,19 +161,29 @@ export default function SignupForm({
         onUsernameChange={setUsernameModal}
         saving={savingUsername}
         onClose={() => setPostSignupOpen(false)}
-        onSkip={() => { setPostSignupOpen(false); navigate('/', { replace: true }); }}
+        onSkip={() => { setPostSignupOpen(false); setPostCategoriesOpen(true); }}
         onSave={async () => {
-          // backend handled by another contributor; keep UX flow
           setSavingUsername(true);
           try {
-            // when backend is ready: await DefaultService.patchUserProfile({ username: usernameModal.trim() })
+            const uname = usernameModal.trim();
+            if (uname) {
+              await updateProfile({ username: uname });
+            }
             toast.success("Saved");
             setPostSignupOpen(false);
-            navigate('/', { replace: true });
+            setPostCategoriesOpen(true);
+          } catch (err) {
+            const msg = err instanceof Error ? err.message : 'Failed to save username';
+            toast.error(msg);
           } finally {
             setSavingUsername(false);
           }
         }}
+      />
+      <CategoriesOnboardingModal
+        open={postCategoriesOpen}
+        onClose={() => { setPostCategoriesOpen(false); setPostSignupOpen(true); }}
+        onDone={() => { setPostCategoriesOpen(false); navigate('/', { replace: true }); }}
       />
     </form>
   );

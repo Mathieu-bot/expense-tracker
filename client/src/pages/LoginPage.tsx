@@ -8,9 +8,11 @@ import AuthLayout from "../components/auth/AuthLayout";
 export default function LoginPage() {
   const { login, loading, error } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation() as any;
+  const location = useLocation() as ReturnType<typeof useLocation> & {
+    state?: { from?: string } | null;
+  };
   const toast = useToast();
-  const from = location.state?.from || "/";
+  const from = (location.state && typeof location.state === 'object' && location.state?.from) || "/";
 
   async function onSubmit({ email, password }: LoginFormData) {
     try {

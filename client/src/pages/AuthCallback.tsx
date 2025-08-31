@@ -4,12 +4,14 @@ import { useAuth } from "../hooks/useAuth";
 
 export default function AuthCallback() {
   const navigate = useNavigate();
-  const location = useLocation() as any;
+  const location = useLocation() as ReturnType<typeof useLocation> & {
+    state?: { from?: string } | null;
+  };
   const { refresh } = useAuth();
 
   useEffect(() => {
     // the backend should have set the session cookie. Just refresh the session and redirect.
-    const from = location.state?.from || "/";
+    const from = (location.state && typeof location.state === 'object' && location.state?.from) || "/";
     (async () => {
       try {
         await refresh();

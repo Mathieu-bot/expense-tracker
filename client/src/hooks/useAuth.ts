@@ -1,16 +1,17 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ApiError, DefaultService, type PublicUser } from '../api';
+import { UserService } from '../services/UserService';
 
-// SDK config is applied globally in src/api/config.ts
+// SDK config is applied globally in src/sdkConfig.ts
 
-function extractErrorMessage(err: unknown, fallback = 'Unexpected error'): string {
+const extractErrorMessage = (err: unknown, fallback = 'Unexpected error'): string => {
   if (err instanceof Error && err.message) return err.message;
   if (typeof err === 'string' && err) return err;
   try {
-    const anyErr = err as any;
-    if (anyErr && typeof anyErr === 'object') {
-      if (typeof anyErr.error === 'string') return anyErr.error;
-      if (typeof anyErr.message === 'string') return anyErr.message;
+    const obj = (err ?? {}) as Record<string, unknown>;
+    if (obj && typeof obj === 'object') {
+      if (typeof obj.error === 'string') return obj.error;
+      if (typeof obj.message === 'string') return obj.message;
     }
   } catch {
     // ignore
@@ -20,7 +21,7 @@ function extractErrorMessage(err: unknown, fallback = 'Unexpected error'): strin
 
 type AuthAction = 'login' | 'signup' | 'logout' | 'me';
 
-function toFriendlyAuthMessage(err: unknown, action: AuthAction): string {
+const toFriendlyAuthMessage = (err: unknown, action: AuthAction): string => {
   const raw = extractErrorMessage(err, '');
   if (raw && /network|failed to fetch|ECONNREFUSED|timeout/i.test(raw)) {
     return 'Network error. Please check your connection and try again.';
@@ -28,9 +29,12 @@ function toFriendlyAuthMessage(err: unknown, action: AuthAction): string {
 
   if (err instanceof ApiError) {
     const status = err.status;
-    // Optional server-provided error code/message
-    const body: any = (err as any).body || {};
-    const serverMsg: string | undefined = body?.error || body?.message;
+    // optional server-provided error code/message
+    const body = (err as ApiError & { body?: unknown }).body ?? {};
+    const b = body as Record<string, unknown>;
+    const serverMsg: string | undefined = (typeof b.error === 'string' && b.error)
+      || (typeof b.message === 'string' && b.message)
+      || undefined;
 
     if (status === 401) {
       if (action === 'login') return 'Invalid email or password.';
@@ -67,7 +71,7 @@ function toFriendlyAuthMessage(err: unknown, action: AuthAction): string {
   }
 }
 
-export function useAuth() {
+export const useAuth = () => {
   const [user, setUser] = useState<PublicUser | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -145,9 +149,27 @@ export function useAuth() {
     }
   }, []);
 
+  const updateProfile = useCallback(
+    async (data: { username?: string; firstname?: string; lastname?: string }) => {
+      setLoading(true);
+      setError(null);
+      try {
+        await UserService.updateProfile(data);
+        await me();
+      } catch (err) {
+        const msg = extractErrorMessage(err, 'Failed to update profile');
+        setError(msg);
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [me]
+  );
+
   const value = useMemo(
-    () => ({ user, loading, error, login, signup, logout, refresh: me }),
-    [user, loading, error, login, signup, logout, me]
+    () => ({ user, loading, error, login, signup, logout, refresh: me, updateProfile }),
+    [user, loading, error, login, signup, logout, me, updateProfile]
   );
 
   return value;
