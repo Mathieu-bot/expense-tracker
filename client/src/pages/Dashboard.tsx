@@ -9,6 +9,7 @@ import PieGraph from "../components/dashboard/PieGraph";
 import { useIncomes } from "../hooks/useIncomes";
 import { computeValueTotal } from "../utils/computeValueTotal";
 import MiniStatCard from "../components/dashboard/DisplayCard";
+import { Toast, useToast } from "../ui";
 
 const monthlyData: Row[] = [
   { month: "Avril", spending: 120000, income: 180000 },
@@ -36,6 +37,7 @@ function Dashboard() {
     "expenses"
   );
   const { incomes, loading, error } = useIncomes();
+  const toast = useToast();
 
   const [totalIncome, setTotalIncome] = useState<number>(0);
   const [totalExpense, setTotalExpense] = useState<number>(0);
@@ -75,6 +77,9 @@ function Dashboard() {
       ? "Expenses — by category"
       : "Income — by category";
 
+  if (error) {
+    toast.error("Failed to load incomes: " + error);
+  }
   return (
     <div className="min-w-screen h-screen pt-26 pl-22 py-5 pr-10 grid grid-cols-3 z-30 gap-5">
       <div className="col-span-2 flex flex-col gap-5">
