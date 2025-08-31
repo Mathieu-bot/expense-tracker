@@ -1,4 +1,10 @@
-import { forwardRef, useImperativeHandle, useState, useEffect } from "react";
+import {
+  forwardRef,
+  useImperativeHandle,
+  useState,
+  useEffect,
+  useMemo,
+} from "react";
 import type { Income } from "../../types/Income";
 import { Button } from "../../ui";
 import { Eye, Edit3, Trash2 } from "lucide-react";
@@ -37,16 +43,15 @@ export const IncomeList = forwardRef<IncomeListRef, IncomeListProps>(
   ) => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 3;
-    const [displayedItems, setDisplayedItems] = useState<Income[]>([]);
 
     useImperativeHandle(ref, () => ({
       refetch: onRefetch,
     }));
 
-    useEffect(() => {
-      if (!incomes) return;
+    const filteredAndSortedIncomes = useMemo(() => {
+      if (!incomes) return [];
 
-      let filteredIncomes = incomes.filter((income) => {
+      const filteredIncomes = incomes.filter((income) => {
         const matchesSearch =
           income.source.toLowerCase().includes(searchQuery.toLowerCase()) ||
           (income.description &&
@@ -57,25 +62,31 @@ export const IncomeList = forwardRef<IncomeListRef, IncomeListProps>(
         return matchesSearch;
       });
 
-      filteredIncomes = [...filteredIncomes].sort((a, b) => {
+      return [...filteredIncomes].sort((a, b) => {
         const dateA = new Date(a.date).getTime();
         const dateB = new Date(b.date).getTime();
         return sortOrder === "recent" ? dateB - dateA : dateA - dateB;
       });
+    }, [incomes, searchQuery, sortOrder]);
 
+    const displayedItems = useMemo(() => {
       const startIndex = (currentPage - 1) * itemsPerPage;
       const endIndex = startIndex + itemsPerPage;
-      setDisplayedItems(filteredIncomes.slice(startIndex, endIndex));
+      return filteredAndSortedIncomes.slice(startIndex, endIndex);
+    }, [filteredAndSortedIncomes, currentPage, itemsPerPage]);
 
-      //resets to first page if current page is invalid after filtering
-      if (currentPage > 1 && startIndex >= filteredIncomes.length) {
+    const totalPages = Math.ceil(
+      filteredAndSortedIncomes.length / itemsPerPage
+    );
+
+    useEffect(() => {
+      if (
+        currentPage > 1 &&
+        (currentPage - 1) * itemsPerPage >= filteredAndSortedIncomes.length
+      ) {
         setCurrentPage(1);
       }
-    }, [incomes, searchQuery, sortOrder, currentPage]);
-
-    const totalPages = Math.ceil((incomes?.length || 0) / itemsPerPage);
-
-  
+    }, [filteredAndSortedIncomes.length, currentPage, itemsPerPage]);
 
     if (loading) {
       return (
