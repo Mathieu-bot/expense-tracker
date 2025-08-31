@@ -13,6 +13,10 @@ export const ReceiptModal = ({ open, income, onClose }: ReceiptModalProps) => {
 
   return (
     <Dialog
+      classes={{
+        body: "text-primary-dark",
+        title: "text-primary-dark",
+      }}
       open={open}
       onClose={onClose}
       title="Income Receipt"
@@ -26,13 +30,13 @@ export const ReceiptModal = ({ open, income, onClose }: ReceiptModalProps) => {
       }
     >
       <div className="p-4">
-        <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+        <div className="bg-primary/3 rounded-xl p-6 border border-white/10">
           <div className="flex justify-between items-start mb-6">
             <div>
-              <h3 className="text-xl font-bold text-light/90">
+              <h3 className="text-xl font-bold text-primary-dark">
                 {income.source}
               </h3>
-              <p className="text-light/60">{formatDate(income.date)}</p>
+              <p className="text-primary-dark">{formatDate(income.date)}</p>
             </div>
             <div className="text-right">
               <p className="text-2xl font-bold text-accent">
@@ -43,18 +47,18 @@ export const ReceiptModal = ({ open, income, onClose }: ReceiptModalProps) => {
 
           {income.description && (
             <div className="mb-6">
-              <p className="text-light/8">{income.description}</p>
+              <p className="text-primary-dark">{income.description}</p>
             </div>
           )}
 
           <div className="pt-4 border-t border-white/10">
             <div className="flex justify-between items-center">
-              <span className="text-light/60">Income ID</span>
-              <span className="text-light/90">#{income.income_id}</span>
+              <span className="text-primary-dark">Income Number</span>
+              <span className="text-primary-dark">#{income.income_id}</span>
             </div>
             <div className="flex justify-between items-center mt-2">
-              <span className="text-light/60">Created</span>
-              <span className="text-light/90">
+              <span className="text-primary-dark">Created</span>
+              <span className="text-primary-dark">
                 {formatDate(income.creation_date)}
               </span>
             </div>

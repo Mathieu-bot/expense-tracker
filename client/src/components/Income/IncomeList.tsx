@@ -87,7 +87,6 @@ export const IncomeList = forwardRef<IncomeListRef, IncomeListProps>(
               <Eye className="w-8 h-8" />
             </div>
             <p className="text-lg mb-2">No incomes found</p>
-            <p className="text-sm">Try adjusting your search"</p>
           </div>
         ) : (
           <>
