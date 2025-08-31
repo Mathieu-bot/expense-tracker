@@ -7,13 +7,14 @@ import BackgroundImage from "./components/common/BackgroundImage";
 import { CreateIncome } from "./pages/CreateIncome";
 import { EditIncome } from "./pages/EditIncome";
 import Mascot from "./components/common/Mascot";
-import DashboardHeader from "./components/common/Header";
 import RequireAuth from "./components/common/RequireAuth";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import AuthCallback from "./pages/AuthCallback";
 import DashboardLayout from "./components/common/DashboardLayout";
 import { Profile } from "./pages/Profile";
+import PostAuthGate from "./components/auth/PostAuthGate";
+import DashboardHeader  from "./components/common/Header/Header";
 
 function App() {
   const location = useLocation();
@@ -33,9 +34,14 @@ function App() {
             <Sidebar />
           </>
         )}
-        {location.pathname.includes("/login") || location.pathname.includes("/signup") ? null : (
+        {location.pathname.includes("/login") ||
+        location.pathname.includes("/signup") ? null : (
           <Mascot className="z-50" />
         )}
+        {!(
+          location.pathname.includes("/login") ||
+          location.pathname.includes("/signup")
+        ) && <PostAuthGate />}
         <Routes>
           {/* Public routes */}
           <Route path="/login" element={<LoginPage />} />

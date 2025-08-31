@@ -13,7 +13,6 @@
     "prisma:deploy": "prisma migrate deploy",
     "prisma:studio": "prisma studio",
     "prisma:seed": "node ./prisma/seed.js"
-
   },
   "keywords": [
     "express",
