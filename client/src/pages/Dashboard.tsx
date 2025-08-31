@@ -9,7 +9,11 @@ import PieGraph from "../components/dashboard/PieGraph";
 import { useIncomes } from "../hooks/useIncomes";
 import { computeValueTotal } from "../utils/computeValueTotal";
 import MiniStatCard from "../components/dashboard/DisplayCard";
-import { DatePicker, useToast } from "../ui";
+import { useToast } from "../ui";
+import { getAlert } from "../services/SummaryService";
+import { useSummaryAlert } from "../hooks/useSummaryAlert";
+import { data } from "react-router-dom";
+import SummaryAlert from "../components/dashboard/SummaryAlert";
 
 const monthlyData: Row[] = [
   { month: "Avril", spending: 120000, income: 180000 },
@@ -26,6 +30,9 @@ const expensesByCat: PieItem[] = [
 ];
 
 function Dashboard() {
+  const { data: summaryAlert } = useSummaryAlert();
+  const [alertOpen, setAlertOpen] = useState<boolean>(true);
+
   const [startDate, setStartDate] = useState<string>(
     Date.now().toString().split(" ")[0]
   );
@@ -34,7 +41,6 @@ function Dashboard() {
   );
 
   const { incomes, loading, error } = useIncomes(startDate, endDate);
-
 
   const toast = useToast();
 
@@ -74,6 +80,14 @@ function Dashboard() {
   }
   return (
     <div className="min-w-screen h-screen pt-24 pl-22 py-5 pr-10 grid grid-cols-4 z-30 gap-5">
+      {summaryAlert.alert && (
+        <SummaryAlert
+          alert={summaryAlert.alert}
+          message={summaryAlert.message}
+          open={alertOpen}
+          setIsOpen={setAlertOpen}
+        />
+      )}
       <div className="col-span-3 flex flex-col gap-5">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {toDisplay.map((item, idx) => (
