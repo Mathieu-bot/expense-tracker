@@ -17,20 +17,15 @@ import Receipt from "../components/Income/Receipt";
 import { Plus, Wallet } from "lucide-react";
 import { StatsCards } from "../components/Income/IncomeHeader/StatsCards";
 import type { Income } from "../types/Income";
-import { useEffect, useState } from "react";
+import { useState, useMemo } from "react";
 
 export const Incomes = () => {
   const navigate = useNavigate();
   const toast = useToast();
 
   const { incomes: fetchedIncomes, loading, refetch } = useIncomes();
-  const [localIncomes, setLocalIncomes] = useState<Income[]>([]);
 
-  useEffect(() => {
-    if (fetchedIncomes) {
-      setLocalIncomes(fetchedIncomes);
-    }
-  }, [fetchedIncomes]);
+  const localIncomes = useMemo(() => fetchedIncomes || [], [fetchedIncomes]);
 
   const {
     searchQuery,
@@ -73,9 +68,7 @@ export const Incomes = () => {
       toast.success("Income deleted successfully");
       closeDeleteModal();
 
-      setLocalIncomes((prev) =>
-        prev.filter((inc) => inc.income_id !== incomeToDelete.income_id)
-      );
+      refetch();
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Failed to delete income";
