@@ -60,7 +60,6 @@ export default function PieGraph({
             align="center"
             iconType="circle"
             wrapperStyle={{ color: "rgba(255,255,255,0.9)" }}
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             content={() => (
               <ul style={{ listStyle: "none", padding: 0, marginTop: 0 }}>
                 {data.map((d, i) => (
