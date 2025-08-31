@@ -55,7 +55,9 @@ export default function SignupForm({
       await onSubmit({ ...payload, confirmPassword });
       setUsernameModal("");
       setPostSignupOpen(true);
-    } catch {
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Sign up failed";
+      toast.error(msg);
     }
   }
 

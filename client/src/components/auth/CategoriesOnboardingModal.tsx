@@ -31,7 +31,7 @@ export default function CategoriesOnboardingModal({ open, onClose, onDone }: Pro
         setAllCategories(cats || []);
         const globals = (cats || []).filter(c => c.user_id == null);
         setSelectedIds(new Set(globals.map(c => c.category_id)));
-      } catch (e) {
+      } catch {
         if (!mounted) return;
         toast.error("Failed to load categories");
       } finally {
@@ -60,12 +60,13 @@ export default function CategoriesOnboardingModal({ open, onClose, onDone }: Pro
       for (const cat of toUse) {
         try {
           await DefaultService.postCategories({ name: cat.category_name, icon_url: cat.icon_url ?? undefined });
-        } catch (e) {
+        } catch {
+          /* ignore */
         }
       }
       toast.success("Categories ready");
       onDone();
-    } catch (e) {
+    } catch {
       toast.error("Failed to create categories");
     } finally {
       setSaving(false);
