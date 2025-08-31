@@ -8,8 +8,9 @@ import ShowPasswordBtn from "./ShowPasswordBtn";
 import PasswordStrength from "./PasswordStrength";
 import { useToast } from "../../ui";
 import UsernameModal from "./UsernameModal";
-import { useAuth } from "../../hooks/useAuth";
 import CategoriesOnboardingModal from "./CategoriesOnboardingModal";
+import { useAuth } from "../../hooks/useAuth";
+ 
 
 export default function SignupForm({
   onSubmit,
@@ -26,11 +27,11 @@ export default function SignupForm({
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [emailError, setEmailError] = useState<string | null>(null);
   const [confirmPasswordError, setConfirmPasswordError] = useState<string | null>(null);
+  const toast = useToast()
   const [postSignupOpen, setPostSignupOpen] = useState(false);
   const [postCategoriesOpen, setPostCategoriesOpen] = useState(false);
   const [usernameModal, setUsernameModal] = useState("");
   const [savingUsername, setSavingUsername] = useState(false);
-  const toast = useToast()
   const { updateProfile } = useAuth();
 
   const isValidEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
@@ -155,7 +156,6 @@ export default function SignupForm({
           </Link>
         </div>
       )}
-
       <UsernameModal
         open={postSignupOpen}
         email={email}
