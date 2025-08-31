@@ -24,7 +24,7 @@ export const DeleteConfirmationModal = ({
         <>
           <Button
             onClick={onClose}
-            className="border border-white/30 text-light/80 bg-transparent hover:bg-white/10"
+            className="border border-white/30 text-primary/80 bg-transparent hover:bg-primary/10"
           >
             Cancel
           </Button>
@@ -37,11 +37,11 @@ export const DeleteConfirmationModal = ({
         </>
       }
     >
-      <p className="text-light/90">
+      <p className="text-primary-dark">
         Are you sure you want to delete this income?
       </p>
       {income && (
-        <div className="mt-3 p-3 bg-white/5 rounded">
+        <div className="mt-3 p-3 bg-primary/3 rounded-xl">
           <p>
             <strong>Amount: </strong>
             {formatCurrency(income.amount)}
