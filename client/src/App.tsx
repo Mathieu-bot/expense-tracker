@@ -7,14 +7,15 @@ import BackgroundImage from "./components/common/BackgroundImage";
 import { CreateIncome } from "./pages/CreateIncome";
 import { EditIncome } from "./pages/EditIncome";
 import Mascot from "./components/common/Mascot";
-import { DashboardHeader } from "./components/common/Header";
+import DashboardHeader from "./components/common/Header";
+import RequireAuth from "./components/common/RequireAuth";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
+import AuthCallback from "./pages/AuthCallback";
+import DashboardLayout from "./components/common/DashboardLayout";
 import { Profile } from "./pages/Profile";
 
 function App() {
-  /*
-    TODO: check auth then redirect to /login when not authenticated
-    TODO: use different layout for auth page and dashboard page
-  */
   const location = useLocation();
   return (
     <ToastProvider
@@ -25,20 +26,32 @@ function App() {
     >
       <div className="App min-h-screen relative overflow-x-hidden">
         {location.pathname.includes("/login") ||
-        location.pathname.includes("/register") ? null : (
+        location.pathname.includes("/signup") ? null : (
           <>
             <BackgroundImage />
             <DashboardHeader />
             <Sidebar />
           </>
         )}
-        <Mascot className="z-50" />
+        {location.pathname.includes("/login") || location.pathname.includes("/signup") ? null : (
+          <Mascot className="z-50" />
+        )}
         <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/incomes" element={<Incomes />} />
-          <Route path="/incomes/new" element={<CreateIncome />} />
-          <Route path="/incomes/:id/edit" element={<EditIncome />} />
-          <Route path="/profile" element={<Profile />} />
+          {/* Public routes */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
+
+          {/* Protected routes */}
+          <Route element={<RequireAuth />}>
+            <Route element={<DashboardLayout />}>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/incomes" element={<Incomes />} />
+              <Route path="/incomes/new" element={<CreateIncome />} />
+              <Route path="/incomes/:id/edit" element={<EditIncome />} />
+              <Route path="/profile" element={<Profile />} />
+            </Route>
+          </Route>
         </Routes>
       </div>
     </ToastProvider>

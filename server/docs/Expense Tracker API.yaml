@@ -143,12 +143,6 @@ paths:
           description: Expense updated
     delete:
       summary: Delete an expense
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
       responses:
         "204":
           description: Expense deleted
@@ -221,12 +215,6 @@ paths:
           description: Income updated
     delete:
       summary: Delete an income entry
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
       responses:
         "204":
           description: Income deleted
@@ -248,6 +236,9 @@ paths:
               properties:
                 name:
                   type: string
+                icon_url:
+                  type: string
+                  nullable: true
       responses:
         "201":
           description: Category created
@@ -338,18 +329,38 @@ paths:
       responses:
         "200":
           description: Profile info
-    put:
+    patch:
       summary: Update user profile
+      description: Update username for the authenticated user
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
+              properties:
+                username:
+                  type: string
+                  minLength: 3
+                  maxLength: 50
+                  pattern: '^[A-Za-z0-9_-]{3,50}$'
+                firstname:
+                  type: string
+                  maxLength: 100
+                lastname:
+                  type: string
+                  maxLength: 100
       responses:
         "200":
-          description: Profile updated
-
+          description: Public user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicUser'
+        "400":
+          description: Invalid username
+        "401":
+          description: Unauthorized
   /user/profile/password:
     patch:
       summary: Update user password
@@ -362,3 +373,44 @@ paths:
       responses:
         "200":
           description: Password updated
+
+  /auth/me:
+    get:
+      summary: Get current authenticated user
+      responses:
+        "200":
+          description: Public user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicUser'
+        "401":
+          description: Unauthorized
+
+  /auth/logout:
+    post:
+      summary: Logout current session
+      responses:
+        "204":
+          description: No Content
+
+components:
+  schemas:
+    PublicUser:
+      type: object
+      required: [user_id, email, created_at]
+      properties:
+        user_id:
+          type: integer
+        email:
+          type: string
+          format: email
+        username:
+          type: [string, 'null']
+        firstname:
+          type: [string, 'null']
+        lastname:
+          type: [string, 'null']
+        created_at:
+          type: string
+          format: date-time
