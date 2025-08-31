@@ -10,7 +10,7 @@ import {
 } from "recharts";
 import { ChartTooltip } from "./ChartTooltip";
 
-interface LineChartData {
+export interface LineChartData {
   date: string;
   amount: number;
   cumulativeAmount?: number;

@@ -1,8 +1,8 @@
 import { BarChart3, TrendingUp } from "lucide-react";
-import { LineChart } from "./LineChart";
+import { LineChart, type LineChartData } from "./LineChart";
 
 interface IncomeChartProps {
-  lineChartData: unknown[];
+  lineChartData: LineChartData[];
   loading: boolean;
   isEmpty: boolean;
   chartType: "timeline" | "cumulative";
