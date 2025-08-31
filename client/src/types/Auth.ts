@@ -54,3 +54,11 @@ export type UsernameModalProps = {
   onSave: () => void;
   saving?: boolean;
 };
+
+export type Category = {
+  category_id: number;
+  category_name: string;
+  icon_url?: string | null;
+  is_custom?: boolean;
+  user_id?: number | null;
+};

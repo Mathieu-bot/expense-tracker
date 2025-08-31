@@ -281,6 +281,7 @@ export class DefaultService {
     public static postCategories(
         requestBody?: {
             name: string;
+            icon_url?: string | null;
         },
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
@@ -428,7 +429,6 @@ export class DefaultService {
             errors: {
                 400: `Invalid username`,
                 401: `Unauthorized`,
-                409: `Username already taken`,
             },
         });
     }

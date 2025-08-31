@@ -3,11 +3,29 @@ import { DollarSign, TrendingUp, Target } from "lucide-react";
 
 export const authLabelCls = 'peer-focus:!text-primary peer-placeholder-shown:!text-primary';
 
+export const modalLabelCls = 'peer-focus:!text-accent peer-placeholder-shown:!text-white'
+
 export const authInputCls = '!border-b-1 !border-gray-400 focus:!border-primary';
+
+export const modalInputCls = '!border-b-1 !border-gray-400 focus:!border-accent !text-white'
 
 export const submitCls = `bg-primary text-white hover:bg-primary/90 focus:ring-2 focus:ring-accent focus:bg-primary/90`
 
 export const authGoogleCls = `!border !border-primary-light !bg-white hover:!bg-accent/10 focus:!border-accent focus:bg-accent/10`
+
+export const textFieldModalCls = { 
+  label: `${modalLabelCls}`, 
+  input: `${modalInputCls}`, 
+  helperText:"!text-light",
+  error: "hidden"
+};
+
+export const modalCls = {
+  panel: "!bg-primary/80 !backdrop-blur-sm", 
+  title: "!text-light", 
+  overlay:"!bg-black/10",
+  body: "text-light" 
+}
 
 export const landingContent = {
   hero: {
