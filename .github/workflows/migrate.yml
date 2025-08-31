@@ -1,0 +1,44 @@
+permissions:
+  contents: read
+name: Run Prisma Migrations
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment name'
+        required: false
+        default: 'production'
+
+jobs:
+  migrate:
+    name: Prisma migrate deploy
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      NODE_ENV: production
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: server/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prisma Version
+        run: npx prisma -v
+
+      - name: Prisma Generate
+        run: npm run prisma:generate
+
+      - name: Run migrations (deploy)
+        run: npm run prisma:deploy
