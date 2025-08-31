@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { PublicUser } from '../models/PublicUser';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -46,8 +47,8 @@ export class DefaultService {
     }
     /**
      * List all user expenses
-     * @param start Start date
-     * @param end End date
+     * @param start Start date (ISO string)
+     * @param end End date (ISO string)
      * @param category
      * @param type
      * @returns any List of expenses
@@ -160,88 +161,6 @@ export class DefaultService {
         });
     }
     /**
-     * Get system income categories
-     * @returns any List of system income categories
-     * @throws ApiError
-     */
-    public static getIncomesCategories(): CancelablePromise<any> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/incomes/categories',
-        });
-    }
-    /**
-     * Get user's custom income categories
-     * @returns any List of user's custom income categories
-     * @throws ApiError
-     */
-    public static getIncomesCustomCategories(): CancelablePromise<any> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/incomes/custom-categories',
-        });
-    }
-    /**
-     * Create a new custom income category
-     * @param requestBody
-     * @returns any Income category created
-     * @throws ApiError
-     */
-    public static postIncomesCustomCategories(
-        requestBody: {
-            category_name: string;
-            icon_url?: string;
-        },
-    ): CancelablePromise<any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/incomes/custom-categories',
-            body: requestBody,
-            mediaType: 'application/json',
-        });
-    }
-    /**
-     * Update an income category
-     * @param id
-     * @param requestBody
-     * @returns any Income category updated
-     * @throws ApiError
-     */
-    public static putIncomesCustomCategories(
-        id: string,
-        requestBody: {
-            category_name: string;
-            icon_url?: string;
-        },
-    ): CancelablePromise<any> {
-        return __request(OpenAPI, {
-            method: 'PUT',
-            url: '/incomes/custom-categories/{id}',
-            path: {
-                'id': id,
-            },
-            body: requestBody,
-            mediaType: 'application/json',
-        });
-    }
-    /**
-     * Delete an income category
-     * @param id
-     * @returns void
-     * @throws ApiError
-     */
-    public static deleteIncomesCustomCategories(
-        id: string,
-    ): CancelablePromise<void> {
-        return __request(OpenAPI, {
-            method: 'DELETE',
-            url: '/incomes/custom-categories/{id}',
-            path: {
-                'id': id,
-            },
-        });
-    }
-    /**
      * List all incomes
      * @param start
      * @param end
@@ -270,10 +189,9 @@ export class DefaultService {
     public static postIncomes(
         requestBody?: {
             amount: number;
-            date?: string;
+            date: string;
             source?: string;
             description?: string;
-            category_id?: number;
         },
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
@@ -363,6 +281,7 @@ export class DefaultService {
     public static postCategories(
         requestBody?: {
             name: string;
+            icon_url?: string | null;
         },
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
@@ -486,6 +405,72 @@ export class DefaultService {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/user/profile',
+        });
+    }
+    /**
+     * Update user profile
+     * Update username for the authenticated user
+     * @param requestBody
+     * @returns PublicUser Public user
+     * @throws ApiError
+     */
+    public static patchUserProfile(
+        requestBody: {
+            username?: string;
+            firstname?: string;
+            lastname?: string;
+        },
+    ): CancelablePromise<PublicUser> {
+        return __request(OpenAPI, {
+            method: 'PATCH',
+            url: '/user/profile',
+            body: requestBody,
+            mediaType: 'application/json',
+            errors: {
+                400: `Invalid username`,
+                401: `Unauthorized`,
+            },
+        });
+    }
+    /**
+     * Update user password
+     * @param requestBody
+     * @returns any Password updated
+     * @throws ApiError
+     */
+    public static patchUserProfilePassword(
+        requestBody: Record<string, any>,
+    ): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'PATCH',
+            url: '/user/profile/password',
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
+    /**
+     * Get current authenticated user
+     * @returns PublicUser Public user
+     * @throws ApiError
+     */
+    public static getAuthMe(): CancelablePromise<PublicUser> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/auth/me',
+            errors: {
+                401: `Unauthorized`,
+            },
+        });
+    }
+    /**
+     * Logout current session
+     * @returns void
+     * @throws ApiError
+     */
+    public static postAuthLogout(): CancelablePromise<void> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/auth/logout',
         });
     }
 }

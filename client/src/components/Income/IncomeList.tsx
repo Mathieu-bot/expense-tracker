@@ -1,7 +1,7 @@
 import { forwardRef, useImperativeHandle } from "react";
-import type { Income } from "../types/Income";
-import { useIncomes } from "../hooks/useIncomes";
-import { Button, Chip } from "../ui";
+import type { Income } from "../../types/Income";
+import { useIncomes } from "../../hooks/useIncomes";
+import { Button } from "../../ui";
 
 interface IncomeListProps {
   startDate?: string;
@@ -65,13 +65,6 @@ export const IncomeList = forwardRef<IncomeListRef, IncomeListProps>(
                       <h3 className="font-medium text-lg">
                         {income.amount.toFixed(2)} MGA
                       </h3>
-                      {income.category && (
-                        <Chip
-                          label={income.category.category_name}
-                          size="small"
-                          className="bg-blue-100 text-blue-800"
-                        />
-                      )}
                     </div>
                     <p className="text-gray-600 mb-1">{income.source}</p>
                     {income.description && (

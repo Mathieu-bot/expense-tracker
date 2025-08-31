@@ -1,17 +1,20 @@
 import { useState, useRef } from "react";
 import type { Income } from "../types/Income";
-import { IncomeList } from "../components/IncomeList";
-import { Button, TextField, Dialog, useToast } from "../ui";
+import { IncomeList } from "../components/Income/IncomeList";
+import { Button, Dialog, useToast, DatePicker } from "../ui";
 import { IncomeService } from "../services/IncomeService";
 import { useNavigate } from "react-router-dom";
+import { validateDateRange } from "../utils/validators";
 
-export const IncomesPage = () => {
+export const Incomes = () => {
   const [dateFilter, setDateFilter] = useState<{
     start?: string;
     end?: string;
   }>({});
+  const [dateError, setDateError] = useState<string | null>(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [incomeToDelete, setIncomeToDelete] = useState<Income | null>(null);
+
   const toast = useToast();
   const incomeListRef = useRef<{ refetch: () => void }>(null);
   const navigate = useNavigate();
@@ -33,7 +36,6 @@ export const IncomesPage = () => {
       toast.success("Income deleted successfully");
       setDeleteConfirmOpen(false);
       setIncomeToDelete(null);
-      //refresh after every operations
       incomeListRef.current?.refetch();
     } catch (error) {
       const message =
@@ -44,6 +46,20 @@ export const IncomesPage = () => {
 
   const handleNewIncome = () => {
     navigate("/incomes/new");
+  };
+
+  const handleStartDateChange = (date: Date | null) => {
+    const newStart = date ? date.toISOString().split("T")[0] : undefined;
+    const err = validateDateRange(newStart, dateFilter.end);
+    setDateError(err);
+    setDateFilter((prev) => ({ ...prev, start: newStart }));
+  };
+
+  const handleEndDateChange = (date: Date | null) => {
+    const newEnd = date ? date.toISOString().split("T")[0] : undefined;
+    const err = validateDateRange(dateFilter.start, newEnd);
+    setDateError(err);
+    setDateFilter((prev) => ({ ...prev, end: newEnd }));
   };
 
   return (
@@ -58,29 +74,25 @@ export const IncomesPage = () => {
         </Button>
       </div>
 
-      <div className="bg-white rounded-lg shadow p-6 mb-6">
+      <div className="bg-white rounded-lg shadow p-6 mb-6 relative">
+        {dateError && (
+          <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-rose-50 border border-rose-200 text-rose-700 px-4 py-2 rounded-xl shadow-md animate-bounce">
+            {dateError}
+          </div>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <TextField
-            label="From Date"
-            type="date"
-            value={dateFilter.start || ""}
-            onChange={(e) =>
-              setDateFilter((prev) => ({
-                ...prev,
-                start: e.target.value || undefined,
-              }))
-            }
+          <DatePicker
+            value={dateFilter.start ? new Date(dateFilter.start) : null}
+            onChange={handleStartDateChange}
+            label="Start Date"
+            size="medium"
           />
-          <TextField
-            label="To Date"
-            type="date"
-            value={dateFilter.end || ""}
-            onChange={(e) =>
-              setDateFilter((prev) => ({
-                ...prev,
-                end: e.target.value || undefined,
-              }))
-            }
+          <DatePicker
+            value={dateFilter.end ? new Date(dateFilter.end) : null}
+            onChange={handleEndDateChange}
+            label="End Date"
+            size="medium"
           />
         </div>
 
@@ -118,10 +130,12 @@ export const IncomesPage = () => {
         {incomeToDelete && (
           <div className="mt-3 p-3 bg-gray-50 rounded">
             <p>
-              <strong>Amount:</strong> ${incomeToDelete.amount.toFixed(2)}
+              <strong>Amount: </strong>
+              {incomeToDelete.amount.toFixed(2)} MGA
             </p>
             <p>
-              <strong>Source:</strong> {incomeToDelete.source}
+              <strong>Source:</strong>{" "}
+              {incomeToDelete.source.length > 0 ? incomeToDelete.source : "-"}
             </p>
             <p>
               <strong>Date:</strong>{" "}

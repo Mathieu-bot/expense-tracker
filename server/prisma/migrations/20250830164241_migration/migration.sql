@@ -1,11 +1,14 @@
+-- CreateEnum
+CREATE TYPE "public"."ExpenseType" AS ENUM ('ONE_TIME', 'RECURRING');
+
 -- CreateTable
 CREATE TABLE "public"."user" (
     "user_id" SERIAL NOT NULL,
-    "username" VARCHAR(50) NOT NULL,
+    "username" VARCHAR(50),
     "email" VARCHAR(255) NOT NULL,
     "hashed_password" VARCHAR(255) NOT NULL,
-    "firstname" VARCHAR(100) NOT NULL,
-    "lastname" VARCHAR(100) NOT NULL,
+    "firstname" VARCHAR(100),
+    "lastname" VARCHAR(100),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -23,19 +26,6 @@ CREATE TABLE "public"."expense_category" (
     "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "expense_category_pkey" PRIMARY KEY ("category_id")
-);
-
--- CreateTable
-CREATE TABLE "public"."income_category" (
-    "category_id" SERIAL NOT NULL,
-    "category_name" VARCHAR(50) NOT NULL,
-    "icon_url" VARCHAR(500),
-    "is_custom" BOOLEAN NOT NULL DEFAULT false,
-    "user_id" INTEGER,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "income_category_pkey" PRIMARY KEY ("category_id")
 );
 
 -- CreateTable
@@ -57,16 +47,15 @@ CREATE TABLE "public"."expense" (
 
 -- CreateTable
 CREATE TABLE "public"."income" (
-    "income_id" SERIAL NOT NULL,
+    "id" SERIAL NOT NULL,
     "amount" DOUBLE PRECISION NOT NULL,
     "date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "source" VARCHAR(100) NOT NULL,
+    "source" VARCHAR(100),
     "description" VARCHAR(2000),
     "creation_date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "user_id" INTEGER NOT NULL,
-    "category_id" INTEGER NOT NULL,
 
-    CONSTRAINT "income_pkey" PRIMARY KEY ("income_id")
+    CONSTRAINT "income_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -76,9 +65,6 @@ CREATE UNIQUE INDEX "user_email_key" ON "public"."user"("email");
 ALTER TABLE "public"."expense_category" ADD CONSTRAINT "expense_category_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."user"("user_id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."income_category" ADD CONSTRAINT "income_category_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."user"("user_id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "public"."expense" ADD CONSTRAINT "expense_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."user"("user_id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -86,6 +72,3 @@ ALTER TABLE "public"."expense" ADD CONSTRAINT "expense_category_id_fkey" FOREIGN
 
 -- AddForeignKey
 ALTER TABLE "public"."income" ADD CONSTRAINT "income_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."user"("user_id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "public"."income" ADD CONSTRAINT "income_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "public"."income_category"("category_id") ON DELETE CASCADE ON UPDATE CASCADE;

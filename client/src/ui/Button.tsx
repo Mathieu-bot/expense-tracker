@@ -100,7 +100,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
     relative inline-flex items-center justify-center select-none
     rounded-md font-medium whitespace-nowrap
     transition-[background,color,box-shadow,transform] duration-150 ease-out
-    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-400
+    outline-none focus:outline-none focus:ring-0 focus:ring-offset-0
     disabled:pointer-events-none disabled:opacity-60
   `.trim().replace(/\s+/g, ' '), []);
 

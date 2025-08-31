@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { IncomeForm } from "../components/IncomeForm";
+import { IncomeForm } from "../components/Income/IncomeForm";
 import { Button, useToast, Skeleton } from "../ui";
 import { IncomeService } from "../services/IncomeService";
 import type { Income, UpdateIncomeRequest } from "../types/Income";
 
-export const EditIncomePage = () => {
+export const EditIncome = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const toast = useToast();
