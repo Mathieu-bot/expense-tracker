@@ -59,6 +59,14 @@ jobs:
       - name: Create .env for Prisma (CI)
         run: |
           printf "DATABASE_URL=%s\n" "${{ secrets.DATABASE_URL || 'postgresql://user:pass@localhost:5432/db' }}" > .env
+          printf "DIRECT_URL=%s\n" "${{ secrets.DIRECT_URL || '' }}" >> .env
+
+      - name: Assert Prisma env vars exist
+        run: |
+          if [ -z "${{ secrets.DATABASE_URL }}" ]; then echo "::warning::DATABASE_URL secret is empty or not set at repo/env level"; fi
+          # DIRECT_URL is required because schema.prisma uses directUrl
+          if [ -z "${{ secrets.DIRECT_URL }}" ]; then echo "::error::DIRECT_URL secret is empty or not set (required for schema.prisma directUrl)"; exit 1; fi
+
       - name: Prisma Generate
         run: npm run prisma:generate
       - name: Prisma Validate
