@@ -10,10 +10,17 @@ import {
 } from "recharts";
 import { ChartTooltip } from "./ChartTooltip";
 
+interface LineChartData {
+  date: string;
+  amount: number;
+  cumulativeAmount?: number;
+  id: string;
+}
+
 interface LineChartProps {
-  data: unknown[];
+  data: LineChartData[];
   height?: number;
-  dataKey?: string;
+  dataKey?: keyof LineChartData;
   strokeColor?: string;
   chartType?: "timeline" | "cumulative";
 }
@@ -38,7 +45,7 @@ export const LineChart = ({
           fontSize={12}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => {
+          tickFormatter={(value: string) => {
             if (!value) return "";
             try {
               const date = new Date(value);
@@ -55,9 +62,8 @@ export const LineChart = ({
           fontSize={12}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => `$${value / 1000}k`}
+          tickFormatter={(value: number) => `$${value / 1000}k`}
         />
-
         <Tooltip
           content={(props) => <ChartTooltip {...props} chartType={chartType} />}
         />
@@ -66,7 +72,15 @@ export const LineChart = ({
           dataKey={dataKey}
           stroke={strokeColor}
           strokeWidth={2}
-          dot={({ cx, cy, payload }) => (
+          dot={({
+            cx,
+            cy,
+            payload,
+          }: {
+            cx: number;
+            cy: number;
+            payload: LineChartData;
+          }) => (
             <Dot
               key={`dot-${payload.id}`}
               cx={cx}
