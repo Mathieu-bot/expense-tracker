@@ -1,7 +1,4 @@
-import { useState } from "react";
-import StatCard, {
-  type MiniStatItem,
-} from "../components/dashboard/DisplayCard";
+import { useEffect, useState } from "react";
 import { type PieItem } from "../components/dashboard/PieGraph";
 import {
   MonthlyBarChart,
@@ -9,17 +6,9 @@ import {
 } from "../components/dashboard/MonthlyBarchart";
 import { Percent, ReceiptCent, Wallet } from "lucide-react";
 import PieGraph from "../components/dashboard/PieGraph";
-
-const mockTotals: MiniStatItem[] = [
-  { label: "Revenue", value: 82450, icon: Wallet, deltaPct: 6.4 },
-  { label: "Expenses", value: 24780, icon: ReceiptCent, deltaPct: -0.11 },
-  {
-    label: "Sold",
-    value: 65,
-    icon: Percent,
-    deltaPct: -0.8,
-  },
-];
+import { useIncomes } from "../hooks/useIncomes";
+import { computeValueTotal } from "../utils/computeValueTotal";
+import MiniStatCard from "../components/dashboard/DisplayCard";
 
 const monthlyData: Row[] = [
   { month: "Avril", spending: 120000, income: 180000 },
@@ -46,6 +35,38 @@ function Dashboard() {
   const [activeGraph, setActiveGraph] = useState<"expenses" | "income">(
     "expenses"
   );
+  const { incomes, loading, error } = useIncomes();
+
+  const [totalIncome, setTotalIncome] = useState<number>(0);
+  const [totalExpense, setTotalExpense] = useState<number>(0);
+  const [sold, setSold] = useState<number>(0);
+
+  const toDisplay = [
+    { label: "Income", value: totalIncome, icon: Wallet, deltaPct: 6.4 },
+    {
+      label: "Expenses",
+      value: totalExpense,
+      icon: ReceiptCent,
+      deltaPct: -0.11,
+    },
+    { label: "Sold", value: sold, icon: Percent, deltaPct: -0.8 },
+  ];
+
+  useEffect(() => {
+    if (!loading && incomes) {
+      const incomeTotal = computeValueTotal(incomes);
+      setTotalIncome(incomeTotal);
+
+      /*
+        TODO: Fetch real expenses and compute real total expense  
+      */
+
+      const expenseTotal = 50000;
+      setTotalExpense(expenseTotal);
+
+      setSold(incomeTotal - expenseTotal);
+    }
+  }, [loading, incomes]);
 
   const currentPieData =
     activeGraph === "expenses" ? expensesByCat : incomeByCat;
@@ -58,8 +79,8 @@ function Dashboard() {
     <div className="min-w-screen h-screen pt-26 pl-22 py-5 pr-10 grid grid-cols-3 z-30 gap-5">
       <div className="col-span-2 flex flex-col gap-5">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {mockTotals.map((item) => (
-            <StatCard key={item.label} {...item} />
+          {toDisplay.map((item, idx) => (
+            <MiniStatCard key={idx} {...item} />
           ))}
         </div>
         <MonthlyBarChart data={monthlyData} />
