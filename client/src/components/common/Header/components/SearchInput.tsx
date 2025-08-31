@@ -7,7 +7,7 @@ const SearchInput = () => {
   return (
     <div
       className={`relative transition-all duration-300 ${
-        isFocused ? "w-72" : "w-56"
+        isFocused ? "w-64" : "w-56"
       }`}
     >
       <Search

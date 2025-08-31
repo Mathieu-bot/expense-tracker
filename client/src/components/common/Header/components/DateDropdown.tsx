@@ -30,10 +30,10 @@ const DateDropdown = () => {
     <div className="flex items-center gap-3">
       <div className="flex items-center gap-2 text-white justify-end">
         <Clock size={18} className="text-white" />
-        <span className="font-medium">{formatTime(currentDate)}</span>
+        <span className="font-medium text-sm">{formatTime(currentDate)}</span>
         <span className="mx-1">|</span>
         <Calendar size={18} className="text-white" />
-        <span className="font-medium">{formatDate(currentDate)}</span>
+        <span className="font-medium text-sm">{formatDate(currentDate)}</span>
       </div>
 
       <div className="flex items-center gap-1">

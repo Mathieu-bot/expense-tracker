@@ -52,8 +52,8 @@ const main = async () => {
     });
     console.log(`created: ${item.category_name}`);
   }
-
   console.log('Seed completed.');
+
 }
 
 main()
