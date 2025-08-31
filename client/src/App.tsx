@@ -14,6 +14,7 @@ import SignupPage from "./pages/SignupPage";
 import AuthCallback from "./pages/AuthCallback";
 import DashboardLayout from "./components/common/DashboardLayout";
 import { Profile } from "./pages/Profile";
+import PostAuthGate from "./components/auth/PostAuthGate";
 
 function App() {
   const location = useLocation();
@@ -35,6 +36,9 @@ function App() {
         )}
         {location.pathname.includes("/login") || location.pathname.includes("/signup") ? null : (
           <Mascot className="z-50" />
+        )}
+        {!(location.pathname.includes("/login") || location.pathname.includes("/signup")) && (
+          <PostAuthGate />
         )}
         <Routes>
           {/* Public routes */}

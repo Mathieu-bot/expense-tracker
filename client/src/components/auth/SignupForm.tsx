@@ -8,8 +8,8 @@ import ShowPasswordBtn from "./ShowPasswordBtn";
 import PasswordStrength from "./PasswordStrength";
 import { useToast } from "../../ui";
 import UsernameModal from "./UsernameModal";
-import { useAuth } from "../../hooks/useAuth";
 import CategoriesOnboardingModal from "./CategoriesOnboardingModal";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function SignupForm({
   onSubmit,
@@ -155,7 +155,6 @@ export default function SignupForm({
           </Link>
         </div>
       )}
-
       <UsernameModal
         open={postSignupOpen}
         email={email}
