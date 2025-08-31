@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { requireAuth } from './middleware/auth.middleware.js';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from './db/prisma.js';
 import incomeRoutes from './routes/income.route.js';
 import authRoutes from './routes/auth.route.js';
 import categoryRoutes from './routes/category.route.js';
@@ -21,7 +21,7 @@ try {
 } catch {}
 
 try {
-  await configureNetwork();
+  void configureNetwork();
 } catch {}
 
 const app = express();
@@ -46,8 +46,7 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/user', requireAuth, userRoutes);
 app.use('/api/expenses', expenseRoutes);
 
-// Initialize a single Prisma client instance
-const prisma = new PrismaClient();
+// Prisma client is provided by './db/prisma.js' and is singleton-safe
 
 app.get("/", (req, res) => {
   res.json({ message: "Expense Tracker API", status: "running" });
