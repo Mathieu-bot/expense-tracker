@@ -35,7 +35,7 @@ export default function PieGraph({
       titleClassName="text-center!"
     >
       <ResponsiveContainer width="100%" height="100%">
-        <PieChart margin={{ top: 10, right: 10, bottom: 10, left: 10 }}>
+        <PieChart margin={{ top: 20, right: 10, bottom: 10, left: 10 }}>
           <Pie
             data={data}
             cx="50%"
@@ -44,8 +44,8 @@ export default function PieGraph({
             outerRadius={80}
             label={false}
             dataKey="value"
-            paddingAngle={2} // espace entre chaque cellule
-            cornerRadius={1} // arrondi des coins
+            paddingAngle={2}
+            cornerRadius={3}
           >
             {data.map((d, i) => (
               <Cell
@@ -62,53 +62,19 @@ export default function PieGraph({
             verticalAlign="bottom"
             align="center"
             wrapperStyle={{ color: "rgba(255,255,255,0.9)", marginTop: 20 }}
-            content={({ payload }) => {
-              // on lit la couleur/nom depuis le payload de Recharts pour rester synchro
-              const items =
-                payload?.map((p: any) => ({
-                  name: p.value as string,
-                  color: p.color as string,
-                })) ??
-                data.map((d, i) => ({
-                  name: d.name,
-                  color: d.color ?? FALLBACK_COLORS[i % FALLBACK_COLORS.length],
-                }));
-
-              return (
-                <ul
-                  style={{
-                    listStyle: "none",
-                    padding: 0,
-                    margin: 0,
-                    display: "grid",
-                    gridTemplateColumns: "repeat(2, minmax(0, 1fr))", // ✅ 2 colonnes
-                    columnGap: "16px",
-                    rowGap: "8px",
-                    justifyItems: "start",
-                  }}
-                >
-                  {items.map((it) => (
-                    <li
-                      key={it.name}
-                      style={{ display: "flex", alignItems: "center", gap: 8 }}
-                    >
-                      <span
-                        style={{
-                          width: 12,
-                          height: 12,
-                          borderRadius: "50%",
-                          background: it.color,
-                          display: "inline-block",
-                        }}
-                      />
-                      <span style={{ color: "rgba(255,255,255,0.9)" }}>
-                        {it.name}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              );
-            }}
+            content={({ payload }) => (
+              <ul className="grid grid-cols-2 gap-x-4 gap-y-2 m-0 p-0 list-none mt-10">
+                {(payload ?? []).map((p) => (
+                  <li key={p.value} className="flex items-center gap-2">
+                    <span
+                      className="inline-block w-3 h-3 rounded-full"
+                      style={{ background: p.color }}
+                    />
+                    <span className="text-white/90">{p.value}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
           />
         </PieChart>
       </ResponsiveContainer>

@@ -47,7 +47,7 @@ export default function MiniStatCard({
   return (
     <div
       className={[
-        "rounded-xl bg-primary/50 shadow-sm min-w-[250px] border border-gray-700",
+        "rounded-xl bg-gradient-to-br from-primary/70 via-primary/50 to-gray-800/50 shadow-sm min-w-[250px] border border-gray-700",
         "p-4 flex flex-col gap-3",
         className,
       ].join(" ")}
