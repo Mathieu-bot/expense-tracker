@@ -7,4 +7,6 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
+export type { PublicUser } from './models/PublicUser';
+
 export { DefaultService } from './services/DefaultService';

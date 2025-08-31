@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { PublicUser } from '../models/PublicUser';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -46,8 +47,8 @@ export class DefaultService {
     }
     /**
      * List all user expenses
-     * @param start Start date
-     * @param end End date
+     * @param start Start date (ISO string)
+     * @param end End date (ISO string)
      * @param category
      * @param type
      * @returns any List of expenses
@@ -280,6 +281,7 @@ export class DefaultService {
     public static postCategories(
         requestBody?: {
             name: string;
+            icon_url?: string | null;
         },
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
@@ -403,6 +405,72 @@ export class DefaultService {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/user/profile',
+        });
+    }
+    /**
+     * Update user profile
+     * Update username for the authenticated user
+     * @param requestBody
+     * @returns PublicUser Public user
+     * @throws ApiError
+     */
+    public static patchUserProfile(
+        requestBody: {
+            username?: string;
+            firstname?: string;
+            lastname?: string;
+        },
+    ): CancelablePromise<PublicUser> {
+        return __request(OpenAPI, {
+            method: 'PATCH',
+            url: '/user/profile',
+            body: requestBody,
+            mediaType: 'application/json',
+            errors: {
+                400: `Invalid username`,
+                401: `Unauthorized`,
+            },
+        });
+    }
+    /**
+     * Update user password
+     * @param requestBody
+     * @returns any Password updated
+     * @throws ApiError
+     */
+    public static patchUserProfilePassword(
+        requestBody: Record<string, any>,
+    ): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'PATCH',
+            url: '/user/profile/password',
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
+    /**
+     * Get current authenticated user
+     * @returns PublicUser Public user
+     * @throws ApiError
+     */
+    public static getAuthMe(): CancelablePromise<PublicUser> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/auth/me',
+            errors: {
+                401: `Unauthorized`,
+            },
+        });
+    }
+    /**
+     * Logout current session
+     * @returns void
+     * @throws ApiError
+     */
+    public static postAuthLogout(): CancelablePromise<void> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/auth/logout',
         });
     }
 }
