@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Search } from "lucide-react";
 
-const SearchInput = () => {
+const SearchInput = ({placeholder} : {placeholder : string}) => {
   const [isFocused, setIsFocused] = useState(false);
 
   return (
     <div
       className={`relative transition-all duration-300 ${
-        isFocused ? "w-72" : "w-56"
+        isFocused ? "w-64" : "w-56"
       }`}
     >
       <Search
@@ -16,7 +16,7 @@ const SearchInput = () => {
       />
       <input
         type="text"
-        placeholder="Search transactions..."
+        placeholder={placeholder}
         className="w-full pl-10 pr-4 py-3  border border-white/20 rounded-xl text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/30 transition-colors duration-300"
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}

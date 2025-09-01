@@ -78,7 +78,7 @@ const Mascot: React.FC<MascotProps> = ({ className = "" }) => {
   };
 
   return (
-    <div className={`fixed bottom-10 right-10 z-50 ${className}`}>
+    <div className={`fixed bottom-7 right-2 z-50 ${className}`}>
       <div
         className={`
         transition-opacity duration-300
@@ -88,7 +88,7 @@ const Mascot: React.FC<MascotProps> = ({ className = "" }) => {
         <img
           src={getImageSrc()}
           alt="Bear mascot"
-          className="w-52 h-52 object-contain"
+          className="w-32 h-32 object-contain"
         />
       </div>
     </div>

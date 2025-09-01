@@ -146,64 +146,6 @@ paths:
       responses:
         "204":
           description: Expense deleted
-  /incomes/categories:
-    get:
-      summary: Get system income categories
-      responses:
-        "200":
-          description: List of system income categories
-  /incomes/custom-categories:
-    get:
-      summary: Get user's custom income categories
-      responses:
-        "200":
-          description: List of user's custom income categories
-    post:
-      summary: Create a new custom income category
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [category_name]
-              properties:
-                category_name:
-                  type: string
-                icon_url:
-                  type: string
-      responses:
-        "201":
-          description: Income category created
-  /incomes/custom-categories/{id}:
-    parameters:
-      - in: path
-        name: id
-        required: true
-        schema:
-          type: string
-    put:
-      summary: Update an income category
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [category_name]
-              properties:
-                category_name:
-                  type: string
-                icon_url:
-                  type: string
-      responses:
-        "200":
-          description: Income category updated
-    delete:
-      summary: Delete an income category
-      responses:
-        "204":
-          description: Income category deleted
   /incomes:
     get:
       summary: List all incomes
@@ -226,7 +168,7 @@ paths:
           application/json:
             schema:
               type: object
-              required: [amount]
+              required: [amount, date]
               properties:
                 amount:
                   type: number
@@ -236,8 +178,6 @@ paths:
                   type: string
                 description:
                   type: string
-                category_id:
-                  type: number
       responses:
         "201":
           description: Income created
@@ -296,19 +236,22 @@ paths:
               properties:
                 name:
                   type: string
+                icon_url:
+                  type: string
+                  nullable: true
       responses:
         "201":
           description: Category created
 
   /categories/{id}:
-    parameters:
-      - in: path
-        name: id
-        required: true
-        schema:
-          type: string
     put:
       summary: Rename a category
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -322,6 +265,12 @@ paths:
           description: Category updated
     delete:
       summary: Delete a category
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
       responses:
         "204":
           description: Category deleted
@@ -380,3 +329,96 @@ paths:
       responses:
         "200":
           description: Profile info
+<<<<<<< HEAD
+    put:
+      summary: Update user profile
+=======
+    patch:
+      summary: Update user profile
+      description: Update username for the authenticated user
+>>>>>>> 4f1ff1098e64f7feee04c94977f358fa4b1c0bb6
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  minLength: 3
+                  maxLength: 50
+                  pattern: '^[A-Za-z0-9_-]{3,50}$'
+                firstname:
+                  type: string
+                  maxLength: 100
+                lastname:
+                  type: string
+                  maxLength: 100
+      responses:
+        "200":
+          description: Public user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicUser'
+        "400":
+          description: Invalid username
+        "401":
+          description: Unauthorized
+  /user/profile/password:
+    patch:
+      summary: Update user password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: Password updated
+<<<<<<< HEAD
+=======
+
+  /auth/me:
+    get:
+      summary: Get current authenticated user
+      responses:
+        "200":
+          description: Public user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicUser'
+        "401":
+          description: Unauthorized
+
+  /auth/logout:
+    post:
+      summary: Logout current session
+      responses:
+        "204":
+          description: No Content
+
+components:
+  schemas:
+    PublicUser:
+      type: object
+      required: [user_id, email, created_at]
+      properties:
+        user_id:
+          type: integer
+        email:
+          type: string
+          format: email
+        username:
+          type: [string, 'null']
+        firstname:
+          type: [string, 'null']
+        lastname:
+          type: [string, 'null']
+        created_at:
+          type: string
+          format: date-time
+>>>>>>> 4f1ff1098e64f7feee04c94977f358fa4b1c0bb6

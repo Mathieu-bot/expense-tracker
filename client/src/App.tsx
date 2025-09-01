@@ -1,19 +1,22 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import { ToastProvider } from "./ui";
-import { IncomesPage } from "./pages/IncomesPage";
+import { Incomes } from "./pages/Incomes";
 import Sidebar from "./components/common/Sidebar";
 import Dashboard from "./pages/Dashboard";
 import BackgroundImage from "./components/common/BackgroundImage";
-import { CreateIncomePage } from "./pages/CreateIncomePage";
-import { EditIncomePage } from "./pages/EditIncomePage";
+import { CreateIncome } from "./pages/CreateIncome";
+import { EditIncome } from "./pages/EditIncome";
 import Mascot from "./components/common/Mascot";
-import { DashboardHeader } from "./components/common/Header";
+import RequireAuth from "./components/common/RequireAuth";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
+import AuthCallback from "./pages/AuthCallback";
+import DashboardLayout from "./components/common/DashboardLayout";
+import { Profile } from "./pages/Profile";
+import PostAuthGate from "./components/auth/PostAuthGate";
+import DashboardHeader  from "./components/common/Header/Header";
 
 function App() {
-  /*
-    TODO: check auth then redirect to /login when not authenticated
-    TODO: use different layout for auth page and dashboard page
-  */
   const location = useLocation();
   return (
     <ToastProvider
@@ -22,21 +25,39 @@ function App() {
       pauseOnHover={true}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
     >
-      <div className="App min-h-screen relative">
+      <div className="App min-h-screen relative overflow-x-hidden">
         {location.pathname.includes("/login") ||
-        location.pathname.includes("/register") ? null : (
+        location.pathname.includes("/signup") ? null : (
           <>
             <BackgroundImage />
             <DashboardHeader />
             <Sidebar />
           </>
         )}
-        <Mascot className="z-50" />
+        {location.pathname.includes("/login") ||
+        location.pathname.includes("/signup") ? null : (
+          <Mascot className="z-50" />
+        )}
+        {!(
+          location.pathname.includes("/login") ||
+          location.pathname.includes("/signup")
+        ) && <PostAuthGate />}
         <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/incomes" element={<IncomesPage />} />
-          <Route path="/incomes/new" element={<CreateIncomePage />} />
-          <Route path="/incomes/:id/edit" element={<EditIncomePage />} />
+          {/* Public routes */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
+
+          {/* Protected routes */}
+          <Route element={<RequireAuth />}>
+            <Route element={<DashboardLayout />}>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/incomes" element={<Incomes />} />
+              <Route path="/incomes/new" element={<CreateIncome />} />
+              <Route path="/incomes/:id/edit" element={<EditIncome />} />
+              <Route path="/profile" element={<Profile />} />
+            </Route>
+          </Route>
         </Routes>
       </div>
     </ToastProvider>
