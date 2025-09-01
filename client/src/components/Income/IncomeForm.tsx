@@ -83,8 +83,13 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
 
   const handleDateChange = (date: Date | null) => {
     if (date) {
-      const formattedDate = date.toISOString().split("T")[0];
-      handleChange("date", formattedDate);
+      const formattedDate = date.toISOString().split("T")[0].split("-");
+      const toChange = [
+        formattedDate[0],
+        formattedDate[1],
+        (parseInt(formattedDate[2]) + 1).toString(),
+      ];
+      handleChange("date", toChange.join("-"));
     }
   };
 
