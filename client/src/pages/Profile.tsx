@@ -1,18 +1,25 @@
 import React, { useState } from "react";
 import { ProfileForm } from "../components/Profile/ProfileForm";
 import { PasswordForm } from "../components/Profile/PasswordForm";
-import { Button } from "../ui";
+import { ProfileTabNavigation } from "../components/Profile/ProfileTabNavigation";
+import { LoadingState } from "../components/Profile/LoadingState";
+import { ErrorState } from "../components/Profile/ErrorState";
+import { LoginPrompt } from "../components/Profile/LoginPrompt";
+import ProfileInfo from "../components/Profile/ProfileInfo";
 import { useUserStore } from "../stores/userStore";
 import type {
   ChangePasswordRequest,
   UpdateProfileRequest,
 } from "../types/UserProfile";
+import { AppearanceTab } from "../components/Profile/Appearance";
 
 export const Profile: React.FC = () => {
   const { user, loading, error, fetchProfile, updateProfile, changePassword } =
     useUserStore();
   const [updating, setUpdating] = useState(false);
   const [changingPassword, setChangingPassword] = useState(false);
+  const [activeTab, setActiveTab] = useState("profile");
+  const [tabTransition, setTabTransition] = useState("");
 
   const handleUpdateProfile = async (data: UpdateProfileRequest) => {
     setUpdating(true);
@@ -28,78 +35,60 @@ export const Profile: React.FC = () => {
     return result;
   };
 
+  const handleTabChange = (tab: string) => {
+    setTabTransition("fade-out");
+    setTimeout(() => {
+      setActiveTab(tab);
+      setTabTransition("fade-in");
+    }, 200);
+  };
+
   if (loading) {
-    return (
-      <div className="relative min-h-screen z-2 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Loading profile...</p>
-        </div>
-      </div>
-    );
+    return <LoadingState />;
   }
 
   if (!user) {
-    return (
-      <div className="relative min-h-screen z-2 flex items-center justify-center">
-        <div className="bg-white p-6 rounded-lg shadow-md text-center">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
-            Please Log In
-          </h2>
-          <p className="text-gray-600 mb-4">
-            You need to be logged in to view your profile
-          </p>
-          <Button
-            onClick={() => (window.location.href = "/login")}
-            size="medium"
-          >
-            Go to Login
-          </Button>
-        </div>
-      </div>
-    );
+    return <LoginPrompt />;
   }
 
   if (error) {
-    return (
-      <div className="relative min-h-screen z-2 flex items-center justify-center">
-        <div className="bg-white p-6 rounded-lg shadow-md text-center max-w-md">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">Error</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
-          <Button onClick={fetchProfile} size="medium">
-            Try Again
-          </Button>
-        </div>
-      </div>
-    );
+    return <ErrorState error={error} onRetry={fetchProfile} />;
   }
 
   return (
-    <div className="pb-10 relative z-2 pt-30">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="space-y-6">
-          <ProfileForm
-            profile={user}
-            onUpdate={handleUpdateProfile}
-            loading={updating}
-          />
+    <div className=" mt-23 ml-20 md:p-8">
+      <div className="max-w-6xl mx-auto ">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8  min-h-[75dvh]">
+          <div className=" h-full flex items-center justify-center">
+            <ProfileInfo user={user} />
+          </div>
+          <div className="lg:col-span-2 pt-5">
+            <ProfileTabNavigation
+              activeTab={activeTab}
+              onTabChange={handleTabChange}
+            />
 
-          <PasswordForm
-            onChangePassword={handleChangePassword}
-            loading={changingPassword}
-          />
-        </div>
+            <div
+              className={`transition-opacity duration-300 ${
+                tabTransition === "fade-out" ? "opacity-0" : "opacity-100"
+              }`}
+            >
+              {activeTab === "profile" && (
+                <ProfileForm
+                  profile={user}
+                  onUpdate={handleUpdateProfile}
+                  loading={updating}
+                />
+              )}
 
-        <div className="mt-8 bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">
-            Account Information
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-            <div className="flex items-center gap-2">
-              <span className="font-medium text-gray-700">Member since:</span>
-              <span className="text-gray-600">
-                {new Date(user.created_at).toLocaleDateString()}
-              </span>
+              {activeTab === "security" && (
+                <PasswordForm
+                  onChangePassword={handleChangePassword}
+                  loading={changingPassword}
+                />
+              )}
+
+              {activeTab === "appearance" && <AppearanceTab />}
             </div>
           </div>
         </div>

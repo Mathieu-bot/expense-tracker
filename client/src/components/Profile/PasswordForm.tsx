@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, TextField } from "../../ui";
 import type { ChangePasswordRequest } from "../../types/UserProfile";
 import { createFieldChangeHandler } from "../../utils/formUtils";
+import { Lock, Key, Shield } from "lucide-react";
 
 interface PasswordFormProps {
   onChangePassword: (
@@ -118,10 +119,15 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Change Password</h2>
+    <div className="bg-gradient-to-br from-primary-light/10 to-primary-dark/10 backdrop-blur-xl rounded-2xl p-6 border border-white/5 shadow-lg transition-all duration-300">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-10 h-10 rounded-xl bg-cyan-400/10 flex items-center justify-center">
+          <Lock className="w-5 h-5 text-cyan-400" />
+        </div>
+        <h2 className="text-xl font-semibold text-light/90">Change Password</h2>
+      </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <TextField
           label="Current Password"
           type="password"
@@ -134,6 +140,13 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
           fullWidth
           error={!!fieldErrors.currentPassword}
           helperText={fieldErrors.currentPassword}
+          startAdornment={<Key className="w-4 h-4 text-light/50" />}
+           classes={{
+                input:
+                  "bg-white/5 backdrop-blur-md border border-white/10 text-light placeholder-light/60 rounded-xl",
+                label:
+                  "rounded-full text-primary-dark ", 
+              }}
         />
 
         <TextField
@@ -151,6 +164,13 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
             fieldErrors.newPassword ||
             "Must be at least 6 characters with 1 uppercase letter and 1 number"
           }
+          startAdornment={<Shield className="w-4 h-4 text-light/50" />}
+           classes={{
+                input:
+                  "bg-white/5 backdrop-blur-md border border-white/10 text-light placeholder-light/60 rounded-xl",
+                label:
+                  "rounded-full text-primary-dark ", 
+              }}
         />
 
         <TextField
@@ -165,16 +185,23 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
           fullWidth
           error={!!fieldErrors.confirmPassword}
           helperText={fieldErrors.confirmPassword}
+          startAdornment={<Lock className="w-4 h-4 text-light/50" />}
+           classes={{
+                input:
+                  "bg-white/5 backdrop-blur-md border border-white/10 text-light placeholder-light/60 rounded-xl",
+                label:
+                  "rounded-full text-primary-dark ", 
+              }}
         />
 
         {message && (
-          <div className="p-3 bg-green-100 border border-green-400 text-green-700 rounded-md">
+          <div className="p-3 bg-green-400/10 border border-green-400/20 text-green-400 rounded-lg">
             {message}
           </div>
         )}
 
         {formError && !Object.values(fieldErrors).some((error) => error) && (
-          <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">
+          <div className="p-3 bg-red-400/10 border border-red-400/20 text-red-400 rounded-lg">
             {formError}
           </div>
         )}
@@ -185,7 +212,7 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
           loadingPosition="center"
           fullWidth
           size="large"
-          className="bg-blue-600 hover:bg-blue-700 text-white"
+          className="bg-cyan-400 hover:bg-cyan-400/90 text-white mt-4 py-3 rounded-xl transition-colors duration-300"
         >
           Change Password
         </Button>
