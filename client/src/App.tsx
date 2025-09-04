@@ -4,7 +4,6 @@ import { Incomes } from "./pages/Incomes";
 import Sidebar from "./components/common/Sidebar";
 import Dashboard from "./pages/Dashboard";
 import BackgroundImage from "./components/common/BackgroundImage";
-import { CreateIncome } from "./pages/CreateIncome";
 import { EditIncome } from "./pages/EditIncome";
 import Mascot from "./components/common/Mascot";
 import RequireAuth from "./components/common/RequireAuth";
@@ -15,6 +14,7 @@ import DashboardLayout from "./components/common/DashboardLayout";
 import { Profile } from "./pages/Profile";
 import PostAuthGate from "./components/auth/PostAuthGate";
 import DashboardHeader  from "./components/common/Header/Header";
+import { CreateIncome } from "./pages/CreateIncome";
 
 function App() {
   const location = useLocation();
@@ -53,7 +53,7 @@ function App() {
             <Route element={<DashboardLayout />}>
               <Route path="/" element={<Dashboard />} />
               <Route path="/incomes" element={<Incomes />} />
-              <Route path="/incomes/new" element={<CreateIncome />} />
+              <Route path="/incomes/new" element={<CreateIncome/>} />
               <Route path="/incomes/:id/edit" element={<EditIncome />} />
               <Route path="/profile" element={<Profile />} />
             </Route>
