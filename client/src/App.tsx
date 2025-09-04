@@ -11,7 +11,6 @@ import RequireAuth from "./components/common/RequireAuth";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import AuthCallback from "./pages/AuthCallback";
-import DashboardLayout from "./components/common/DashboardLayout";
 import { Profile } from "./pages/Profile";
 import PostAuthGate from "./components/auth/PostAuthGate";
 import DashboardHeader  from "./components/common/Header/Header";
@@ -30,8 +29,8 @@ function App() {
         location.pathname.includes("/signup") ? null : (
           <>
             <BackgroundImage />
-            {/* <DashboardHeader /> */}
-            {/* <Sidebar /> */}
+            <DashboardHeader />
+            <Sidebar />
           </>
         )}
         {location.pathname.includes("/login") ||
@@ -50,13 +49,11 @@ function App() {
 
           {/* Protected routes */}
           <Route element={<RequireAuth />}>
-            <Route element={<DashboardLayout />}>
               <Route path="/" element={<Dashboard />} />
               <Route path="/incomes" element={<Incomes />} />
               <Route path="/incomes/new" element={<CreateIncome />} />
               <Route path="/incomes/:id/edit" element={<EditIncome />} />
               <Route path="/profile" element={<Profile />} />
-            </Route>
           </Route>
         </Routes>
       </div>
