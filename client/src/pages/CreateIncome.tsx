@@ -26,10 +26,6 @@ export const CreateIncome = () => {
   };
 
   return (
-    <div className="p-6 max-w-2xl mx-auto pt-20">
-      <div className="flex items-center mb-6">
         <IncomeForm onSave={handleSave} onCancel={handleCancel} open={true} />
-      </div>
-    </div>
   );
 };
