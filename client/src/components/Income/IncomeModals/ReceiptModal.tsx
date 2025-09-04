@@ -1,4 +1,4 @@
-import { Dialog, Button } from "../../../ui";
+import React, { useEffect } from "react";
 import { formatCurrency, formatDate } from "../../../utils/formatters";
 import type { Income } from "../../../types/Income";
 
@@ -8,63 +8,91 @@ interface ReceiptModalProps {
   onClose: () => void;
 }
 
-export const ReceiptModal = ({ open, income, onClose }: ReceiptModalProps) => {
-  if (!income) return null;
+export const ReceiptModal: React.FC<ReceiptModalProps> = ({
+  open,
+  income,
+  onClose,
+}) => {
+  useEffect(() => {
+    if (open) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "unset";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [open]);
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    if (open) document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [open, onClose]);
+
+  if (!open || !income) return null;
 
   return (
-    <Dialog
-      classes={{
-        body: "text-primary-dark",
-        title: "text-primary-dark",
-      }}
-      open={open}
-      onClose={onClose}
-      title="Income Receipt"
-      footer={
-        <Button
+    <div className="fixed inset-0 z-[1000] bg-black/50 backdrop-blur-md flex items-center justify-center p-4">
+      <div
+        className="bg-primary-light/20 rounded-2xl p-6 border border-gray-700 shadow-lg relative w-full max-w-md"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
           onClick={onClose}
-          className="bg-accent/90 text-primary-dark font-semibold hover:bg-accent"
+          className="absolute top-2 right-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-full w-8 h-8 flex items-center justify-center transition-colors"
         >
-          Close
-        </Button>
-      }
-    >
-      <div className="p-4">
-        <div className="bg-primary/3 rounded-xl p-6 border border-white/10">
-          <div className="flex justify-between items-start mb-6">
-            <div>
-              <h3 className="text-xl font-bold text-primary-dark">
-                {income.source}
-              </h3>
-              <p className="text-primary-dark">{formatDate(income.date)}</p>
-            </div>
-            <div className="text-right">
-              <p className="text-2xl font-bold text-accent">
-                {formatCurrency(income.amount)}
-              </p>
-            </div>
+          x
+        </button>
+
+        <div className="text-center mb-6">
+          <div className="flex w-full items-center justify-center mb-6">
+            <img src="./Monogram.png" alt="Logo" className="w-12 h-12" />
+          </div>
+          <h2 className="text-accent font-bold text-lg">INCOME RECEIPT</h2>
+          <p className="text-gray-400 text-sm">{formatDate(income.date)}</p>
+        </div>
+
+        <div className="text-center mb-6 py-4 border-y border-gray-700">
+          <p className="text-gray-400 text-sm">Amount Received</p>
+          <p className="text-accent font-bold text-3xl">
+            {formatCurrency(income.amount)}
+          </p>
+        </div>
+
+        <div className="space-y-4 mb-6">
+          <div>
+            <p className="text-gray-400 text-sm">From</p>
+            <p className="text-gray-200 font-medium">
+              {income.source || "Unknown Source"}
+            </p>
           </div>
 
           {income.description && (
-            <div className="mb-6">
-              <p className="text-primary-dark">{income.description}</p>
+            <div>
+              <p className="text-gray-400 text-sm">Description</p>
+              <p className="text-gray-200">{income.description}</p>
             </div>
           )}
 
-          <div className="pt-4 border-t border-white/10">
-            <div className="flex justify-between items-center">
-              <span className="text-primary-dark">Income Number</span>
-              <span className="text-primary-dark">#{income.income_id}</span>
-            </div>
-            <div className="flex justify-between items-center mt-2">
-              <span className="text-primary-dark">Created</span>
-              <span className="text-primary-dark">
-                {formatDate(income.creation_date)}
-              </span>
-            </div>
+          <div>
+            <p className="text-gray-400 text-sm">Transaction ID</p>
+            <p className="text-gray-200 font-mono">#{income.income_id}</p>
+          </div>
+
+          <div>
+            <p className="text-gray-400 text-sm">Recorded on</p>
+            <p className="text-gray-200">{formatDate(income.creation_date)}</p>
           </div>
         </div>
+
+        <div className="text-center pt-4 border-t border-gray-700">
+          <p className="text-gray-400 text-xs">
+            Thank you for trusting us
+          </p>
+        </div>
       </div>
-    </Dialog>
+    </div>
   );
 };
