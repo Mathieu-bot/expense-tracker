@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, TextField } from "../../ui";
 import type { ChangePasswordRequest } from "../../types/UserProfile";
 import { createFieldChangeHandler } from "../../utils/formUtils";
-import { Lock, Key, Shield } from "lucide-react";
+import { Lock } from "lucide-react";
 
 interface PasswordFormProps {
   onChangePassword: (
@@ -140,7 +140,6 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
           fullWidth
           error={!!fieldErrors.currentPassword}
           helperText={fieldErrors.currentPassword}
-          startAdornment={<Key className="w-4 h-4 text-light/50" />}
            classes={{
                 input:
                   "bg-white/5 backdrop-blur-md border border-white/10 text-light placeholder-light/60 rounded-xl",
@@ -164,7 +163,6 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
             fieldErrors.newPassword ||
             "Must be at least 6 characters with 1 uppercase letter and 1 number"
           }
-          startAdornment={<Shield className="w-4 h-4 text-light/50" />}
            classes={{
                 input:
                   "bg-white/5 backdrop-blur-md border border-white/10 text-light placeholder-light/60 rounded-xl",
@@ -185,7 +183,6 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
           fullWidth
           error={!!fieldErrors.confirmPassword}
           helperText={fieldErrors.confirmPassword}
-          startAdornment={<Lock className="w-4 h-4 text-light/50" />}
            classes={{
                 input:
                   "bg-white/5 backdrop-blur-md border border-white/10 text-light placeholder-light/60 rounded-xl",
