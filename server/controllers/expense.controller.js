@@ -27,7 +27,7 @@ export const createExpenseController = async (req, res) => {
       user_id: userId
     };
 
-    const result = await createExpense(userId,expenseData);
+    const result = await createExpense(expenseData);
     
     if (!result.success) {
       return res.status(400).json({ 
@@ -85,13 +85,14 @@ export const getExpenseController = async (req, res) => {
 export const getAllExpensesController = async (req, res) => {
   try {
     const userId = req.user.user_id;
-    const { startDate, endDate, categoryId, type } = req.query;
+    const { startDate, endDate, categoryId, type, includeUpcoming } = req.query;
 
     const result = await getAllExpenses(userId, { 
       startDate, 
       endDate, 
       categoryId, 
-      type 
+      type,
+      includeUpcoming,
     });
 
     if (!result.success) {
