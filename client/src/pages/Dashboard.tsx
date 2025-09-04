@@ -67,7 +67,7 @@ function Dashboard() {
         </div>
       </div>
 
-      <div className="lg:col-span-1 flex flex-col items-center gap-4 w-full md:bg-primary/30 py-2 px-5 rounded-lg">
+      <div className="lg:col-span-1 flex flex-col md:h-full items-center gap-4 w-full md:bg-primary/30 py-2 px-5 rounded-lg">
         <div className="rounded-xl bg-white/5 p-1 w-full max-w-xs ">
           <div className="grid grid-cols-2 bg-white/5 rounded-lg p-1 gap-5">
             <button
