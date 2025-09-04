@@ -15,6 +15,9 @@ import DashboardLayout from "./components/common/DashboardLayout";
 import { Profile } from "./pages/Profile";
 import PostAuthGate from "./components/auth/PostAuthGate";
 import DashboardHeader  from "./components/common/Header/Header";
+import Expenses from "./pages/Expenses";
+import { CreateExpense } from "./pages/CreateExpense";
+import { EditExpense } from "./pages/EditExpense";
 
 function App() {
   const location = useLocation();
@@ -52,6 +55,9 @@ function App() {
           <Route element={<RequireAuth />}>
             <Route element={<DashboardLayout />}>
               <Route path="/" element={<Dashboard />} />
+              <Route path="/expenses" element={<Expenses />} />
+              <Route path="/expenses/new" element={<CreateExpense />} />
+              <Route path="/expenses/:id/edit" element={<EditExpense />} />
               <Route path="/incomes" element={<Incomes />} />
               <Route path="/incomes/new" element={<CreateIncome />} />
               <Route path="/incomes/:id/edit" element={<EditIncome />} />
@@ -65,3 +71,4 @@ function App() {
 }
 
 export default App;
+
