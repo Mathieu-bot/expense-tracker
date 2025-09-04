@@ -30,8 +30,8 @@ function App() {
         location.pathname.includes("/signup") ? null : (
           <>
             <BackgroundImage />
-            <DashboardHeader />
-            <Sidebar />
+            {/* <DashboardHeader /> */}
+            {/* <Sidebar /> */}
           </>
         )}
         {location.pathname.includes("/login") ||

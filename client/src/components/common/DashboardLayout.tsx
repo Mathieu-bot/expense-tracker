@@ -6,7 +6,7 @@ export default function DashboardLayout() {
   return (
     <>
       <BackgroundImage />
-      <Sidebar />
+      {/* <Sidebar /> */}
       <Outlet />
     </>
   );
