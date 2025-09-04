@@ -12,7 +12,7 @@ export default function Layout({
   titleClassName?: string;
 }) {
   return (
-    <div className="w-full  mx-auto flex flex-col items-center gap-2">
+    <div className="w-full mx-auto flex flex-col items-center gap-2">
       {" "}
       {title && (
         <h2

@@ -55,17 +55,19 @@ function Dashboard() {
       : "Income — by category";
 
   return (
-    <div className="min-w-screen h-screen pt-26 pl-22 py-5 pr-10 grid grid-cols-3 z-30 gap-5">
-      <div className="col-span-2 flex flex-col gap-5">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div className="min-w-screen h-screen pt-26 py-5  md:pr-10 md:pl-22 flex flex-col items-center gap-10 md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 z-30 ">
+      <div className="md:col-span-2 w-full flex flex-col gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 px-10">
           {mockTotals.map((item) => (
             <StatCard key={item.label} {...item} />
           ))}
         </div>
-        <MonthlyBarChart data={monthlyData} />
+        <div className="mr-5">
+          <MonthlyBarChart data={monthlyData} />
+        </div>
       </div>
 
-      <div className="col-span-1 flex flex-col items-center gap-4 w-full bg-primary/30 py-2 px-5 rounded-lg">
+      <div className="lg:col-span-1 flex flex-col md:h-full items-center gap-4 w-full md:bg-primary/30 py-2 px-5 rounded-lg">
         <div className="rounded-xl bg-white/5 p-1 w-full max-w-xs ">
           <div className="grid grid-cols-2 bg-white/5 rounded-lg p-1 gap-5">
             <button
