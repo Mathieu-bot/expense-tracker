@@ -86,7 +86,7 @@ export const Incomes = () => {
 
   return (
     <>
-      <div className="relative z-2 mb-10 mt-30 mx-auto text-light max-w-7xl px-6">
+      <div className="relative z-2 mb-10 mt-30 mx-auto text-light max-w-7xl px-6 lg:ml-20">
         <IncomeHeader totalIncome={totalIncome} onNewIncome={handleNewIncome} />
 
         <StatsCards
