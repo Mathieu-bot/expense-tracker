@@ -125,7 +125,7 @@ const DashboardHeader = () => {
       <header
         className={`flex justify-between items-center fixed top-4 left-4 right-4 lg:left-25 lg:right-10 z-50 px-4 lg:px-6 py-3 rounded-2xl transition-all duration-500 ${
           shouldShowGlassmorphism
-            ? "bg-white/10 backdrop-blur-sm shadow-lg border border-white/10 mr-4"
+            ? "bg-white/10 backdrop-blur-sm shadow-lg border border-white/10"
             : "bg-transparent border border-transparent"
         }`}
       >
