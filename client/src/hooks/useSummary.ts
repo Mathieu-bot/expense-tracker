@@ -14,20 +14,27 @@ export const useSummaryAlert = () => {
     alert: false,
     message: "",
   });
-
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     const fetch = async () => {
       try {
+        setLoading(true);
+
         const res = await getAlert();
         setData(res);
       } catch (error) {
+        setError(error as string);
+
         console.error("Error fetching summary alert:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetch();
   }, []);
 
-  return { data: data };
+  return { data: data, loading: loading, error: error };
 };
 
 export const useMonthlySummary = (month: string) => {
@@ -36,23 +43,27 @@ export const useMonthlySummary = (month: string) => {
     totalIncome: 0,
     netBalance: 0,
   });
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetch = async () => {
+      setLoading(true);
       try {
-        console.log(month);
-
         const res = (await getMonthlySummary(month)) as MonthlySummary;
         setData(res);
       } catch (error) {
+        setError(error as string);
         console.error("Failed to fetch summary" + error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetch();
   }, [month]);
 
-  return { data: data };
+  return { data: data, loading: loading, error: error };
 };
 
 export const useLastSixthMonthSummary = () => {

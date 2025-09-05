@@ -25,10 +25,8 @@ export default function MiniStatCard({
   value,
   icon: Icon,
   deltaPct,
-  hint = "From last month",
   valueSuffix,
   formatValue,
-  className = "",
 }: MiniStatItem) {
   const isUp = typeof deltaPct === "number" ? deltaPct >= 0 : undefined;
   const deltaColor =
@@ -45,13 +43,7 @@ export default function MiniStatCard({
     : fmtArShort(value);
 
   return (
-    <div
-      className={[
-        "rounded-xl bg-gradient-to-br from-primary/70 via-primary/50 to-gray-800/50 shadow-sm min-w-[250px] border border-gray-700",
-        "p-4 flex flex-col gap-3",
-        className,
-      ].join(" ")}
-    >
+    <div className="bg-gradient-to-br from-primary-light/20 to-primary-dark/10 backdrop-blur-xl rounded-2xl p-5 border border-white/5 shadow-lg hover:shadow-accent/5 transition-shadow duration-300 flex flex-col gap-2">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -63,7 +55,11 @@ export default function MiniStatCard({
       </div>
 
       {/* Value */}
-      <div className="text-3xl font-normal tracking-tight text-white">
+      <div
+        className={`text-3xl font-normal tracking-tight text-white ${
+          value < 0 ? "text-red-500!" : ""
+        }`}
+      >
         {valueStr}
         {valueSuffix ? valueSuffix : ""}
       </div>
@@ -83,7 +79,6 @@ export default function MiniStatCard({
             {deltaPct.toFixed(1)}%
           </span>
         )}
-        <span className="text-sm text-white">{hint}</span>
       </div>
     </div>
   );

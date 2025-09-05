@@ -33,7 +33,6 @@ export function MonthlyBarChart({ data }: { data: Row[] }) {
 
   return (
     <Layout
-      title="Monthly Spending vs Income (6 last months)"
       graphClassName="h-[300px]"
     >
       {/* Toggles */}

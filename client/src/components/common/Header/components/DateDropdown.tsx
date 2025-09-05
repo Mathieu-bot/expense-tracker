@@ -36,7 +36,7 @@ const DateDropdown = () => {
         <span className="font-medium text-sm">{formatDate(currentDate)}</span>
       </div>
 
-      <div className="flex items-center gap-1">
+      {/* <div className="flex items-center gap-1">
         <button
           onClick={() => changeDate(-1)}
           className="p-1 focus:outline-none border-none"
@@ -57,7 +57,7 @@ const DateDropdown = () => {
         >
           <ChevronRight size={16} className="text-white/70 hover:text-white" />
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

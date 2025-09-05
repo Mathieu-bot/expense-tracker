@@ -5,20 +5,21 @@ import PieGraph from "../components/dashboard/PieGraph";
 import { useIncomes } from "../hooks/useIncomes";
 import { computeValueTotal } from "../utils/computeValueTotal";
 import MiniStatCard from "../components/dashboard/DisplayCard";
-import { Button, useToast } from "../ui";
+import { useToast } from "../ui";
 import {
   useLastSixthMonthSummary,
+  useMonthlySummary,
   useSummaryAlert,
-} from "../hooks/useSummaryAlert";
+} from "../hooks/useSummary";
 import SummaryAlert from "../components/dashboard/SummaryAlert";
 import { useExpenses } from "../hooks/useExpenses";
 import { GlassDatePicker } from "../components/Income";
+import { computeEvolutionBetweenValues } from "../utils/evolutionBetweenValues";
 
 function Dashboard() {
   const { data: summaryAlert } = useSummaryAlert();
   const [alertOpen, setAlertOpen] = useState<boolean>(true);
   const { data: lastSixthMonthSummary } = useLastSixthMonthSummary();
-
   const now = new Date();
 
   const [startDate, setStartDate] = useState<string>(
@@ -45,7 +46,16 @@ function Dashboard() {
     startDate,
     endDate
   );
-
+  const { data: lastMonthSummary } = useMonthlySummary(
+    new Date(new Date().getFullYear(), new Date().getMonth())
+      .toISOString()
+      .slice(0, 7)
+  );
+  const { data: thisMonthSummary } = useMonthlySummary(
+    new Date(new Date().getFullYear(), new Date().getMonth() + 1)
+      .toISOString()
+      .slice(0, 7)
+  );
   const toast = useToast();
 
   const [totalIncome, setTotalIncome] = useState<number>(0);
@@ -54,12 +64,41 @@ function Dashboard() {
 
   const toDisplay = useMemo(
     () => [
-      { label: "Income", value: totalIncome, icon: Wallet },
-      { label: "Expenses", value: totalExpense, icon: ReceiptCent },
-      { label: "Sold", value: sold, icon: Percent },
+      {
+        label: "Income",
+        value: totalIncome,
+        icon: Wallet,
+        deltaPct: computeEvolutionBetweenValues(
+          lastMonthSummary.totalIncome,
+          thisMonthSummary.totalIncome
+        ),
+      },
+      {
+        label: "Expenses",
+        value: totalExpense,
+        icon: ReceiptCent,
+        deltaPct: computeEvolutionBetweenValues(
+          lastMonthSummary.totalExpense,
+          thisMonthSummary.totalExpense
+        ),
+      },
+      {
+        label: "Sold",
+        value: sold,
+        icon: Percent,
+        deltaPct: computeEvolutionBetweenValues(
+          lastMonthSummary.netBalance,
+          thisMonthSummary.netBalance
+        ),
+      },
     ],
-    [totalIncome, totalExpense, sold]
+    [totalIncome, lastMonthSummary, thisMonthSummary, totalExpense, sold]
   );
+
+  console.log("Last:" + lastMonthSummary);
+  console.log(thisMonthSummary);
+
+  /* Last month stat for the comparison */
 
   /* Totals */
   useEffect(() => {
@@ -138,7 +177,7 @@ function Dashboard() {
   };
 
   return (
-    <div className="min-w-screen max-h-screen pt-26 py-5 md:pr-10 md:pl-22 flex flex-col items-center gap-10 md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 z-30">
+    <div className="min-w-screen max-h-screen pt-22 py-5 md:pr-10 md:pl-22 flex flex-col items-center gap-10 md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 z-30">
       {summaryAlert.alert && (
         <SummaryAlert
           alert={summaryAlert.alert}
@@ -179,6 +218,9 @@ function Dashboard() {
 
         {/* BARCHART */}
         <MonthlyBarChart data={lastSixthMonthSummary} />
+        <h1 className="text-center text-2xl text-white font-semibold">
+          Monthly spending vs income last 6 month
+        </h1>
       </div>
       {/* PIE */}
       <div className="lg:col-span-1 flex flex-col md:h-full items-center gap-4 w-full md:bg-primary/30 py-2 px-5 rounded-lg">
