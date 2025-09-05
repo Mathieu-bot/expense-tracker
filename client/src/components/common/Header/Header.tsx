@@ -1,7 +1,15 @@
+// DashboardHeader.tsx
 import { assets } from "../../../assets/images";
 import { Link } from "react-router-dom";
 import ThemeToggle from "../ThemeToggle";
-import { ChevronDown } from "lucide-react";
+import {
+  ChevronDown,
+  LayoutDashboard,
+  CreditCard,
+  DollarSign,
+  User,
+  LogOut,
+} from "lucide-react";
 import {
   DateDropdown,
   MobileMenu,
@@ -10,6 +18,7 @@ import {
 } from "./components";
 import { useState, useEffect } from "react";
 import { useUserStore } from "../../../stores/userStore";
+import LogoutButton from "../LogoutButton";
 
 const DashboardHeader = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -17,19 +26,26 @@ const DashboardHeader = () => {
   const [isMobile, setIsMobile] = useState(false);
   const { user, loading, error, fetchProfile } = useUserStore();
 
+  // Navigation items
+  const navItems = [
+    { label: "Dashboard", icon: LayoutDashboard, href: "/" },
+    { label: "Expenses", icon: CreditCard, href: "/expenses" },
+    { label: "Incomes", icon: DollarSign, href: "/incomes" },
+    { label: "Profile", icon: User, href: "/profile" },
+  ];
+
   useEffect(() => {
     fetchProfile();
   }, [fetchProfile]);
 
+  // Check if mobile on mount and resize
   useEffect(() => {
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth < 1024);
     };
 
     checkIfMobile();
-
     window.addEventListener("resize", checkIfMobile);
-
     return () => window.removeEventListener("resize", checkIfMobile);
   }, []);
 
@@ -42,6 +58,7 @@ const DashboardHeader = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Close mobile menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const mobileMenu = document.querySelector(".mobile-menu-overlay");
@@ -65,15 +82,9 @@ const DashboardHeader = () => {
   const getUserDisplayName = () => {
     if (loading) return "Loading...";
     if (error || !user) return "GUEST";
-
-    if (user.firstname && user.lastname) {
-      return `${user.firstname} ${user.lastname}`;
-    }
-    if (user.firstname) return user.firstname;
-    if (user.lastname) return user.lastname;
-    if (user.username) return user.username;
-
-    return "User";
+    return user.firstname && user.lastname
+      ? `${user.firstname} ${user.lastname}`
+      : user.firstname || user.lastname || user.username || "User";
   };
 
   const getUsername = () => {
@@ -87,7 +98,7 @@ const DashboardHeader = () => {
     if (error || !user) return "Welcome, Guest!";
     return `Hi, `;
   };
-//always show glassmorphism on mobile
+
   const shouldShowGlassmorphism = isMobile || isScrolled;
 
   return (
@@ -99,6 +110,7 @@ const DashboardHeader = () => {
             : "bg-transparent border border-transparent"
         }`}
       >
+        {/* Left section - Logo and Mobile Menu */}
         <div className="flex items-center gap-4">
           <div className="mobile-menu-button">
             <MobileMenu
@@ -122,11 +134,13 @@ const DashboardHeader = () => {
           </div>
         </div>
 
+        {/* Center section - Search (hidden on mobile) */}
         <div className="hidden lg:flex items-center gap-6">
           <DateDropdown />
           <SearchInput placeholder="Search transactions..." />
         </div>
 
+        {/* Right section - Desktop features */}
         <div className="hidden lg:flex items-center gap-5">
           <ThemeToggle />
           <NotificationBell hasNotifications={true} notifNumber={3} />
@@ -148,9 +162,6 @@ const DashboardHeader = () => {
               {user && (
                 <div className="absolute bottom-0 right-0 w-3 h-3 lg:w-3.5 lg:h-3.5 bg-green-400 rounded-full border-2 border-white z-20"></div>
               )}
-              {!user && (
-                <div className="absolute bottom-0 right-0 w-3 h-3 lg:w-3.5 lg:h-3.5 bg-gray-400 rounded-full border-2 border-white z-20"></div>
-              )}
             </div>
 
             <div className="hidden lg:flex flex-col">
@@ -169,6 +180,7 @@ const DashboardHeader = () => {
           </Link>
         </div>
 
+        {/* Mobile right section - Only show profile and notifications */}
         <div className="flex lg:hidden items-center gap-3">
           <NotificationBell hasNotifications={true} notifNumber={3} />
           <Link
@@ -191,14 +203,19 @@ const DashboardHeader = () => {
         </div>
       </header>
 
+      {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
-        <div className="mobile-menu-overlay fixed inset-0 z-40 lg:hidden">
+        <div className="mobile-menu-overlay fixed inset-0 z-[500000] lg:hidden">
           <div
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={() => setIsMobileMenuOpen(false)}
           ></div>
-          <div className="absolute left-0 top-0 h-full w-80 bg-gradient-to-b from-gray-900 to-gray-800 shadow-2xl transform transition-transform duration-300">
-            <div className="p-6">
+          <div
+            className="absolute left-0 top-0 h-full w-80 bg-gradient-to-b from-gray-900 to-gray-800 shadow-2xl transform transition-transform duration-300"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6 h-full flex flex-col">
+              {/* Header with user info */}
               <div className="flex items-center gap-3 mb-8">
                 <img
                   src={assets.userPlaceholder}
@@ -213,9 +230,25 @@ const DashboardHeader = () => {
                 </div>
               </div>
 
-              <div className="space-y-4">
-                <div className="mb-6">
-                  <SearchInput placeholder="Search..." />
+              {/* Navigation Items */}
+              <nav className="flex-1 space-y-2 mb-6">
+                {navItems.map(({ label, icon: Icon, href }) => (
+                  <Link
+                    key={label}
+                    to={href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center gap-4 rounded-xl px-4 py-3 hover:bg-white/15 transition-colors duration-200 text-white"
+                  >
+                    <Icon size={20} />
+                    <span className="text-lg">{label}</span>
+                  </Link>
+                ))}
+              </nav>
+
+              {/* Features Section */}
+              <div className="space-y-4 mb-6">
+                <div className="mb-4">
+                  <SearchInput placeholder="Search transactions..." />
                 </div>
 
                 <div className="p-3 bg-white/10 rounded-xl">
@@ -225,6 +258,17 @@ const DashboardHeader = () => {
                 <div className="flex justify-center">
                   <ThemeToggle />
                 </div>
+              </div>
+
+              {/* Logout Button */}
+              <div className="mt-auto pt-4 border-t border-white/20">
+                <LogoutButton
+                  size="large"
+                  className="w-full flex items-center justify-center gap-3 py-3 rounded-xl hover:bg-white/15 transition-colors duration-200 text-white"
+                  startIcon={<LogOut size={20} />}
+                >
+                  Logout
+                </LogoutButton>
               </div>
             </div>
           </div>

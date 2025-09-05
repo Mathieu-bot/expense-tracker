@@ -12,6 +12,7 @@ import categoryRoutes from './routes/category.route.js';
 import userRoutes from './routes/user.route.js';
 import expenseRoutes from './routes/expense.route.js';
 import { configureNetwork } from './utils/network.js';
+import path from 'node:path';
 
 dotenv.config();
 
@@ -39,6 +40,9 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(cookieParser());
+
+// Serve receipt uploads statically
+app.use('/uploads', express.static(path.resolve('uploads')));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/incomes', requireAuth, incomeRoutes);

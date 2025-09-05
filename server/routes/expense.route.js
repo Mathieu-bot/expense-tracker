@@ -1,19 +1,20 @@
-import express from 'express';
-import { requireAuth } from '../middleware/auth.middleware.js';
+import express from "express";
+import { requireAuth } from "../middleware/auth.middleware.js";
 import {
   createExpenseController,
   getExpenseController,
   getAllExpensesController,
   updateExpenseController,
-  deleteExpenseController
-} from '../controllers/expense.controller.js';
+  deleteExpenseController,
+} from "../controllers/expense.controller.js";
 import {
   createExpenseValidator,
   updateExpenseValidator,
   getExpenseValidator,
   deleteExpenseValidator,
-  listExpensesValidator
-} from '../validators/expense.validator.js';
+  listExpensesValidator,
+} from "../validators/expense.validator.js";
+import { upload } from "../middleware/upload.middleware.js";
 
 const router = express.Router();
 
@@ -21,10 +22,11 @@ const router = express.Router();
 router.use(requireAuth);
 
 // @route   POST /api/expenses
-// @desc    Create a new expense
+// @desc    Create a new expense with optional receipt upload
 // @access  Private
 router.post(
-  '/',
+  "/",
+  upload.single("receipt"), // Handle receipt file upload
   createExpenseValidator,
   createExpenseController
 );
@@ -32,26 +34,19 @@ router.post(
 // @route   GET /api/expenses/:id
 // @desc    Get a single expense by ID
 // @access  Private
-router.get(
-  '/:id',
-  getExpenseValidator,
-  getExpenseController
-);
+router.get("/:id", getExpenseValidator, getExpenseController);
 
 // @route   GET /api/expenses
 // @desc    Get all expenses for the authenticated user
 // @access  Private
-router.get(
-  '/',
-  listExpensesValidator,
-  getAllExpensesController
-);
+router.get("/", listExpensesValidator, getAllExpensesController);
 
 // @route   PUT /api/expenses/:id
-// @desc    Update an expense
+// @desc    Update an expense with optional receipt upload
 // @access  Private
 router.put(
-  '/:id',
+  "/:id",
+  upload.single("receipt"), // Handle receipt file upload
   updateExpenseValidator,
   updateExpenseController
 );
@@ -59,10 +54,6 @@ router.put(
 // @route   DELETE /api/expenses/:id
 // @desc    Delete an expense
 // @access  Private
-router.delete(
-  '/:id',
-  deleteExpenseValidator,
-  deleteExpenseController
-);
+router.delete("/:id", deleteExpenseValidator, deleteExpenseController);
 
 export default router;
