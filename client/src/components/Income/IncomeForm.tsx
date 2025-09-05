@@ -26,6 +26,7 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
   const { showSuccess, showError } = useMascot();
   const submitRef = useRef<HTMLButtonElement>(null);
   const errorTimeoutRef = useRef<number | null>(null);
+  const [hasChanges, setHasChanges] = useState(false);
 
   const [formData, setFormData] = useState<IncomeFormData>({
     amount: income?.amount || 0,
@@ -60,7 +61,23 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
     }
     setErrors({});
     setErrorDisplay({ message: "", visible: false });
+    setHasChanges(false);
   }, [income, open]);
+
+  useEffect(() => {
+    if (!income) {
+      setHasChanges(true);
+      return;
+    }
+
+    const hasFormChanged =
+      formData.amount !== income.amount ||
+      formData.date !== new Date(income.date).toISOString().split("T")[0] ||
+      formData.source !== income.source ||
+      formData.description !== (income.description || "");
+
+    setHasChanges(hasFormChanged);
+  }, [formData, income]);
 
   useEffect(() => {
     return () => {
@@ -84,6 +101,10 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!hasChanges) {
+      return;
+    }
 
     const numericAmount = Number(formData.amount);
     if (isNaN(numericAmount) || numericAmount < 0) {
@@ -136,8 +157,8 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
   if (!open) return null;
 
   return (
-    <div className="min-h-screen absolute inset-0 z-[1000] bg-black/40 backdrop-blur-[10px] flex items-center justify-center">
-      <div className="grid grid-cols-1 md:grid-cols-2 max-w-4xl w-full">
+    <div className="min-h-screen md:pt-8 pt-30 lg:pt-5 inset-0 z-[1000] bg-black/40 backdrop-blur-[10px] flex items-center justify-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 max-w-3xl w-full">
         <div className="relative flex items-center justify-center">
           <svg
             viewBox="0 0 100 150"
@@ -208,70 +229,86 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
           </svg>
         </div>
 
-        <div className="flex flex-col justify-center items-start p-6">
-          <div className="mb-8">
-            <h2 className="text-4xl font-bold text-gray-100 mb-2">
-              {income ? "Edit Income" : "New Income"}
-            </h2>
-            <p className="text-gray-100">
-              Fill out your income details on the receipt
-            </p>
-          </div>
-
-          <div className="space-y-4 w-full max-w-xs">
-            <div>
-              <label className="text-sm text-gray-100">Source</label>
-              <p className="text-gray-500 font-medium">
-                {formData.source || "Not specified"}
+        <div className="w-full flex items-center justify-center">
+          <div className="flex flex-col w-fit justify-center items-start p-6">
+            <div className="mb-8">
+              <h2 className="text-4xl font-bold text-gray-100 mb-2">
+                {income ? "Edit Income" : "New Income"}
+              </h2>
+              <p className="text-gray-100">
+                Fill out your income details on the receipt
               </p>
             </div>
 
-            <div>
-              <label className="text-sm text-gray-100">Amount</label>
-              <p className="font-medium text-gray-500">${formData.amount}</p>
-            </div>
-
-            <div>
-              <label className="text-sm text-gray-100">Date</label>
-              <p className="text-gray-500 font-medium">{formData.date}</p>
-            </div>
-
-            <div>
-              <label className="text-sm text-gray-100">Description</label>
-              <p className="text-gray-500 font-medium">
-                {formData.description || "No description"}
-              </p>
-            </div>
-          </div>
-
-          {errorDisplay.visible && (
-            <div className="mt-6 p-3 bg-red-900/30 border border-red-700/50 rounded-lg w-full max-w-xs animate-fadeIn">
-              <div className="flex items-center gap-2 text-red-400">
-                <AlertCircle size={16} />
-                <span className="font-medium text-sm">Validation Error</span>
+            <div className="space-y-4 w-full max-w-xs">
+              <div>
+                <label className="text-sm text-gray-100">Source</label>
+                <p className="text-gray-500 font-medium">
+                  {formData.source || "Not specified"}
+                </p>
               </div>
-              <p className="text-red-300 text-xs mt-1">
-                {errorDisplay.message}
-              </p>
+
+              <div>
+                <label className="text-sm text-gray-100">Amount</label>
+                <p className="font-medium text-gray-500">${formData.amount}</p>
+              </div>
+
+              <div>
+                <label className="text-sm text-gray-100">Date</label>
+                <p className="text-gray-500 font-medium">{formData.date}</p>
+              </div>
+
+              <div>
+                <label className="text-sm text-gray-100">Description</label>
+                <p className="text-gray-500 font-medium">
+                  {formData.description || "No description"}
+                </p>
+              </div>
             </div>
-          )}
 
-          <div className="flex gap-4 mt-10">
-            <button
-              onClick={() => submitRef.current?.click()}
-              disabled={saving}
-              className="px-6 py-3 bg-primary-light text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
-            >
-              {saving ? "Saving..." : "Save Income"}
-            </button>
+            {errorDisplay.visible && (
+              <div className="mt-6 p-3 bg-red-900/30 border border-red-700/50 rounded-lg w-full max-w-xs animate-fadeIn">
+                <div className="flex items-center gap-2 text-red-400">
+                  <AlertCircle size={16} />
+                  <span className="font-medium text-sm">Validation Error</span>
+                </div>
+                <p className="text-red-300 text-xs mt-1">
+                  {errorDisplay.message}
+                </p>
+              </div>
+            )}
 
-            <button
-              onClick={onCancel}
-              disabled={saving}
-              className="px-6 py-3 bg-gray-100 text-gray-700 border border-gray-200 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
-            >
-              Cancel
-            </button>
+            <div className="flex gap-4 mt-10">
+              <button
+                onClick={() => submitRef.current?.click()}
+                disabled={saving || (!hasChanges && !!income)}
+                className={`px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 ${
+                  saving || (!hasChanges && !!income)
+                    ? "bg-gray-400/50 text-gray-200 cursor-not-allowed"
+                    : "bg-primary-light text-white hover:bg-primary"
+                }`}
+              >
+                {saving
+                  ? "Saving..."
+                  : income
+                  ? "Save Changes"
+                  : "Create Income"}
+              </button>
+
+              <button
+                onClick={onCancel}
+                disabled={saving}
+                className="px-6 py-3 bg-gray-100 text-gray-700 border border-gray-200 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                Cancel
+              </button>
+            </div>
+
+            {!hasChanges && income && (
+              <p className="text-gray-400 text-sm mt-4">
+                No changes made to the income
+              </p>
+            )}
           </div>
         </div>
       </div>
