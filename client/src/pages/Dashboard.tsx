@@ -1,52 +1,42 @@
 import { useEffect, useMemo, useState } from "react";
-import { type PieItem } from "../components/dashboard/PieGraph";
-import {
-  MonthlyBarChart,
-  type Row,
-} from "../components/dashboard/MonthlyBarchart";
-import { Percent, ReceiptCent, Wallet } from "lucide-react";
+import { MonthlyBarChart } from "../components/dashboard/MonthlyBarchart";
+import { Percent, ReceiptCent, Wallet, X } from "lucide-react";
 import PieGraph from "../components/dashboard/PieGraph";
 import { useIncomes } from "../hooks/useIncomes";
 import { computeValueTotal } from "../utils/computeValueTotal";
 import MiniStatCard from "../components/dashboard/DisplayCard";
-import { useToast } from "../ui";
+import { Button, useToast } from "../ui";
 import {
   useLastSixthMonthSummary,
-  useMonthlySummary,
   useSummaryAlert,
 } from "../hooks/useSummaryAlert";
 import SummaryAlert from "../components/dashboard/SummaryAlert";
 import { useExpenses } from "../hooks/useExpenses";
-
-const monthlyData: Row[] = [
-  { month: "Avril", spending: 120000, income: 180000 },
-  { month: "Mai", spending: 95000, income: 165000 },
-  { month: "Juin", spending: 110000, income: 170000 },
-  { month: "Juil", spending: 130000, income: 190000 },
-];
-const expensesByCat: PieItem[] = [
-  { name: "Food", value: 45000 },
-  { name: "Transport", value: 20000 },
-  { name: "Shopping", value: 30000 },
-  { name: "Bills", value: 25000 },
-  { name: "Entertainment", value: 15000 },
-];
+import { GlassDatePicker } from "../components/Income";
 
 function Dashboard() {
   const { data: summaryAlert } = useSummaryAlert();
   const [alertOpen, setAlertOpen] = useState<boolean>(true);
   const { data: lastSixthMonthSummary } = useLastSixthMonthSummary();
 
-
   const now = new Date();
 
   const [startDate, setStartDate] = useState<string>(
-    new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split("T")[0]
+    new Date(now.getFullYear(), now.getMonth(), 1).toLocaleDateString("fr-CA", {
+      year: "numeric",
+      day: "numeric",
+      month: "numeric",
+    })
   );
   const [endDate, setEndDate] = useState<string>(
-    new Date(now.getFullYear(), now.getMonth() + 1, 0)
-      .toISOString()
-      .split("T")[0]
+    new Date(now.getFullYear(), now.getMonth() + 1, 0).toLocaleDateString(
+      "fr-CA",
+      {
+        year: "numeric",
+        day: "numeric",
+        month: "numeric",
+      }
+    )
   );
 
   /* Expense and incomes */
@@ -55,6 +45,7 @@ function Dashboard() {
     startDate,
     endDate
   );
+
   const toast = useToast();
 
   const [totalIncome, setTotalIncome] = useState<number>(0);
@@ -82,14 +73,70 @@ function Dashboard() {
     }
   }, [loading, incomes, expenses, expensesLoading]);
 
-  /* Monthly Summary */
-  const { data } = useMonthlySummary("2025-09");
-
   if (error) {
     toast.error("Failed to load incomes: " + error, {
       autoHideDuration: 2,
     });
   }
+
+  /* Event Handler */
+  const handleDateChange = (e: Date, field: string) => {
+    switch (field) {
+      case "start": {
+        const date = new Date(e as Date).toLocaleDateString("fr-CA", {
+          year: "numeric",
+          day: "numeric",
+          month: "numeric",
+        });
+        const newStart = new Date(date).toISOString().split("T")[0];
+        if (new Date(newStart) > new Date(endDate)) {
+          toast.error("Start date should be before end date");
+          return;
+        }
+        setStartDate(date);
+        break;
+      }
+      case "end": {
+        const date = new Date(e as Date).toLocaleDateString("fr-CA", {
+          year: "numeric",
+          day: "numeric",
+          month: "numeric",
+        });
+
+        const newEnd = new Date(date).toISOString().split("T")[0];
+        if (new Date(newEnd) < new Date(startDate)) {
+          toast.error("End date should be after start date");
+          return;
+        }
+        setEndDate(date);
+        break;
+      }
+    }
+  };
+
+  const resetFilter = () => {
+    setStartDate(
+      new Date(now.getFullYear(), now.getMonth(), 1).toLocaleDateString(
+        "fr-CA",
+        {
+          year: "numeric",
+          day: "numeric",
+          month: "numeric",
+        }
+      )
+    );
+    setEndDate(
+      new Date(now.getFullYear(), now.getMonth() + 1, 0).toLocaleDateString(
+        "fr-CA",
+        {
+          year: "numeric",
+          day: "numeric",
+          month: "numeric",
+        }
+      )
+    );
+  };
+
   return (
     <div className="min-w-screen max-h-screen pt-26 py-5 md:pr-10 md:pl-22 flex flex-col items-center gap-10 md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 z-30">
       {summaryAlert.alert && (
@@ -101,42 +148,41 @@ function Dashboard() {
         />
       )}
       <div className="col-span-3 flex flex-col gap-5">
-        <div className="flex items-center text-white">
-          <input
-            type="date"
-            value={startDate}
-            onChange={(e) => {
-              const newStart = e.target.value;
-              if (new Date(startDate) < new Date(newStart)) {
-                toast.error("Start date should be before end date");
-                return;
-              }
-              setStartDate(newStart);
-            }}
-          />
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => {
-              const newEnd = e.target.value;
-              if (new Date(startDate) > new Date(newEnd)) {
-                toast.error("End date should be after start date");
-                return;
-              }
-              setEndDate(newEnd);
-            }}
-          />
+        {/* FILTER */}
+        <div className="flex items-center text-white justify-between">
+          <h1 className="text-4xl pl-10 font-semibold">Filters</h1>
+          <div className="flex gap-5 items-center">
+            <GlassDatePicker
+              value={new Date(startDate)}
+              onChange={(e) => handleDateChange(e!, "start")}
+              label="Start Date"
+            />
+            <GlassDatePicker
+              value={new Date(endDate)}
+              onChange={(e) => handleDateChange(e!, "end")}
+              label="End Date"
+            />
+            <button
+              className="flex items-center gap-2 px-4 py-2 h-fit rounded-sm bg-red-700 outline-none"
+              onClick={resetFilter}
+            >
+              <X /> Reset
+            </button>
+          </div>
         </div>
+        {/* CARD */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {toDisplay.map((item, idx) => (
             <MiniStatCard key={idx} {...item} />
           ))}
         </div>
 
+        {/* BARCHART */}
         <MonthlyBarChart data={lastSixthMonthSummary} />
       </div>
+      {/* PIE */}
       <div className="lg:col-span-1 flex flex-col md:h-full items-center gap-4 w-full md:bg-primary/30 py-2 px-5 rounded-lg">
-        <PieGraph title={"Expense Overview"} data={expensesByCat} />
+        <PieGraph title={"Expense Overview"} data={expenses} />
       </div>
     </div>
   );

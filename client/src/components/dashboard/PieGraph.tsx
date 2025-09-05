@@ -9,8 +9,7 @@ import {
   Legend,
 } from "recharts";
 import { fmtAr } from "../../utils/formatter";
-
-export type PieItem = { name: string; value: number; color?: string };
+import type { Expense } from "../../types/Expense";
 
 const FALLBACK_COLORS = ["#93C5FD", "#A7F3D0", "#FDE68A", "#FCA5A5", "#FDBA74"];
 const formatAr = (v: number) => `Ar ${v.toLocaleString("fr-MG")}`;
@@ -21,13 +20,25 @@ export default function PieGraph({
   heightClass = "h-44 sm:h-56 md:h-64",
 }: {
   title?: string;
-  data: PieItem[];
+  data: Expense[];
   heightClass?: string;
 }) {
   const total = useMemo(
-    () => data.reduce((acc, item) => acc + item.value, 0),
+    () => data.reduce((acc, item) => acc + item.amount, 0),
     [data]
   );
+  const chartData = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const exp of data) {
+      const label = exp.category?.category_name ?? "Autres";
+      map.set(label, (map.get(label) ?? 0) + exp.amount);
+    }
+    return Array.from(map.entries()).map(([name, value]) => ({
+      name,
+      value,
+    }));
+  }, [data]);
+
   return (
     <Layout
       title={title}
@@ -37,7 +48,7 @@ export default function PieGraph({
       <ResponsiveContainer width="100%" height="100%">
         <PieChart margin={{ top: 20, right: 10, bottom: 10, left: 10 }}>
           <Pie
-            data={data}
+            data={chartData}
             cx="50%"
             cy="50%"
             innerRadius={50}
@@ -47,11 +58,11 @@ export default function PieGraph({
             paddingAngle={2}
             cornerRadius={3}
           >
-            {data.map((d, i) => (
+            {chartData.map((d, i) => (
               <Cell
                 key={d.name}
                 stroke="none"
-                fill={d.color ?? FALLBACK_COLORS[i % FALLBACK_COLORS.length]}
+                fill={FALLBACK_COLORS[i % FALLBACK_COLORS.length]}
               />
             ))}
           </Pie>

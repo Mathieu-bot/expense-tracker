@@ -23,9 +23,6 @@ const COLORS = {
 
 export function MonthlyBarChart({ data }: { data: Row[] }) {
   const [show, setShow] = useState({ spending: true, income: true });
-
-  console.log(data);
-
   const totals = useMemo(
     () => ({
       spending: data.reduce((a, c) => a + c.totalExpense, 0),
@@ -35,7 +32,10 @@ export function MonthlyBarChart({ data }: { data: Row[] }) {
   );
 
   return (
-    <Layout title="Monthly Spending vs Income" graphClassName="h-[300px]">
+    <Layout
+      title="Monthly Spending vs Income (6 last months)"
+      graphClassName="h-[300px]"
+    >
       {/* Toggles */}
       <div className="flex items-center justify-end gap-2 px-2 pb-2">
         <button
