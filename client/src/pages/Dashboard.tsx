@@ -46,6 +46,8 @@ function Dashboard() {
     startDate,
     endDate
   );
+
+  /* Last month stat for the comparison */
   const { data: lastMonthSummary } = useMonthlySummary(
     new Date(new Date().getFullYear(), new Date().getMonth())
       .toISOString()
@@ -56,6 +58,7 @@ function Dashboard() {
       .toISOString()
       .slice(0, 7)
   );
+
   const toast = useToast();
 
   const [totalIncome, setTotalIncome] = useState<number>(0);
@@ -68,37 +71,45 @@ function Dashboard() {
         label: "Income",
         value: totalIncome,
         icon: Wallet,
-        deltaPct: computeEvolutionBetweenValues(
-          lastMonthSummary.totalIncome,
-          thisMonthSummary.totalIncome
-        ),
+        deltaPct:
+          computeEvolutionBetweenValues(
+            lastMonthSummary?.totalIncome ?? 0,
+            thisMonthSummary?.totalIncome ?? 0
+          ) ?? 0,
       },
       {
         label: "Expenses",
         value: totalExpense,
         icon: ReceiptCent,
-        deltaPct: computeEvolutionBetweenValues(
-          lastMonthSummary.totalExpense,
-          thisMonthSummary.totalExpense
-        ),
+        deltaPct:
+          computeEvolutionBetweenValues(
+            lastMonthSummary?.totalExpense ?? 0,
+            thisMonthSummary?.totalExpense ?? 0
+          ) ?? 0,
       },
       {
         label: "Sold",
         value: sold,
         icon: Percent,
-        deltaPct: computeEvolutionBetweenValues(
-          lastMonthSummary.netBalance,
-          thisMonthSummary.netBalance
-        ),
+        deltaPct:
+          computeEvolutionBetweenValues(
+            lastMonthSummary?.netBalance ?? 0,
+            thisMonthSummary?.netBalance ?? 0
+          ) ?? 0,
       },
     ],
-    [totalIncome, lastMonthSummary, thisMonthSummary, totalExpense, sold]
+    [
+      lastMonthSummary?.netBalance,
+      lastMonthSummary?.totalExpense,
+      lastMonthSummary?.totalIncome,
+      sold,
+      thisMonthSummary?.netBalance,
+      thisMonthSummary?.totalExpense,
+      thisMonthSummary?.totalIncome,
+      totalExpense,
+      totalIncome,
+    ]
   );
-
-  console.log("Last:" + lastMonthSummary);
-  console.log(thisMonthSummary);
-
-  /* Last month stat for the comparison */
 
   /* Totals */
   useEffect(() => {
@@ -177,7 +188,7 @@ function Dashboard() {
   };
 
   return (
-    <div className="min-w-screen max-h-screen pt-22 py-5 md:pr-10 md:pl-22 flex flex-col items-center gap-10 md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 z-30">
+    <div className="min-w-screen max-h-screen pt-22 md:pl-30 md:pr-22 flex flex-col items-center gap-10 md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 z-30">
       {summaryAlert.alert && (
         <SummaryAlert
           alert={summaryAlert.alert}
@@ -195,11 +206,13 @@ function Dashboard() {
               value={new Date(startDate)}
               onChange={(e) => handleDateChange(e!, "start")}
               label="Start Date"
+              size="small"
             />
             <GlassDatePicker
               value={new Date(endDate)}
               onChange={(e) => handleDateChange(e!, "end")}
               label="End Date"
+              size="small"
             />
             <button
               className="flex items-center gap-2 px-4 py-2 h-fit rounded-sm bg-red-700 outline-none"
@@ -218,12 +231,9 @@ function Dashboard() {
 
         {/* BARCHART */}
         <MonthlyBarChart data={lastSixthMonthSummary} />
-        <h1 className="text-center text-2xl text-white font-semibold">
-          Monthly spending vs income last 6 month
-        </h1>
       </div>
       {/* PIE */}
-      <div className="lg:col-span-1 flex flex-col md:h-full items-center gap-4 w-full md:bg-primary/30 py-2 px-5 rounded-lg">
+      <div className="lg:col-span-1 flex flex-col md:h-full items-center gap-4 w-full md:bg-white/5 backdrop-blur-2xl py-2 px-5 rounded-lg">
         <PieGraph title={"Expense Overview"} data={expenses} />
       </div>
     </div>

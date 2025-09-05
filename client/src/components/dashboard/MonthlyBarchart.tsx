@@ -32,14 +32,12 @@ export function MonthlyBarChart({ data }: { data: Row[] }) {
   );
 
   return (
-    <Layout
-      graphClassName="h-[300px]"
-    >
+    <Layout graphClassName="h-[300px]">
       {/* Toggles */}
       <div className="flex items-center justify-end gap-2 px-2 pb-2">
         <button
           onClick={() => setShow((s) => ({ ...s, spending: !s.spending }))}
-          className={`text-sm font-semibold px-2 py-1 rounded-md transition outline-none ${
+          className={`text-xs font-semibold px-2 py-1 rounded-md transition outline-none ${
             show.spending
               ? "bg-white text-slate-900"
               : "bg-white/10 text-white/80 hover:text-white"
@@ -49,7 +47,7 @@ export function MonthlyBarChart({ data }: { data: Row[] }) {
         </button>
         <button
           onClick={() => setShow((s) => ({ ...s, income: !s.income }))}
-          className={`text-sm font-semibold px-2 py-1 rounded-md transition outline-none ${
+          className={`text-xs font-semibold px-2 py-1 rounded-md transition outline-none ${
             show.income
               ? "bg-white text-slate-900"
               : "bg-white/10 text-white/80 hover:text-white"

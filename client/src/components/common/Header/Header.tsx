@@ -51,12 +51,12 @@ const DashboardHeader = () => {
 
   return (
     <header
-      className={`flex justify-between items-center fixed top-4 left-25 right-10 z-30 px-6 py-3 rounded-2xl transition-all duration-500 ${
+      className={`flex justify-between items-center fixed top-2 left-25 right-10 z-30 px-6 py-2 rounded-2xl transition-all duration-500 ${
         isScrolled ? "bg-white/10 backdrop-blur-sm shadow-lg" : "bg-transparent"
       }`}
     >
       <div className="flex flex-col">
-        <h1 className="text-2xl font-bold text-white">
+        <h1 className="text-xl font-bold text-white">
           {getWelcomeMessage()}
           {user && (
             <span className="bg-accent bg-clip-text text-transparent">
@@ -64,7 +64,7 @@ const DashboardHeader = () => {
             </span>
           )}
         </h1>
-        <p className="text-indigo-100/90 font-light text-sm">
+        <p className="text-indigo-100/90 font-light text-xs">
           Track all your transactions with PennyPal
         </p>
       </div>
