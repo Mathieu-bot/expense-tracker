@@ -156,7 +156,7 @@ const DashboardHeader = () => {
             <p
               className={`font-light text-sm ${
                 shouldShowGlassmorphism
-                  ? "text-gray-600 dark:text-indigo-100/90"
+                  ? "text-gray-900 dark:text-indigo-100/90"
                   : "text-white/90"
               }`}
             >

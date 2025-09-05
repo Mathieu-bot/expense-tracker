@@ -12,7 +12,7 @@ export const StatsCards = ({ totalIncome, incomeCount, totalIncomeThisMonth }: S
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-      <div className="bg-gradient-to-br from-primary-light/10 to-primary-dark/10 backdrop-blur-xl rounded-2xl p-5 border border-white/5 shadow-lg hover:shadow-accent/5 transition-shadow duration-300">
+      <div className="bg-gradient-to-br bg-white/10 dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl p-5 border border-white/5 shadow-lg hover:shadow-accent/5 transition-shadow duration-300">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-light/60 text-sm">This Month</p>
@@ -30,7 +30,7 @@ export const StatsCards = ({ totalIncome, incomeCount, totalIncomeThisMonth }: S
         </div>
       </div>
 
-      <div className="bg-gradient-to-br from-primary-light/10 to-primary-dark/10 backdrop-blur-xl rounded-2xl p-5 border border-white/5 shadow-lg hover:shadow-cyan-400/5 transition-shadow duration-300">
+      <div className="bg-gradient-to-br bg-white/10 dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl p-5 border border-white/5 shadow-lg hover:shadow-cyan-400/5 transition-shadow duration-300">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-light/60 text-sm">Total Records</p>
@@ -48,7 +48,7 @@ export const StatsCards = ({ totalIncome, incomeCount, totalIncomeThisMonth }: S
         </div>
       </div>
 
-      <div className="bg-gradient-to-br from-primary-light/10 to-primary-dark/10 backdrop-blur-xl rounded-2xl p-5 border border-white/5 shadow-lg hover:shadow-purple-400/5 transition-shadow duration-300">
+      <div className="bg-gradient-to-br bg-white/10 dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl p-5 border border-white/5 shadow-lg hover:shadow-purple-400/5 transition-shadow duration-300">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-light/60 text-sm">Avg. Income</p>

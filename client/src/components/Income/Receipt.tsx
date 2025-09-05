@@ -1,6 +1,6 @@
+import { useTheme } from "../../contexts/ThemeContext";
 import type { Income } from "../../types/Income";
-import { Eye } from "lucide-react";
-import { formatCurrency } from "../../utils/formatters";
+import { formatCurrency, formatDate } from "../../utils/formatters";
 
 interface ReceiptProps {
   items: Income[];
@@ -8,30 +8,9 @@ interface ReceiptProps {
   emptyMessage?: string;
 }
 
-const Receipt = ({
-  items,
-  onViewReceipt,
-  emptyMessage = "No receipts to display",
-}: ReceiptProps) => {
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "2-digit",
-      month: "short",
-      day: "numeric",
-    });
-  };
+const Receipt = ({ items, onViewReceipt }: ReceiptProps) => {
 
-  if (items.length === 0) {
-    return (
-      <div className="flex-1 flex flex-col items-center justify-center text-light/50">
-        <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-3">
-          <Eye className="w-6 h-6" />
-        </div>
-        <p className="text-sm">{emptyMessage}</p>
-        <p className="text-xs mt-1">Add incomes to see receipts</p>
-      </div>
-    );
-  }
+  const {isDark} = useTheme();
 
   return (
     <div className="flex gap-4">
@@ -63,7 +42,7 @@ const Receipt = ({
                 V 10
                 Q 0,0 10,0
               "
-              fill="rgba(255,255,255,0.04)"
+              fill={`${isDark? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.1)"}`}
               stroke="rgba(255,255,255,0.12)"
               strokeWidth="0.8"
             />

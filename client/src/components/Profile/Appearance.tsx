@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { Palette, Sun, Moon } from "lucide-react";
+import { useTheme } from "../../contexts/ThemeContext";
 
 export const AppearanceTab = () => {
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const {toggleTheme} = useTheme();
 
-  const toggleTheme = () => {
+  const handleToggleTheme = () => {
+    toggleTheme();
     setIsDarkMode(!isDarkMode);
   };
 
@@ -30,7 +33,7 @@ export const AppearanceTab = () => {
 
         <div className="flex justify-center">
           <button
-            onClick={toggleTheme}
+            onClick={handleToggleTheme}
             className={`relative w-20 h-10 rounded-full p-1 transition-all duration-500 ease-in-out ${
               isDarkMode
                 ? "bg-gradient-to-r from-purple-500 to-blue-500"
