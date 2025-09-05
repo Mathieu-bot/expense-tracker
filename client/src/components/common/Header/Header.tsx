@@ -1,4 +1,3 @@
-// DashboardHeader.tsx
 import { assets } from "../../../assets/images";
 import { Link } from "react-router-dom";
 import ThemeToggle from "../ThemeToggle";
@@ -9,14 +8,11 @@ import {
   DollarSign,
   User,
   LogOut,
+  X,
+  Menu,
 } from "lucide-react";
-import {
-  DateDropdown,
-  MobileMenu,
-  NotificationBell,
-  SearchInput,
-} from "./components";
-import { useState, useEffect } from "react";
+import { DateDropdown, NotificationBell, SearchInput } from "./components";
+import { useState, useEffect, useRef } from "react";
 import { useUserStore } from "../../../stores/userStore";
 import LogoutButton from "../LogoutButton";
 
@@ -24,9 +20,12 @@ const DashboardHeader = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
   const { user, loading, error, fetchProfile } = useUserStore();
 
-  // Navigation items
+  const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLDivElement>(null);
+
   const navItems = [
     { label: "Dashboard", icon: LayoutDashboard, href: "/" },
     { label: "Expenses", icon: CreditCard, href: "/expenses" },
@@ -38,7 +37,6 @@ const DashboardHeader = () => {
     fetchProfile();
   }, [fetchProfile]);
 
-  // Check if mobile on mount and resize
   useEffect(() => {
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth < 1024);
@@ -58,26 +56,47 @@ const DashboardHeader = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close mobile menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      const mobileMenu = document.querySelector(".mobile-menu-overlay");
-      const menuButton = document.querySelector(".mobile-menu-button");
-
       if (
         isMobileMenuOpen &&
-        mobileMenu &&
-        !mobileMenu.contains(event.target as Node) &&
-        menuButton &&
-        !menuButton.contains(event.target as Node)
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target as Node)
       ) {
-        setIsMobileMenuOpen(false);
+        closeMenu();
       }
     };
 
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, [isMobileMenuOpen]);
+
+  useEffect(() => {
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && isMobileMenuOpen) {
+        closeMenu();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscapeKey);
+    return () => document.removeEventListener("keydown", handleEscapeKey);
+  }, [isMobileMenuOpen]);
+
+  const openMenu = () => {
+    setIsMobileMenuOpen(true);
+    setTimeout(() => {
+      setIsAnimating(true);
+    }, 10);
+  };
+
+  const closeMenu = () => {
+    setIsAnimating(false);
+    setTimeout(() => {
+      setIsMobileMenuOpen(false);
+    }, 300);
+  };
 
   const getUserDisplayName = () => {
     if (loading) return "Loading...";
@@ -110,13 +129,15 @@ const DashboardHeader = () => {
             : "bg-transparent border border-transparent"
         }`}
       >
-        {/* Left section - Logo and Mobile Menu */}
         <div className="flex items-center gap-4">
-          <div className="mobile-menu-button">
-            <MobileMenu
-              isOpen={isMobileMenuOpen}
-              onToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            />
+          <div className="mobile-menu-button" ref={buttonRef}>
+            <button
+              onClick={openMenu}
+              className="p-2 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 transition-colors duration-200 lg:hidden"
+              aria-label="Toggle menu"
+            >
+              <Menu size={24} />
+            </button>
           </div>
 
           <div className="hidden lg:flex lg:flex-col">
@@ -134,13 +155,11 @@ const DashboardHeader = () => {
           </div>
         </div>
 
-        {/* Center section - Search (hidden on mobile) */}
-        <div className="hidden lg:flex items-center gap-6">
+        <div className="hidden xl:flex items-center gap-6">
           <DateDropdown />
           <SearchInput placeholder="Search transactions..." />
         </div>
 
-        {/* Right section - Desktop features */}
         <div className="hidden lg:flex items-center gap-5">
           <ThemeToggle />
           <NotificationBell hasNotifications={true} notifNumber={3} />
@@ -180,8 +199,8 @@ const DashboardHeader = () => {
           </Link>
         </div>
 
-        {/* Mobile right section - Only show profile and notifications */}
         <div className="flex lg:hidden items-center gap-3">
+          <ThemeToggle />
           <NotificationBell hasNotifications={true} notifNumber={3} />
           <Link
             to={user ? "/profile" : "/login"}
@@ -203,69 +222,64 @@ const DashboardHeader = () => {
         </div>
       </header>
 
-      {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
-        <div className="mobile-menu-overlay fixed inset-0 z-[500000] lg:hidden">
+        <div className="fixed inset-0 z-[9999] lg:hidden">
           <div
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-            onClick={() => setIsMobileMenuOpen(false)}
-          ></div>
+            className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
+              isAnimating ? "opacity-100" : "opacity-0"
+            }`}
+            onClick={closeMenu}
+          />
           <div
-            className="absolute left-0 top-0 h-full w-80 bg-gradient-to-b from-gray-900 to-gray-800 shadow-2xl transform transition-transform duration-300"
-            onClick={(e) => e.stopPropagation()}
+            ref={menuRef}
+            className={`absolute left-0 top-0 h-full w-80 bg-gradient-to-b from-primary-dark to-primary shadow-2xl transform transition-transform duration-300 ${
+              isAnimating ? "translate-x-0" : "-translate-x-full"
+            }`}
+            style={{ zIndex: 10000 }}
           >
             <div className="p-6 h-full flex flex-col">
-              {/* Header with user info */}
-              <div className="flex items-center gap-3 mb-8">
-                <img
-                  src={assets.userPlaceholder}
-                  className="w-12 h-12 rounded-full"
-                  alt="Profile"
-                />
-                <div>
-                  <h2 className="text-white font-semibold">
-                    {getUserDisplayName()}
-                  </h2>
-                  <p className="text-gray-400 text-sm">@{getUsername()}</p>
+              <div className="flex justify-between items-center mb-8">
+                <div className="flex items-center gap-3">
+                  <img
+                    src={assets.userPlaceholder}
+                    className="w-12 h-12 rounded-full"
+                    alt="Profile"
+                  />
+                  <div>
+                    <h2 className="text-white font-semibold">
+                      {getUserDisplayName()}
+                    </h2>
+                    <p className="text-gray-400 text-sm">@{getUsername()}</p>
+                  </div>
                 </div>
+                <button
+                  onClick={closeMenu}
+                  className="p-2 text-white hover:bg-white/10 rounded-lg transition-colors duration-200"
+                  aria-label="Close menu"
+                >
+                  <X size={24} />
+                </button>
               </div>
 
-              {/* Navigation Items */}
-              <nav className="flex-1 space-y-2 mb-6">
+              <nav className="flex-1 space-y-3 mb-8">
                 {navItems.map(({ label, icon: Icon, href }) => (
                   <Link
                     key={label}
                     to={href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center gap-4 rounded-xl px-4 py-3 hover:bg-white/15 transition-colors duration-200 text-white"
+                    onClick={closeMenu}
+                    className="flex items-center gap-4 rounded-xl px-4 py-4 hover:bg-white/15 transition-all duration-200 text-white "
                   >
-                    <Icon size={20} />
-                    <span className="text-lg">{label}</span>
+                    <Icon size={22} />
+                    <span>{label}</span>
                   </Link>
                 ))}
               </nav>
 
-              {/* Features Section */}
-              <div className="space-y-4 mb-6">
-                <div className="mb-4">
-                  <SearchInput placeholder="Search transactions..." />
-                </div>
-
-                <div className="p-3 bg-white/10 rounded-xl">
-                  <DateDropdown />
-                </div>
-
-                <div className="flex justify-center">
-                  <ThemeToggle />
-                </div>
-              </div>
-
-              {/* Logout Button */}
-              <div className="mt-auto pt-4 border-t border-white/20">
+              <div className="mt-auto pt-6 border-t border-white/20">
                 <LogoutButton
                   size="large"
-                  className="w-full flex items-center justify-center gap-3 py-3 rounded-xl hover:bg-white/15 transition-colors duration-200 text-white"
-                  startIcon={<LogOut size={20} />}
+                  className="w-full flex items-center justify-center gap-3 py-7 border-none rounded-xl hover:bg-white/15 transition-colors duration-200 text-white"
+                  startIcon={<LogOut size={22} />}
                 >
                   Logout
                 </LogoutButton>
