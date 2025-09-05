@@ -1,3 +1,4 @@
+// validators/expense.validator.js
 import { body, param, query } from "express-validator";
 
 export const createExpenseValidator = [
@@ -16,39 +17,51 @@ export const createExpenseValidator = [
 
   body("type")
     .optional()
-    .isIn(["ONE_TIME", "RECURRING"])
-    .withMessage("Type must be either ONE_TIME or RECURRING"),
+    .isIn(["one-time", "recurring"])
+    .withMessage("Type must be either one-time or recurring"),
 
-  body("receipt_upload")
-    .optional()
-    .isString()
-    .withMessage("Receipt upload must be a string")
-    .isURL()
-    .withMessage("Receipt upload must be a valid URL"),
-
-  body("expense_date")
-    .optional()
+  // If type is absent (defaults to one-time) OR explicitly 'one-time', require date
+  body("date")
+    .custom((value, { req }) => {
+      const type = req.body.type || "one-time";
+      if (type === "one-time" && !value) {
+        throw new Error("Date is required for one-time expenses");
+      }
+      return true;
+    })
+    .optional({ values: "falsy" })
     .isISO8601()
-    .withMessage("Expense date must be a valid date")
-    .toDate(),
+    .withMessage("Date must be a valid ISO date"),
 
-  body("start_date")
-    .optional()
-    .isISO8601()
-    .withMessage("Start date must be a valid date")
-    .toDate(),
-
-  body("end_date")
-    .optional()
-    .isISO8601()
-    .withMessage("End date must be a valid date")
-    .toDate(),
-
-  body("category_id")
-    .isInt({ min: 1 })
-    .withMessage("Category ID must be a positive integer")
+  body("startDate")
+    .if(body("type").equals("recurring"))
     .notEmpty()
-    .withMessage("Category ID is required"),
+    .withMessage("Start date is required for recurring expenses")
+    .isISO8601()
+    .withMessage("Start date must be a valid ISO date"),
+
+  body("endDate")
+    .optional()
+    .isISO8601()
+    .withMessage("End date must be a valid ISO date")
+    .custom((value, { req }) => {
+      if (
+        value &&
+        req.body.startDate &&
+        new Date(value) < new Date(req.body.startDate)
+      ) {
+        throw new Error("End date must be after start date");
+      }
+      return true;
+    }),
+
+  body("categoryId")
+    .notEmpty()
+    .withMessage("Category ID is required")
+    .isInt({ min: 1 })
+    .withMessage("Category ID must be a positive integer"),
+
+  body("receipt").optional(), // file upload handled by multer
 ];
 
 export const updateExpenseValidator = [
@@ -71,38 +84,50 @@ export const updateExpenseValidator = [
 
   body("type")
     .optional()
-    .isIn(["ONE_TIME", "RECURRING"])
-    .withMessage("Type must be either ONE_TIME or RECURRING"),
+    .isIn(["one-time", "recurring"])
+    .withMessage("Type must be either one-time or recurring"),
 
-  body("receipt_upload")
-    .optional()
-    .isString()
-    .withMessage("Receipt upload must be a string")
-    .isURL()
-    .withMessage("Receipt upload must be a valid URL"),
+  // If explicitly switching to one-time, require date
+  body("date")
+    .custom((value, { req }) => {
+      if (req.body.type === "one-time" && !value) {
+        throw new Error("Date is required when type is one-time");
+      }
+      return true;
+    })
+    .optional({ values: "falsy" })
+    .isISO8601()
+    .withMessage("Date must be a valid ISO date"),
 
-  body("expense_date")
+  // If explicitly switching to recurring, require startDate
+  body("startDate")
+    .if(body("type").equals("recurring"))
+    .notEmpty()
+    .withMessage("Start date is required when type is recurring")
+    .isISO8601()
+    .withMessage("Start date must be a valid ISO date"),
+
+  body("endDate")
     .optional()
     .isISO8601()
-    .withMessage("Expense date must be a valid date")
-    .toDate(),
+    .withMessage("End date must be a valid ISO date")
+    .custom((value, { req }) => {
+      if (
+        value &&
+        req.body.startDate &&
+        new Date(value) < new Date(req.body.startDate)
+      ) {
+        throw new Error("End date must be after start date");
+      }
+      return true;
+    }),
 
-  body("start_date")
-    .optional()
-    .isISO8601()
-    .withMessage("Start date must be a valid date")
-    .toDate(),
-
-  body("end_date")
-    .optional()
-    .isISO8601()
-    .withMessage("End date must be a valid date")
-    .toDate(),
-
-  body("category_id")
+  body("categoryId")
     .optional()
     .isInt({ min: 1 })
     .withMessage("Category ID must be a positive integer"),
+
+  body("receipt").optional(), // file upload handled by multer
 ];
 
 export const getExpenseValidator = [
@@ -120,24 +145,23 @@ export const deleteExpenseValidator = [
 ];
 
 export const listExpensesValidator = [
-  query("startDate")
+  query("start")
     .optional()
     .isISO8601()
-    .withMessage("Start date must be a valid date"),
+    .withMessage("Start date must be a valid ISO date"),
 
-  query("endDate")
+  query("end")
     .optional()
     .isISO8601()
-    .withMessage("End date must be a valid date"),
+    .withMessage("End date must be a valid ISO date"),
 
-  query("categoryId")
+  query("category")
     .optional()
-    .isInt({ min: 1 })
-    .withMessage("Category ID must be a positive integer")
-    .toInt(),
+    .isString()
+    .withMessage("Category must be a string"),
 
   query("type")
     .optional()
-    .isIn(["ONE_TIME", "RECURRING"])
-    .withMessage("Type must be either ONE_TIME or RECURRING"),
+    .isIn(["recurring", "one-time"])
+    .withMessage("Type must be either recurring or one-time"),
 ];

@@ -45,21 +45,27 @@ model ExpenseCategory {
 }
 
 model Expense {
-  expense_id     Int             @id @default(autoincrement())
+  expense_id     Int      @id @default(autoincrement())
   amount         Float
-  description    String?         @db.VarChar(2000)
-  type           String          @default("ONE_TIME") @db.VarChar(20)
-  receipt_upload String?         @db.VarChar(2000)
-  creation_date  DateTime        @default(now())
-  expense_date   DateTime?
-  start_date     DateTime?
-  end_date       DateTime?
+  description    String?  @db.VarChar(2000)
+  type           ExpenseType @default(ONE_TIME)
+  receipt_upload String?  @db.VarChar(2000)
+  creation_date  DateTime @default(now())
+  expense_date   DateTime?  // For one-time expenses or next occurrence of recurring
+  start_date     DateTime?   // When the recurring expense starts
+  end_date       DateTime?   // When the recurring expense ends (null means indefinitely)
+  last_processed DateTime?   // Last time the expense was processed
   user_id        Int
-  user           User            @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  user           User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
   category_id    Int
   category       ExpenseCategory @relation(fields: [category_id], references: [category_id], onDelete: Cascade)
 
   @@map("expense")
+}
+
+enum ExpenseType {
+  ONE_TIME
+  RECURRING
 }
 
 model Income {
@@ -74,9 +80,4 @@ model Income {
   user    User @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
 
   @@map("income")
-}
-
-enum ExpenseType {
-  ONE_TIME
-  RECURRING
 }
