@@ -10,7 +10,11 @@ import { useIncomes } from "../hooks/useIncomes";
 import { computeValueTotal } from "../utils/computeValueTotal";
 import MiniStatCard from "../components/dashboard/DisplayCard";
 import { useToast } from "../ui";
-import { useSummaryAlert } from "../hooks/useSummaryAlert";
+import {
+  useLastSixthMonthSummary,
+  useMonthlySummary,
+  useSummaryAlert,
+} from "../hooks/useSummaryAlert";
 import SummaryAlert from "../components/dashboard/SummaryAlert";
 import { useExpenses } from "../hooks/useExpenses";
 
@@ -31,22 +35,26 @@ const expensesByCat: PieItem[] = [
 function Dashboard() {
   const { data: summaryAlert } = useSummaryAlert();
   const [alertOpen, setAlertOpen] = useState<boolean>(true);
+  const { data: lastSixthMonthSummary } = useLastSixthMonthSummary();
+
+
+  const now = new Date();
 
   const [startDate, setStartDate] = useState<string>(
-    new Date().toISOString().split("T")[0]
+    new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split("T")[0]
   );
   const [endDate, setEndDate] = useState<string>(
-    new Date().toISOString().split("T")[0]
+    new Date(now.getFullYear(), now.getMonth() + 1, 0)
+      .toISOString()
+      .split("T")[0]
   );
 
+  /* Expense and incomes */
   const { incomes, loading, error } = useIncomes(startDate, endDate);
-  const {
-    expenses,
-    loading: expensesLoading,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    error: expensesError,
-  } = useExpenses(startDate, endDate);
-
+  const { expenses, loading: expensesLoading } = useExpenses(
+    startDate,
+    endDate
+  );
   const toast = useToast();
 
   const [totalIncome, setTotalIncome] = useState<number>(0);
@@ -74,13 +82,16 @@ function Dashboard() {
     }
   }, [loading, incomes, expenses, expensesLoading]);
 
+  /* Monthly Summary */
+  const { data } = useMonthlySummary("2025-09");
+
   if (error) {
     toast.error("Failed to load incomes: " + error, {
       autoHideDuration: 2,
     });
   }
   return (
-    <div className="min-w-screen h-screen pt-26 py-5  md:pr-10 md:pl-22 flex flex-col items-center gap-10 md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 z-30">
+    <div className="min-w-screen max-h-screen pt-26 py-5 md:pr-10 md:pl-22 flex flex-col items-center gap-10 md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 z-30">
       {summaryAlert.alert && (
         <SummaryAlert
           alert={summaryAlert.alert}
@@ -90,40 +101,39 @@ function Dashboard() {
         />
       )}
       <div className="col-span-3 flex flex-col gap-5">
+        <div className="flex items-center text-white">
+          <input
+            type="date"
+            value={startDate}
+            onChange={(e) => {
+              const newStart = e.target.value;
+              if (new Date(startDate) < new Date(newStart)) {
+                toast.error("Start date should be before end date");
+                return;
+              }
+              setStartDate(newStart);
+            }}
+          />
+          <input
+            type="date"
+            value={endDate}
+            onChange={(e) => {
+              const newEnd = e.target.value;
+              if (new Date(startDate) > new Date(newEnd)) {
+                toast.error("End date should be after start date");
+                return;
+              }
+              setEndDate(newEnd);
+            }}
+          />
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {toDisplay.map((item, idx) => (
             <MiniStatCard key={idx} {...item} />
           ))}
         </div>
-        <div className="flex flex-col">
-          <div className="flex justify-end text-white">
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => {
-                const newStart = e.target.value;
-                if (new Date(startDate) > new Date(newStart)) {
-                  toast.error("Start date should be before end date");
-                  return;
-                }
-                setStartDate(newStart);
-              }}
-            />
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => {
-                const newEnd = e.target.value;
-                if (new Date(startDate) > new Date(newEnd)) {
-                  toast.error("End date should be after start date");
-                  return;
-                }
-                setEndDate(newEnd);
-              }}
-            />
-          </div>
-          <MonthlyBarChart data={monthlyData} />
-        </div>
+
+        <MonthlyBarChart data={lastSixthMonthSummary} />
       </div>
       <div className="lg:col-span-1 flex flex-col md:h-full items-center gap-4 w-full md:bg-primary/30 py-2 px-5 rounded-lg">
         <PieGraph title={"Expense Overview"} data={expensesByCat} />

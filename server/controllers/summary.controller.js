@@ -20,10 +20,10 @@ export const getSummaryBetweenCustomPeriod = asyncHandler(async (req, res) => {
 
 export const getSummaryForAMonth = asyncHandler(async (req, res) => {
   const { user_id } = req.user;
-  const { date } = req.query;
+  const { month: payload } = req.query;
 
   try {
-    const [year, month] = date.split("-");
+    const [year, month] = payload.split("-");
     const summary = await summaryService.getSummaryForAMonth(
       user_id,
       month,

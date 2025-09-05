@@ -10,7 +10,11 @@ import {
 } from "recharts";
 import Layout from "./Layout";
 import { fmtAr, fmtShort } from "../../utils/formatter";
-export type Row = { month: string; spending: number; income: number };
+export type Row = {
+  totalIncome: number;
+  totalExpense: number;
+  netBalance: number;
+};
 
 const COLORS = {
   spending: "#FF8042",
@@ -20,10 +24,12 @@ const COLORS = {
 export function MonthlyBarChart({ data }: { data: Row[] }) {
   const [show, setShow] = useState({ spending: true, income: true });
 
+  console.log(data);
+
   const totals = useMemo(
     () => ({
-      spending: data.reduce((a, c) => a + c.spending, 0),
-      income: data.reduce((a, c) => a + c.income, 0),
+      spending: data.reduce((a, c) => a + c.totalExpense, 0),
+      income: data.reduce((a, c) => a + c.totalIncome, 0),
     }),
     [data]
   );
@@ -98,7 +104,7 @@ export function MonthlyBarChart({ data }: { data: Row[] }) {
 
           {show.spending && (
             <Bar
-              dataKey="spending"
+              dataKey="totalExpense"
               name="Spending"
               fill="url(#gradSpending)"
               radius={[8, 8, 0, 0]}
@@ -106,7 +112,7 @@ export function MonthlyBarChart({ data }: { data: Row[] }) {
           )}
           {show.income && (
             <Bar
-              dataKey="income"
+              dataKey="totalIncome"
               name="Income"
               fill="url(#gradIncome)"
               radius={[8, 8, 0, 0]}
