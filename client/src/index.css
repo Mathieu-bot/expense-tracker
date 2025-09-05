@@ -1,12 +1,14 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: "Clash Grotesk", system-ui, sans-serif;
   --color-primary-dark: #010c19;
   --color-primary: #01153e;
   --color-primary-light: #052261;
   --color-light: #e0e9f5;
-  --color-accent: #FFDD33
+  --color-accent: #ffdd33;
 }
 
 @layer base {
@@ -62,13 +64,13 @@
     caret-color: currentColor !important;
     background-image: none !important;
     /* Match bg-white/80 ≈ rgba(255,255,255,0.8) */
-    box-shadow: 0 0 0 1000px rgba(255,255,255,0.8) inset !important;
-    -webkit-box-shadow: 0 0 0 1000px rgba(255,255,255,0.8) inset !important;
+    box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.8) inset !important;
+    -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.8) inset !important;
   }
-  
+
   .auth-form input:-moz-autofill,
   .auth-form input:-moz-autofill:focus {
-    box-shadow: 0 0 0 1000px rgba(255,255,255,0.8) inset !important;
+    box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.8) inset !important;
   }
 
   .auth-form input:focus {
@@ -117,4 +119,15 @@
   .scrollbar:hover::-webkit-scrollbar-thumb {
     background-color: var(--color-accent);
   }
+}
+
+/* dark mode styles */
+.dark {
+  color-scheme: dark;
+  --color-light: #f6faff;
+}
+
+
+.dark .scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 221, 51, 0.4);
 }
