@@ -94,7 +94,7 @@ export const IncomeList = forwardRef<IncomeListRef, IncomeListProps>(
               {displayedItems.map((income) => (
                 <div
                   key={income.income_id}
-                  className="bg-white/8 backdrop-blur-lg rounded-xl p-4 border border-white/15 hover:border-accent/30 transition-all duration-300 cursor-pointer hover:shadow-lg group"
+                  className="dark:bg-white/8 backdrop-blur-lg rounded-xl p-4 border border-white/15 hover:border-accent/30 transition-all duration-300 cursor-pointer hover:shadow-lg group"
                   onClick={() => onViewReceipt(income)}
                 >
                   <div className="flex items-center justify-between">

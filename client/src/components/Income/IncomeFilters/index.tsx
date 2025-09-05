@@ -40,14 +40,13 @@ export const IncomeFilters = ({
         <div className="flex items-center gap-3 w-full md:w-auto">
           <div className="flex-1 md:flex-initial">
             <TextField
-              placeholder="Search incomes..."
+              label="Search incomes..."
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
               classes={{
                 input:
-                  "bg-white/5 backdrop-blur-md border border-white/10 text-light placeholder-light/60 rounded-xl",
-                label:
-                  "rounded-full text-primary-dark ", 
+                  "bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-xl",
+                label: "text-white rounded-lg peer-placeholder-shown:text-white/60",
               }}
             />
           </div>

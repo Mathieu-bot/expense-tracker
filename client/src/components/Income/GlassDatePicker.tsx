@@ -16,7 +16,7 @@ export const GlassDatePicker = (
         grid: "grid grid-cols-7 gap-1",
         input:
           "bg-white/5 backdrop-blur-md border border-white/10 text-light placeholder-light/60 rounded-xl",
-        label: "rounded-full text-primary-dark ", // force hide label completely
+        label: "rounded-full text-primary-dark peer-placeholder-shown:text-white/60", 
       }}
     />
   );

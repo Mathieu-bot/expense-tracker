@@ -25,7 +25,7 @@ export const DateRangeFilter = ({
   }, [dateError]);
 
   return (
-    <div className="bg-gradient-to-br from-primary-light/10 to-primary-dark/10 backdrop-blur-xl rounded-2xl p-6 border border-white/5 mb-6 shadow-lg animate-in fade-in-50">
+    <div className="bg-gradient-to-br bg-white/10 dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl p-6 border border-white/5 mb-6 shadow-lg animate-in fade-in-50">
       <h3 className="text-lg font-medium text-light/90 mb-4 flex items-center gap-2">
         <Calendar className="w-5 h-5 text-accent" />
         Filter Incomes
