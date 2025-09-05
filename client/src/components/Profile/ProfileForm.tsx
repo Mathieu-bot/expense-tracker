@@ -72,7 +72,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
     };
 
   return (
-    <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-2xl rounded-3xl p-8 border border-white/15 shadow-2xl transition-all duration-500 hover:shadow-2xl">
+    <div className="bg-gradient-to-br from-primary-light/10 to-primary-dark/10 backdrop-blur-xl rounded-3xl p-8 border border-white/15 shadow-2xl transition-all duration-500 hover:shadow-2xl">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-accent/15 flex items-center justify-center border border-accent/20">

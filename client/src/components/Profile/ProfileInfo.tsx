@@ -35,12 +35,14 @@ const ProfileInfo = ({ user, activeTab, onTabChange }: ProfileInfoProps) => {
   return (
     <div className="relative">
       <div
-        className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-2xl 
+        className="bg-gradient-to-br from-primary-light/10 to-primary-dark/10 backdrop-blur-xl
                       rounded-3xl py-5 border border-white/15 shadow-2xl h-full 
                       relative overflow-hidden group flex"
       >
         {/* left content*/}
         <div className="flex-1 relative z-10">
+          <div className="absolute top-0 -right-2 w-32 h-32 bg-accent/5 rounded-full -translate-y-16 translate-x-16"></div>
+          <div className="absolute bottom-0 -left-4 w-24 h-24 bg-cyan-400/5 rounded-full translate-y-12 -translate-x-12"></div>
           {/*profile*/}
           <div className="flex flex-col items-center mb-8">
             <div className="relative mb-2 group">
