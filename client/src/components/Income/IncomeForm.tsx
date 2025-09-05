@@ -161,7 +161,7 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
                 V 10
                 Q 0,0 10,0
               "
-              fill="rgba(255,255,255,0.05)"
+              fill="rgba(255,255,255,0.1)"
               stroke="rgba(255,255,255,0.15)"
               strokeWidth={0.8}
             />
