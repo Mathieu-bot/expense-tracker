@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { IncomeForm } from "../components/Income/IncomeForm";
-import { Button, useToast, Skeleton } from "../ui";
+import { useToast, Skeleton } from "../ui";
 import { IncomeService } from "../services/IncomeService";
 import type { Income, UpdateIncomeRequest } from "../types/Income";
 
@@ -64,26 +64,11 @@ export const EditIncome = () => {
   }
 
   return (
-    <div className="p-6 max-w-2xl mx-auto pt-20">
-      <div className="flex items-center mb-6">
-        <Button
-          onClick={handleCancel}
-          className="mr-4 border border-gray-300"
-          size="small"
-        >
-          ← Back
-        </Button>
-        <h1 className="text-2xl font-semibold">Edit Income</h1>
-      </div>
-
-      <div className="bg-white rounded-lg shadow p-6">
-        <IncomeForm
-          income={income}
-          onSave={handleSave}
-          onCancel={handleCancel}
-          open={true}
-        />
-      </div>
-    </div>
+    <IncomeForm
+      income={income}
+      onSave={handleSave}
+      onCancel={handleCancel}
+      open={true}
+    />
   );
 };
