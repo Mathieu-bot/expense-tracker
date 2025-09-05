@@ -4,7 +4,6 @@ import { Incomes } from "./pages/Incomes";
 import Sidebar from "./components/common/Sidebar";
 import Dashboard from "./pages/Dashboard";
 import BackgroundImage from "./components/common/BackgroundImage";
-import { CreateIncome } from "./pages/CreateIncome";
 import { EditIncome } from "./pages/EditIncome";
 import Mascot from "./components/common/Mascot";
 import RequireAuth from "./components/common/RequireAuth";
@@ -17,6 +16,8 @@ import DashboardHeader  from "./components/common/Header/Header";
 import Expenses from "./pages/Expenses";
 import { CreateExpense } from "./pages/CreateExpense";
 import { EditExpense } from "./pages/EditExpense";
+import { CreateIncome } from "./pages/CreateIncome";
+
 
 function App() {
   const location = useLocation();
@@ -57,7 +58,7 @@ function App() {
               <Route path="/expenses/new" element={<CreateExpense />} />
               <Route path="/expenses/:id/edit" element={<EditExpense />} />
               <Route path="/incomes" element={<Incomes />} />
-              <Route path="/incomes/new" element={<CreateIncome />} />
+              <Route path="/incomes/new" element={<CreateIncome/>} />
               <Route path="/incomes/:id/edit" element={<EditIncome />} />
               <Route path="/profile" element={<Profile />} />
           </Route>
