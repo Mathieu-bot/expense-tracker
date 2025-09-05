@@ -27,8 +27,11 @@ const getSummaryBetweenCustomPeriod = async (user_id, start, end) => {
         },
         {
           type: "RECURRING",
-          start_date: toDateRange(start, end),
-          end_date: toDateRange(start, end),
+          start_date: { lte: new Date(end || new Date()) },
+          OR: [
+            { end_date: null },
+            { end_date: { gte: new Date(start || "1970-01-01") } },
+          ],
         },
       ],
     },
@@ -46,6 +49,7 @@ const getSummaryForAMonth = async (user_id, month, year) => {
   const start = new Date(`${year}-${month}-01T00:00:00.000Z`);
   const nextMonth = (parseInt(month, 10) + 1).toString().padStart(2, "0");
   const end = new Date(`${year}-${nextMonth}-01T00:00:00.000Z`);
+
 
   const incomeSummary = await prisma.income.aggregate({
     _sum: { amount: true },
@@ -66,8 +70,11 @@ const getSummaryForAMonth = async (user_id, month, year) => {
         },
         {
           type: "RECURRING",
-          start_date: { gte: start, lt: end },
-          end_date: { gte: start, lt: end },
+          start_date: { lte: new Date(end || new Date()) },
+          OR: [
+            { end_date: null },
+            { end_date: { gte: new Date(start || "1970-01-01") } },
+          ],
         },
       ],
     },
@@ -101,8 +108,11 @@ const getAlert = async (user_id) => {
         },
         {
           type: "RECURRING",
-          start_date: { gte: start, lt: end },
-          end_date: { gte: start, lt: end },
+          start_date: { lte: new Date(end || new Date()) },
+          OR: [
+            { end_date: null },
+            { end_date: { gte: new Date(start || "1970-01-01") } },
+          ],
         },
       ],
     },

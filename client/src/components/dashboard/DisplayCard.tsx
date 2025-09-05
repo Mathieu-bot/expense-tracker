@@ -10,6 +10,7 @@ export type MiniStatItem = {
   valueSuffix?: string;
   formatValue?: (v: number) => string;
   className?: string;
+  filterWasUsed: boolean;
 };
 
 const nfMG = new Intl.NumberFormat("fr-MG");
@@ -27,6 +28,7 @@ export default function MiniStatCard({
   deltaPct,
   valueSuffix,
   formatValue,
+  filterWasUsed,
 }: MiniStatItem) {
   const isUp = typeof deltaPct === "number" ? deltaPct >= 0 : undefined;
   const deltaColor =
@@ -42,7 +44,6 @@ export default function MiniStatCard({
     ? nfMG.format(value)
     : fmtArShort(value);
 
-
   return (
     <div className="bg-gradient-to-br from-primary/20 to-gray-800/20 backdrop-blur-xl rounded-2xl py-4 px-5 border border-white/5 shadow-lg hover:shadow-accent/20 transition-shadow duration-300 flex flex-col gap-3">
       {/* Header */}
@@ -56,7 +57,7 @@ export default function MiniStatCard({
       {/* Value + Delta alignés */}
       <div className="flex items-center justify-between">
         <div
-          className={`text-3xl font-semibold tracking-tight ${
+          className={`text-2xl font-semibold tracking-tight ${
             value < 0 ? "text-red-400" : "text-white"
           }`}
         >
@@ -64,7 +65,7 @@ export default function MiniStatCard({
           {valueSuffix ? valueSuffix : ""}
         </div>
 
-        {typeof deltaPct === "number" && (
+        {typeof deltaPct === "number" && !filterWasUsed ? (
           <span
             className={`ml-3 text-sm font-semibold px-2.5 py-1 rounded-full inline-flex items-center gap-1 ${deltaColor}`}
           >
@@ -76,7 +77,7 @@ export default function MiniStatCard({
             {isUp ? "+" : ""}
             {deltaPct.toFixed(1)}%
           </span>
-        )}
+        ) : null}
       </div>
     </div>
   );

@@ -39,6 +39,7 @@ function Dashboard() {
       }
     )
   );
+  const [filterWasUsed, setFilterWasUsed] = useState<boolean>(false);
 
   /* Expense and incomes */
   const { incomes, loading, error } = useIncomes(startDate, endDate);
@@ -46,6 +47,7 @@ function Dashboard() {
     startDate,
     endDate
   );
+  console.log(expenses);
 
   /* Last month stat for the comparison */
   const { data: lastMonthSummary } = useMonthlySummary(
@@ -131,6 +133,7 @@ function Dashboard() {
 
   /* Event Handler */
   const handleDateChange = (e: Date, field: string) => {
+    setFilterWasUsed(true);
     switch (field) {
       case "start": {
         const date = new Date(e as Date).toLocaleDateString("fr-CA", {
@@ -185,6 +188,7 @@ function Dashboard() {
         }
       )
     );
+    setFilterWasUsed(false);
   };
 
   return (
@@ -225,7 +229,7 @@ function Dashboard() {
         {/* CARD */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {toDisplay.map((item, idx) => (
-            <MiniStatCard key={idx} {...item} />
+            <MiniStatCard key={idx} {...item} filterWasUsed={filterWasUsed} />
           ))}
         </div>
 

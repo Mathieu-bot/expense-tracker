@@ -89,8 +89,8 @@ export default function PieGraph({
           />
         </PieChart>
       </ResponsiveContainer>
-      <span className="text-white text-center block mt-4">
-        Total: {fmtAr(total)}
+      <span className="text-white text-2xl font-semibold text-center block mt-4">
+        Total: <br />{fmtAr(total)}
       </span>
     </Layout>
   );

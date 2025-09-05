@@ -8,6 +8,7 @@ import {
 import getLastSixMonths from "../utils/getLastSixMonth";
 import { DefaultService } from "../api";
 import { formatMonth } from "../utils/formatter";
+import { useMascotStore } from "../stores/mascotStore";
 
 export const useSummaryAlert = () => {
   const [data, setData] = useState<SummaryAlert>({
@@ -22,6 +23,9 @@ export const useSummaryAlert = () => {
         setLoading(true);
 
         const res = await getAlert();
+        if (res.alert == true) {
+          useMascotStore.getState().setExpression("error");
+        }
         setData(res);
       } catch (error) {
         setError(error as string);
