@@ -21,7 +21,7 @@ export const EditExpense = () => {
       try {
         const exp = await ExpenseService.getExpenseById(id);
         setExpense(exp);
-      } catch (e) {
+      } catch {
         toast.error("Failed to load expense");
         navigate("/expenses");
       } finally {
@@ -81,7 +81,10 @@ export const EditExpense = () => {
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setLocal((f) => ({ ...f, [name]: value }));
+    setLocal((f) => ({
+      ...f,
+      [name]: name === "amount" ? (value === "" ? undefined : Number(value)) : value,
+    }));
   };
 
   const onFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -129,7 +132,7 @@ export const EditExpense = () => {
               name="amount"
               type="number"
               step="0.01"
-              value={local.amount as any}
+              value={local.amount !== undefined ? String(local.amount) : ""}
               onChange={onChange}
               className="w-full rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
             />

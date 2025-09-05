@@ -6,6 +6,14 @@ import type {
   UpdateExpenseRequest,
 } from "../types/Expense";
 
+type ApiEnvelope<T> = { success: boolean; data: T };
+function hasData<T>(r: unknown): r is { data: T } {
+  return typeof r === "object" && r !== null && "data" in (r as Record<string, unknown>);
+}
+function unwrap<T>(response: unknown): T {
+  return hasData<T>(response) ? (response as ApiEnvelope<T>).data : (response as T);
+}
+
 export class ExpenseService {
   // GET all expenses with optional filtering
   static async getExpenses(
@@ -22,9 +30,7 @@ export class ExpenseService {
         type
       );
       useMascotStore.getState().setExpression("success");
-      // Server wraps payload as { success, data, ... }
-      const data = (response as any)?.data ?? response;
-      return data as Expense[];
+      return unwrap<Expense[]>(response);
     } catch (error) {
       useMascotStore.getState().setExpression("error");
       console.error("Error fetching expenses:", error);
@@ -37,8 +43,7 @@ export class ExpenseService {
     try {
       const response = await DefaultService.getExpenses1(id);
       useMascotStore.getState().setExpression("success");
-      const data = (response as any)?.data ?? response;
-      return data as Expense;
+      return unwrap<Expense>(response);
     } catch (error) {
       useMascotStore.getState().setExpression("error");
       console.error(`Error fetching expense ${id}:`, error);
@@ -61,8 +66,7 @@ export class ExpenseService {
       };
       const response = await DefaultService.postExpenses(payload);
       useMascotStore.getState().setExpression("success");
-      const data = (response as any)?.data ?? response;
-      return data as Expense;
+      return unwrap<Expense>(response);
     } catch (error) {
       useMascotStore.getState().setExpression("error");
       console.error("Error creating expense:", error);
@@ -88,8 +92,7 @@ export class ExpenseService {
       };
       const response = await DefaultService.putExpenses(id, payload);
       useMascotStore.getState().setExpression("success");
-      const data = (response as any)?.data ?? response;
-      return data as Expense;
+      return unwrap<Expense>(response);
     } catch (error) {
       useMascotStore.getState().setExpression("error");
       console.error(`Error updating expense ${id}:`, error);
