@@ -1,46 +1,97 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "../db/prisma.js";
 
-//Post
-
-export const createExpense = async (userId, expenseData) => {
+/**
+ * Create a new expense
+ * @param {Object} expenseData - The expense data
+ * @returns {Promise<Object>} Result object with success status and data/error
+ */
+export const createExpense = async (expenseData) => {
   try {
-    const expense = await prisma.expense.create({
+    const {
+      amount,
+      date,
+      categoryId,
+      description,
+      type = "one-time",
+      startDate,
+      endDate,
+      receipt_upload,
+      user_id, // from controller
+      ...rest
+    } = expenseData;
+
+    // Convert amount to float
+    const normalizedAmount =
+      typeof amount === "string" ? parseFloat(amount) : amount;
+
+    // Map API type to DB type
+    const dbType = type === "recurring" ? "RECURRING" : "ONE_TIME";
+
+    // Validate required fields based on type
+    if (type === "one-time" && !date) {
+      return {
+        success: false,
+        error: "Date is required for one-time expenses",
+      };
+    }
+    if (type === "recurring" && !startDate) {
+      return {
+        success: false,
+        error: "Start date is required for recurring expenses",
+      };
+    }
+
+    const created = await prisma.expense.create({
       data: {
-        amount: expenseData.amount,
-        description: expenseData.description,
-        type: expenseData.type || "ONE_TIME",
-        receipt_upload: expenseData.receipt_upload,
-        expense_date: expenseData.expense_date
-          ? new Date(expenseData.expense_date)
-          : null,
-        start_date: expenseData.start_date
-          ? new Date(expenseData.start_date)
-          : null,
-        end_date: expenseData.end_date ? new Date(expenseData.end_date) : null,
-        user_id: expenseData.user_id,
-        category_id: expenseData.category_id,
+        ...rest,
+        amount: normalizedAmount,
+        description,
+        user_id: parseInt(user_id),
+        category_id: parseInt(categoryId),
+        type: dbType,
+        expense_date: type === "one-time" ? new Date(date) : null,
+        start_date: type === "recurring" ? new Date(startDate) : null,
+        end_date: endDate ? new Date(endDate) : null,
+        receipt_upload,
       },
-      include: {
-        category: true,
-      },
+      include: { category: true },
     });
-    return { success: true, data: expense };
+
+    // Transform response to match API format (avoid duplicate snake_case + camelCase)
+    const response = {
+      expense_id: created.expense_id,
+      amount: created.amount,
+      description: created.description,
+      type: created.type === "RECURRING" ? "recurring" : "one-time",
+      receipt_upload: created.receipt_upload,
+      date: created.expense_date,
+      startDate: created.start_date,
+      endDate: created.end_date,
+      last_processed: created.last_processed,
+      user_id: created.user_id,
+      categoryId: created.category_id,
+      category: created.category,
+    };
+
+    return { success: true, data: response };
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2002") {
-        return { success: false, error: "Expense already exists" };
-      }
       if (error.code === "P2003") {
-        return { success: false, error: "Invalid user_id or category_id" };
+        return { success: false, error: "Invalid categoryId" };
       }
     }
+    console.error("Error in createExpense:", error);
     return { success: false, error: error.message };
   }
 };
 
-//Get expense by id
-
+/**
+ * Get an expense by ID
+ * @param {string|number} expenseId - The expense ID
+ * @param {string|number} userId - The user ID
+ * @returns {Promise<Object>} Result object with success status and data/error
+ */
 export const getExpenseById = async (expenseId, userId) => {
   try {
     const expense = await prisma.expense.findFirst({
@@ -57,52 +108,124 @@ export const getExpenseById = async (expenseId, userId) => {
       return { success: false, error: "Expense not found" };
     }
 
-    return { success: true, data: expense };
+    // Transform response to match API format (avoid duplicate snake_case + camelCase)
+    const response = {
+      expense_id: expense.expense_id,
+      amount: expense.amount,
+      description: expense.description,
+      type: expense.type === "RECURRING" ? "recurring" : "one-time",
+      receipt_upload: expense.receipt_upload,
+      date: expense.expense_date,
+      startDate: expense.start_date,
+      endDate: expense.end_date,
+      last_processed: expense.last_processed,
+      user_id: expense.user_id,
+      categoryId: expense.category_id,
+      category: expense.category,
+    };
+
+    return { success: true, data: response };
   } catch (error) {
     return { success: false, error: error.message };
   }
 };
 
-//Get all
-
+/**
+ * Get all expenses with filters
+ * @param {string|number} userId - The user ID
+ * @param {Object} filters - Filter options
+ * @returns {Promise<Object>} Result object with success status and data/error
+ */
 export const getAllExpenses = async (userId, filters = {}) => {
   try {
-    const { startDate, endDate, categoryId, type } = filters;
+    const { start, end, category, type } = filters;
 
     const where = {
       user_id: parseInt(userId),
+      AND: [],
     };
 
-    if (startDate || endDate) {
-      where.expense_date = {};
-      if (startDate) where.expense_date.gte = new Date(startDate);
-      if (endDate) where.expense_date.lte = new Date(endDate);
+    // Apply category filter by category name
+    if (category) {
+      where.AND.push({
+        category: {
+          category_name: category,
+        },
+      });
     }
 
-    if (categoryId) where.category_id = parseInt(categoryId);
-    if (type) where.type = type;
+    // Apply date range filter and type filter respecting behaviors
+    if (start || end) {
+      const dateRange = {
+        ...(start ? { gte: new Date(start) } : {}),
+        ...(end ? { lte: new Date(end) } : {}),
+      };
+
+      let orConditions = [
+        { type: "ONE_TIME", expense_date: dateRange },
+        {
+          type: "RECURRING",
+          start_date: { lte: new Date(end || new Date()) },
+          OR: [
+            { end_date: null },
+            { end_date: { gte: new Date(start || "1970-01-01") } },
+          ],
+        },
+      ];
+
+      // Apply type filter if specified without reassigning const
+      if (type) {
+        const dbType = type === "recurring" ? "RECURRING" : "ONE_TIME";
+        orConditions = orConditions.filter((condition) => condition.type === dbType);
+      }
+
+      where.AND.push({ OR: orConditions });
+    } else if (type) {
+      where.AND.push({ type: type === "recurring" ? "RECURRING" : "ONE_TIME" });
+    }
 
     const expenses = await prisma.expense.findMany({
       where,
-      include: {
-        category: true,
-      },
-      orderBy: {
-        expense_date: "desc",
-      },
+      include: { category: true },
+      orderBy: [
+        { expense_date: "asc" },
+        { creation_date: "asc" },
+        { start_date: "asc" },
+      ],
     });
 
-    return { success: true, data: expenses };
+    // Transform response to match API format (avoid duplicate snake_case + camelCase)
+    const response = expenses.map((expense) => ({
+      expense_id: expense.expense_id,
+      amount: expense.amount,
+      description: expense.description,
+      type: expense.type === "RECURRING" ? "recurring" : "one-time",
+      receipt_upload: expense.receipt_upload,
+      date: expense.expense_date,
+      startDate: expense.start_date,
+      endDate: expense.end_date,
+      last_processed: expense.last_processed,
+      user_id: expense.user_id,
+      categoryId: expense.category_id,
+      category: expense.category,
+    }));
+
+    return { success: true, data: response };
   } catch (error) {
+    console.error("Error in getAllExpenses:", error);
     return { success: false, error: error.message };
   }
 };
 
-//Update expense
-
+/**
+ * Update an expense
+ * @param {string|number} expenseId - The expense ID
+ * @param {string|number} userId - The user ID
+ * @param {Object} updateData - The data to update
+ * @returns {Promise<Object>} Result object with success status and data/error
+ */
 export const updateExpense = async (expenseId, userId, updateData) => {
   try {
-    // First verify the expense exists and belongs to the user
     const existingExpense = await prisma.expense.findFirst({
       where: {
         expense_id: parseInt(expenseId),
@@ -114,59 +237,87 @@ export const updateExpense = async (expenseId, userId, updateData) => {
       return { success: false, error: "Expense not found or access denied" };
     }
 
-    // Prepare the data to update
-    const dataToUpdate = {};
-    const allowedFields = [
-      "amount",
-      "description",
-      "type",
-      "receipt_upload",
-      "expense_date",
-      "start_date",
-      "end_date",
-      "category_id",
-    ];
+    const {
+      amount,
+      date,
+      categoryId,
+      description,
+      type,
+      startDate,
+      endDate,
+      receipt_upload,
+    } = updateData;
 
-    Object.keys(updateData).forEach((key) => {
-      if (allowedFields.includes(key) && updateData[key] !== undefined) {
-        // Handle date fields
-        if (key.endsWith("_date") && updateData[key]) {
-          dataToUpdate[key] = new Date(updateData[key]);
-        } else {
-          dataToUpdate[key] = updateData[key];
-        }
-      }
-    });
+    const data = {
+      ...(amount !== undefined && {
+        amount: typeof amount === "string" ? parseFloat(amount) : amount,
+      }),
+      ...(description !== undefined && { description }),
+      ...(categoryId !== undefined && { category_id: parseInt(categoryId) }),
+      ...(receipt_upload !== undefined && { receipt_upload }),
+    };
+
+    if (type === "one-time") {
+      data.type = "ONE_TIME";
+      data.expense_date = date ? new Date(date) : null;
+      data.start_date = null;
+      data.end_date = null;
+    } else if (type === "recurring") {
+      data.type = "RECURRING";
+      data.start_date = startDate ? new Date(startDate) : null;
+      data.end_date = endDate ? new Date(endDate) : null;
+      data.expense_date = null;
+    }
 
     const updatedExpense = await prisma.expense.update({
       where: {
         expense_id: parseInt(expenseId),
       },
-      data: dataToUpdate,
+      data,
       include: {
         category: true,
       },
     });
 
-    return { success: true, data: updatedExpense };
+    // Transform response to match API format (avoid duplicate snake_case + camelCase)
+    const response = {
+      expense_id: updatedExpense.expense_id,
+      amount: updatedExpense.amount,
+      description: updatedExpense.description,
+      type: updatedExpense.type === "RECURRING" ? "recurring" : "one-time",
+      receipt_upload: updatedExpense.receipt_upload,
+      date: updatedExpense.expense_date,
+      startDate: updatedExpense.start_date,
+      endDate: updatedExpense.end_date,
+      last_processed: updatedExpense.last_processed,
+      user_id: updatedExpense.user_id,
+      categoryId: updatedExpense.category_id,
+      category: updatedExpense.category,
+    };
+
+    return { success: true, data: response };
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2025") {
         return { success: false, error: "Expense not found" };
       }
       if (error.code === "P2003") {
-        return { success: false, error: "Invalid category_id" };
+        return { success: false, error: "Invalid categoryId" };
       }
     }
+    console.error("Error in updateExpense:", error);
     return { success: false, error: error.message };
   }
 };
 
-//Delete
-
+/**
+ * Delete an expense
+ * @param {string|number} expenseId - The expense ID
+ * @param {string|number} userId - The user ID
+ * @returns {Promise<Object>} Result object with success status and data/error
+ */
 export const deleteExpense = async (expenseId, userId) => {
   try {
-    // First verify the expense exists and belongs to the user
     const existingExpense = await prisma.expense.findFirst({
       where: {
         expense_id: parseInt(expenseId),
@@ -178,13 +329,13 @@ export const deleteExpense = async (expenseId, userId) => {
       return { success: false, error: "Expense not found or access denied" };
     }
 
-    const deletedExpense = await prisma.expense.delete({
+    await prisma.expense.delete({
       where: {
         expense_id: parseInt(expenseId),
       },
     });
 
-    return { success: true, data: deletedExpense };
+    return { success: true, data: { id: expenseId } };
   } catch (error) {
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
@@ -192,6 +343,7 @@ export const deleteExpense = async (expenseId, userId) => {
     ) {
       return { success: false, error: "Expense not found" };
     }
+    console.error("Error in deleteExpense:", error);
     return { success: false, error: error.message };
   }
 };

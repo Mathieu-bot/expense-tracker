@@ -20,3 +20,15 @@ export const formatShortDate = (dateString: string): string => {
     day: "numeric",
   });
 };
+
+export const fmt =(dateStr?: string | null) => {
+  if (!dateStr) return "";
+  try {
+    const d = new Date(dateStr);
+    if (Number.isNaN(d.getTime())) return "";
+    return d.toISOString().slice(0, 10);
+  } catch {
+    return "";
+  }
+}
+

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Button, TextField } from "../../ui";
+import { Button, useToast } from "../../ui";
 import type { ChangePasswordRequest } from "../../types/UserProfile";
-import { createFieldChangeHandler } from "../../utils/formUtils";
+import { Lock, Eye, EyeOff } from "lucide-react";
 
 interface PasswordFormProps {
   onChangePassword: (
@@ -19,9 +19,14 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
     newPassword: "",
     confirmPassword: "",
   });
-  const [message, setMessage] = useState("");
+  const [showPasswords, setShowPasswords] = useState({
+    current: false,
+    new: false,
+    confirm: false,
+  });
   const [formError, setFormError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const toast = useToast();
 
   const validateForm = (): boolean => {
     const errors: Record<string, string> = {};
@@ -49,7 +54,6 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setMessage("");
     setFormError("");
     setFieldErrors({});
 
@@ -61,134 +65,161 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
     });
 
     if (result.success) {
-      setMessage("Password changed successfully!");
+      toast.success("Password changed successfully!");
       setFormData({
         currentPassword: "",
         newPassword: "",
         confirmPassword: "",
       });
-      setTimeout(() => setMessage(""), 3000);
     } else {
-      const error = result.error || "Failed to change password";
-      setFormError(error);
-
-      if (
-        error.toLowerCase().includes("current") ||
-        error.toLowerCase().includes("incorrect")
-      ) {
-        setFieldErrors((prev) => ({ ...prev, currentPassword: error }));
-      } else if (
-        error.toLowerCase().includes("new") ||
-        error.toLowerCase().includes("password")
-      ) {
-        if (
-          error.toLowerCase().includes("uppercase") ||
-          error.toLowerCase().includes("number") ||
-          error.toLowerCase().includes("6") ||
-          error.toLowerCase().includes("character")
-        ) {
-          setFieldErrors((prev) => ({ ...prev, newPassword: error }));
-        } else {
-          setFormError(error);
-        }
-      } else {
-        setFormError(error);
-      }
+      setFormError(result.error || "Failed to change password");
     }
   };
 
-  const handleCurrentPasswordChange = createFieldChangeHandler(
-    setFormData,
-    "currentPassword"
-  );
-  const handleNewPasswordChange = createFieldChangeHandler(
-    setFormData,
-    "newPassword"
-  );
-  const handleConfirmPasswordChange = createFieldChangeHandler(
-    setFormData,
-    "confirmPassword"
-  );
+  const handleInputChange =
+    (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      setFormData((prev) => ({ ...prev, [field]: e.target.value }));
+      if (fieldErrors[field]) {
+        setFieldErrors((prev) => ({ ...prev, [field]: "" }));
+      }
+      if (formError) setFormError("");
+    };
 
-  const clearFieldError = (fieldName: string) => {
-    if (fieldErrors[fieldName]) {
-      setFieldErrors((prev) => ({ ...prev, [fieldName]: "" }));
-    }
-    if (formError) setFormError("");
+  const togglePasswordVisibility = (field: keyof typeof showPasswords) => {
+    setShowPasswords((prev) => ({ ...prev, [field]: !prev[field] }));
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Change Password</h2>
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <TextField
-          label="Current Password"
-          type="password"
-          value={formData.currentPassword}
-          onChange={handleCurrentPasswordChange}
-          onFocus={() => clearFieldError("currentPassword")}
-          placeholder="Enter current password"
-          variant="outlined"
-          size="medium"
-          fullWidth
-          error={!!fieldErrors.currentPassword}
-          helperText={fieldErrors.currentPassword}
-        />
-
-        <TextField
-          label="New Password"
-          type="password"
-          value={formData.newPassword}
-          onChange={handleNewPasswordChange}
-          onFocus={() => clearFieldError("newPassword")}
-          placeholder="Enter new password"
-          variant="outlined"
-          size="medium"
-          fullWidth
-          error={!!fieldErrors.newPassword}
-          helperText={
-            fieldErrors.newPassword ||
-            "Must be at least 6 characters with 1 uppercase letter and 1 number"
-          }
-        />
-
-        <TextField
-          label="Confirm New Password"
-          type="password"
-          value={formData.confirmPassword}
-          onChange={handleConfirmPasswordChange}
-          onFocus={() => clearFieldError("confirmPassword")}
-          placeholder="Confirm new password"
-          variant="outlined"
-          size="medium"
-          fullWidth
-          error={!!fieldErrors.confirmPassword}
-          helperText={fieldErrors.confirmPassword}
-        />
-
-        {message && (
-          <div className="p-3 bg-green-100 border border-green-400 text-green-700 rounded-md">
-            {message}
+    <div className="bg-gradient-to-br from-primary-light/10 to-primary-dark/10 backdrop-blur-xl rounded-3xl p-8 border border-white/15 shadow-2xl transition-all duration-500">
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-cyan-400/15 flex items-center justify-center border border-cyan-400/20">
+            <Lock className="w-6 h-6 text-cyan-400" />
           </div>
-        )}
+          <div>
+            <h2 className="text-xl font-semibold text-white">
+              Change Password
+            </h2>
+            <p className="text-light/60 text-sm">
+              Secure your account with a new password
+            </p>
+          </div>
+        </div>
+      </div>
 
-        {formError && !Object.values(fieldErrors).some((error) => error) && (
-          <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div>
+          <label className="block text-sm font-medium text-light/70 mb-3">
+            Current Password
+          </label>
+          <div className="relative">
+            <input
+              type={showPasswords.current ? "text" : "password"}
+              value={formData.currentPassword}
+              onChange={handleInputChange("currentPassword")}
+              className="w-full bg-white/5 backdrop-blur-lg border outline-none border-white/10 rounded-2xl px-4 py-3 text-white placeholder-light/40 focus:border-cyan-400/50 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-300 pr-12"
+              placeholder="Enter current password"
+            />
+            <button
+              type="button"
+              onClick={() => togglePasswordVisibility("current")}
+              className="absolute right-0 top-1/2 -translate-y-1/2 text-light/40 hover:text-white transition-colors duration-300"
+            >
+              {showPasswords.current ? (
+                <EyeOff className="w-5 h-5" />
+              ) : (
+                <Eye className="w-5 h-5" />
+              )}
+            </button>
+          </div>
+          {fieldErrors.currentPassword && (
+            <p className="text-red-400 text-sm mt-2">
+              {fieldErrors.currentPassword}
+            </p>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-light/70 mb-3">
+            New Password
+          </label>
+          <div className="relative">
+            <input
+              type={showPasswords.new ? "text" : "password"}
+              value={formData.newPassword}
+              onChange={handleInputChange("newPassword")}
+              className="w-full bg-white/5 backdrop-blur-lg border outline-none border-white/10 rounded-2xl px-4 py-3 text-white placeholder-light/40 focus:border-cyan-400/50 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-300 pr-12"
+              placeholder="Enter new password"
+            />
+            <button
+              type="button"
+              onClick={() => togglePasswordVisibility("new")}
+              className="absolute right-0 top-1/2 -translate-y-1/2 text-light/40 hover:text-white transition-colors duration-300"
+            >
+              {showPasswords.new ? (
+                <EyeOff className="w-5 h-5" />
+              ) : (
+                <Eye className="w-5 h-5" />
+              )}
+            </button>
+          </div>
+          {fieldErrors.newPassword ? (
+            <p className="text-red-400 text-sm mt-2">
+              {fieldErrors.newPassword}
+            </p>
+          ) : (
+            <p className="text-light/40 text-sm mt-2">
+              Must be at least 6 characters with 1 uppercase letter and 1 number
+            </p>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-light/70 mb-3">
+            Confirm New Password
+          </label>
+          <div className="relative">
+            <input
+              type={showPasswords.confirm ? "text" : "password"}
+              value={formData.confirmPassword}
+              onChange={handleInputChange("confirmPassword")}
+              className="w-full bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl px-4 py-3 text-white placeholder-light/40 focus:border-cyan-400/50 outline-none focus:ring-2 focus:ring-cyan-400/20 transition-all duration-300 pr-12"
+              placeholder="Confirm new password"
+            />
+            <button
+              type="button"
+              onClick={() => togglePasswordVisibility("confirm")}
+              className="absolute right-0 top-1/2 -translate-y-1/2 text-light/40 hover:text-white transition-colors duration-300"
+            >
+              {showPasswords.confirm ? (
+                <EyeOff className="w-5 h-5" />
+              ) : (
+                <Eye className="w-5 h-5" />
+              )}
+            </button>
+          </div>
+          {fieldErrors.confirmPassword && (
+            <p className="text-red-400 text-sm mt-2">
+              {fieldErrors.confirmPassword}
+            </p>
+          )}
+        </div>
+
+        {formError && (
+          <div className="p-4 bg-red-400/15 border border-red-400/30 text-red-400 rounded-2xl backdrop-blur-lg">
             {formError}
           </div>
         )}
 
-        <Button
-          type="submit"
-          loading={loading}
-          loadingPosition="center"
-          fullWidth
-          size="large"
-          className="bg-blue-600 hover:bg-blue-700 text-white"
-        >
-          Change Password
-        </Button>
+        <div className="flex justify-end">
+          <Button
+            type="submit"
+            loading={loading}
+            className="bg-gradient-to-r from-cyan-400/90 to-blue-500/50 hover:from-cyan-400/90 hover:to-blue-600/50 text-white py-4 rounded-2xl border-none shadow-lg hover:shadow-xl transition-all duration-300"
+          >
+            Change Password
+          </Button>
+        </div>
       </form>
     </div>
   );
