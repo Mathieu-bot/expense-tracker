@@ -87,13 +87,23 @@ export const updateExpenseValidator = [
     .isIn(["one-time", "recurring"])
     .withMessage("Type must be either one-time or recurring"),
 
+  // If explicitly switching to one-time, require date
   body("date")
-    .optional()
+    .custom((value, { req }) => {
+      if (req.body.type === "one-time" && !value) {
+        throw new Error("Date is required when type is one-time");
+      }
+      return true;
+    })
+    .optional({ values: "falsy" })
     .isISO8601()
     .withMessage("Date must be a valid ISO date"),
 
+  // If explicitly switching to recurring, require startDate
   body("startDate")
-    .optional()
+    .if(body("type").equals("recurring"))
+    .notEmpty()
+    .withMessage("Start date is required when type is recurring")
     .isISO8601()
     .withMessage("Start date must be a valid ISO date"),
 

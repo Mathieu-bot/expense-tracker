@@ -90,6 +90,15 @@ export const EditExpense = () => {
   };
 
   const onSubmit = async () => {
+    // Client-side validation mirroring server rules
+    if (local.type === "one-time" && !local.date) {
+      toast.error("Date is required when type is one-time");
+      return;
+    }
+    if (local.type === "recurring" && !local.startDate) {
+      toast.error("Start date is required when type is recurring");
+      return;
+    }
     const payload: UpdateExpenseRequest = {
       amount: local.amount,
       description: local.description,
@@ -169,6 +178,7 @@ export const EditExpense = () => {
                 type="date"
                 value={local.date || ""}
                 onChange={onChange}
+                required
                 className="w-full rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
               />
             </div>
@@ -182,6 +192,7 @@ export const EditExpense = () => {
                   type="date"
                   value={local.startDate || ""}
                   onChange={onChange}
+                  required
                   className="w-full rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
                 />
               </div>
