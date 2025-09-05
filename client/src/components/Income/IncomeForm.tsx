@@ -26,6 +26,7 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
   const { showSuccess, showError } = useMascot();
   const submitRef = useRef<HTMLButtonElement>(null);
   const errorTimeoutRef = useRef<number | null>(null);
+  const [hasChanges, setHasChanges] = useState(false);
 
   const [formData, setFormData] = useState<IncomeFormData>({
     amount: income?.amount || 0,
@@ -60,7 +61,23 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
     }
     setErrors({});
     setErrorDisplay({ message: "", visible: false });
+    setHasChanges(false);
   }, [income, open]);
+
+  useEffect(() => {
+    if (!income) {
+      setHasChanges(true);
+      return;
+    }
+
+    const hasFormChanged =
+      formData.amount !== income.amount ||
+      formData.date !== new Date(income.date).toISOString().split("T")[0] ||
+      formData.source !== income.source ||
+      formData.description !== (income.description || "");
+
+    setHasChanges(hasFormChanged);
+  }, [formData, income]);
 
   useEffect(() => {
     return () => {
@@ -84,6 +101,10 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!hasChanges) {
+      return;
+    }
 
     const numericAmount = Number(formData.amount);
     if (isNaN(numericAmount) || numericAmount < 0) {
@@ -260,10 +281,18 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
             <div className="flex gap-4 mt-10">
               <button
                 onClick={() => submitRef.current?.click()}
-                disabled={saving}
-                className="px-6 py-3 bg-primary-light text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
+                disabled={saving || (!hasChanges && !!income)}
+                className={`px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 ${
+                  saving || (!hasChanges && !!income)
+                    ? "bg-gray-400/50 text-gray-200 cursor-not-allowed"
+                    : "bg-primary-light text-white hover:bg-primary"
+                }`}
               >
-                {saving ? "Saving..." : "Save Income"}
+                {saving
+                  ? "Saving..."
+                  : income
+                  ? "Save Changes"
+                  : "Create Income"}
               </button>
 
               <button
@@ -274,6 +303,12 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
                 Cancel
               </button>
             </div>
+
+            {!hasChanges && income && (
+              <p className="text-gray-400 text-sm mt-4">
+                No changes made to the income
+              </p>
+            )}
           </div>
         </div>
       </div>
