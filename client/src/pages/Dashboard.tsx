@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { type PieItem } from "../components/dashboard/PieGraph";
 import {
   MonthlyBarChart,
@@ -12,6 +12,7 @@ import MiniStatCard from "../components/dashboard/DisplayCard";
 import { useToast } from "../ui";
 import { useSummaryAlert } from "../hooks/useSummaryAlert";
 import SummaryAlert from "../components/dashboard/SummaryAlert";
+import { useExpenses } from "../hooks/useExpenses";
 
 const monthlyData: Row[] = [
   { month: "Avril", spending: 120000, income: 180000 },
@@ -32,13 +33,17 @@ function Dashboard() {
   const [alertOpen, setAlertOpen] = useState<boolean>(true);
 
   const [startDate, setStartDate] = useState<string>(
-    Date.now().toString().split(" ")[0]
+    new Date().toISOString().split("T")[0]
   );
   const [endDate, setEndDate] = useState<string>(
-    Date.now().toString().split(" ")[0]
+    new Date().toISOString().split("T")[0]
   );
-
   const { incomes, loading, error } = useIncomes(startDate, endDate);
+  const {
+    expenses,
+    loading: expensesLoading,
+    error: expensesError,
+  } = useExpenses();
 
   const toast = useToast();
 
@@ -46,36 +51,31 @@ function Dashboard() {
   const [totalExpense, setTotalExpense] = useState<number>(0);
   const [sold, setSold] = useState<number>(0);
 
-  const toDisplay = [
-    { label: "Income", value: totalIncome, icon: Wallet, deltaPct: 6.4 },
-    {
-      label: "Expenses",
-      value: totalExpense,
-      icon: ReceiptCent,
-      deltaPct: -0.11,
-    },
-    { label: "Sold", value: sold, icon: Percent, deltaPct: -0.8 },
-  ];
+  const toDisplay = useMemo(
+    () => [
+      { label: "Income", value: totalIncome, icon: Wallet },
+      { label: "Expenses", value: totalExpense, icon: ReceiptCent },
+      { label: "Sold", value: sold, icon: Percent },
+    ],
+    [totalIncome, totalExpense, sold]
+  );
 
+  /* Totals */
   useEffect(() => {
-    if (!loading && incomes) {
+    if (!loading && incomes && !expensesLoading && expenses) {
       const incomeTotal = computeValueTotal(incomes);
+      const expenseTotal =
+        expensesLoading || !expenses ? 0 : computeValueTotal(expenses);
       setTotalIncome(incomeTotal);
-
-      /*
-        TODO: Fetch real expenses and compute real total expense  
-      */
-
-      const expenseTotal = 50000;
       setTotalExpense(expenseTotal);
-
       setSold(incomeTotal - expenseTotal);
     }
-  }, [loading, incomes]);
+  }, [loading, incomes, expenses, expensesLoading]);
 
-  if (error) {
+  if (error || expensesError) {
     toast.error("Failed to load incomes: " + error);
   }
+  if (loading || expensesLoading) return <div>Loading...</div>;
   return (
     <div className="min-w-screen h-screen pt-24 pl-22 py-5 pr-10 grid grid-cols-4 z-30 gap-5">
       {summaryAlert.alert && (

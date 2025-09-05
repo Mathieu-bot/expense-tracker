@@ -1,20 +1,3 @@
-<<<<<<< HEAD
-import dns from "node:dns";
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import cookieParser from "cookie-parser";
-import helmet from "helmet";
-import { requireAuth } from "./middleware/auth.middleware.js";
-import { PrismaClient } from "@prisma/client";
-import incomeRoutes from "./routes/income.route.js";
-import authRoutes from "./routes/auth.route.js";
-import categoryRoutes from "./routes/category.route.js";
-import userRoutes from "./routes/user.route.js";
-import expenseRoutes from "./routes/expense.route.js";
-import summaryRoutes from "./routes/summary.route.js";
-import { configureNetwork } from "./utils/network.js";
-=======
 import dns from 'node:dns';
 import express from 'express';
 import cors from 'cors';
@@ -28,9 +11,9 @@ import authRoutes from './routes/auth.route.js';
 import categoryRoutes from './routes/category.route.js';
 import userRoutes from './routes/user.route.js';
 import expenseRoutes from './routes/expense.route.js';
+import summaryRoutes from "./routes/summary.route.js";
 import { configureNetwork } from './utils/network.js';
 import path from 'node:path';
->>>>>>> dev
 
 dotenv.config();
 
@@ -62,14 +45,6 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-<<<<<<< HEAD
-app.use("/api/auth", authRoutes);
-app.use("/api/incomes", requireAuth, incomeRoutes);
-app.use("/api/categories", categoryRoutes);
-app.use("/api/user", requireAuth, userRoutes);
-app.use("/api/expenses", expenseRoutes);
-app.use("/api/summary", requireAuth, summaryRoutes);
-=======
 // Serve receipt uploads statically
 app.use('/uploads', express.static(path.resolve('uploads')));
 
@@ -78,7 +53,7 @@ app.use('/api/incomes', requireAuth, incomeRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/user', requireAuth, userRoutes);
 app.use('/api/expenses', expenseRoutes);
->>>>>>> dev
+app.use("/api/summary" , requireAuth , summaryRoutes);
 
 // Initialize a single Prisma client instance
 const prisma = new PrismaClient();
