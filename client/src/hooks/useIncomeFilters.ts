@@ -49,6 +49,22 @@ export const useIncomeFilters = ({ incomes }: UseIncomeFiltersProps) => {
     setDateError(null);
   }, []);
 
+  const toISODateString = (date: Date | string): string => {
+    const d = new Date(date);
+    const year = d.getUTCFullYear();
+    const month = String(d.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(d.getUTCDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString("en-US", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  };
+
   const filteredAndSortedIncomes = useMemo(() => {
     const filtered = incomes.filter((income) => {
       const matchesSearch =
@@ -56,10 +72,16 @@ export const useIncomeFilters = ({ incomes }: UseIncomeFiltersProps) => {
         (income.description &&
           income.description.toLowerCase().includes(searchQuery.toLowerCase()));
 
-      const incomeDate = new Date(income.date);
+      const incomeDateStr = toISODateString(income.date);
+
+      const startDateStr = dateRange.start
+        ? toISODateString(dateRange.start)
+        : null;
+      const endDateStr = dateRange.end ? toISODateString(dateRange.end) : null;
+
       const matchesDateRange =
-        (!dateRange.start || incomeDate >= dateRange.start) &&
-        (!dateRange.end || incomeDate <= dateRange.end);
+        (!startDateStr || incomeDateStr >= startDateStr) &&
+        (!endDateStr || incomeDateStr <= endDateStr);
 
       return matchesSearch && matchesDateRange;
     });
@@ -106,5 +128,6 @@ export const useIncomeFilters = ({ incomes }: UseIncomeFiltersProps) => {
     filteredAndSortedIncomes,
     totalIncome,
     totalIncomeThisMonth,
+    formatDate,
   };
 };

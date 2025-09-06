@@ -46,10 +46,10 @@ export const Profile: React.FC = () => {
   }
 
   return (
-    <div className="mt-33 mx-10 mb-10 lg:ml-24">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          <div className="lg:col-span-1">
+    <div className="h-[76dvh]  mt-22 ml-15">
+      <div className="max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-6 gap-6">
+          <div className="lg:col-span-2">
             <ProfileInfo
               user={user}
               activeTab={activeTab}
@@ -57,7 +57,7 @@ export const Profile: React.FC = () => {
             />
           </div>
 
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-4">
             <div className="transition-all duration-500 ease-in-out">
               {activeTab === "profile" && (
                 <ProfileForm

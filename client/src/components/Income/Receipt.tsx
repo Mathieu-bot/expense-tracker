@@ -7,7 +7,6 @@ interface ReceiptProps {
   onViewReceipt: (income: Income) => void;
   emptyMessage?: string;
 }
-
 const Receipt = ({
   items,
   onViewReceipt,

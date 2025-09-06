@@ -129,7 +129,6 @@ const DatePicker: React.FC<DatePickerProps> = ({
   const daySel = [DAY_SELECTED, classes?.daySelected].filter(Boolean).join(" ");
   const dayDis = [DAY_DISABLED, classes?.dayDisabled].filter(Boolean).join(" ");
 
-  // FORMAT DATE LOCALLY TO AVOID UTC ISSUES
   const fmt = (d: Date | null) =>
     d
       ? `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
@@ -137,6 +136,9 @@ const DatePicker: React.FC<DatePickerProps> = ({
           "0"
         )}-${String(d.getDate()).padStart(2, "0")}`
       : "";
+
+  const toLocalDate = (date: Date) =>
+    new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
   const isDisabled = (d: Date) => {
     if (minDate && d < startOfDay(minDate)) return true;
@@ -164,7 +166,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
           ‹
         </button>
         <div className="text-sm font-medium">
-          {view.toLocaleString(undefined, { month: "long", year: "numeric" })}
+          {view.toLocaleString("en-US", { month: "long", year: "numeric" })}
         </div>
         <button
           type="button"
@@ -198,7 +200,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
                 .join(" ")}
               onClick={() => {
                 if (isDisabled(d)) return;
-                onChange(clamp(d, minDate, maxDate));
+                onChange(clamp(toLocalDate(d), minDate, maxDate));
                 setOpen(false);
               }}
             >

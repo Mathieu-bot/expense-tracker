@@ -283,6 +283,7 @@ paths:
           name: month
           schema:
             type: string
+            example: "2025-08"
       responses:
         "200":
           description: Monthly summary
@@ -329,14 +330,9 @@ paths:
       responses:
         "200":
           description: Profile info
-<<<<<<< HEAD
-    put:
-      summary: Update user profile
-=======
     patch:
       summary: Update user profile
       description: Update username for the authenticated user
->>>>>>> 4f1ff1098e64f7feee04c94977f358fa4b1c0bb6
       requestBody:
         required: true
         content:
@@ -348,7 +344,7 @@ paths:
                   type: string
                   minLength: 3
                   maxLength: 50
-                  pattern: '^[A-Za-z0-9_-]{3,50}$'
+                  pattern: "^[A-Za-z0-9_-]{3,50}$"
                 firstname:
                   type: string
                   maxLength: 100
@@ -361,7 +357,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PublicUser'
+                $ref: "#/components/schemas/PublicUser"
         "400":
           description: Invalid username
         "401":
@@ -390,7 +386,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PublicUser'
+                $ref: "#/components/schemas/PublicUser"
         "401":
           description: Unauthorized
 
@@ -413,11 +409,11 @@ components:
           type: string
           format: email
         username:
-          type: [string, 'null']
+          type: [string, "null"]
         firstname:
-          type: [string, 'null']
+          type: [string, "null"]
         lastname:
-          type: [string, 'null']
+          type: [string, "null"]
         created_at:
           type: string
           format: date-time
