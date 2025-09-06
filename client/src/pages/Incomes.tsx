@@ -17,7 +17,13 @@ import Receipt from "../components/Income/Receipt";
 import { Plus, Wallet } from "lucide-react";
 import { StatsCards } from "../components/Income/IncomeHeader/StatsCards";
 import type { Income } from "../types/Income";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
+import { ReceiptPdf } from "../components/Income/ReceiptPdf";
+import {
+  PdfExportService,
+  Resolution,
+  Margin,
+} from "../services/PdfExportService";
 
 export const Incomes = () => {
   const navigate = useNavigate();
@@ -84,10 +90,34 @@ export const Incomes = () => {
     "timeline"
   );
 
+  const pdfRef = useRef<HTMLDivElement>(null);
+
+  const handleExportPdf = async (startDate?: string, endDate?: string) => {
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      if (pdfRef.current) {
+        await PdfExportService.generatePdf(pdfRef, {
+          filename: PdfExportService.generateFilename(startDate, endDate),
+          resolution: Resolution.HIGH,
+          margin: Margin.MEDIUM,
+        });
+        toast.success("PDF exported successfully!");
+      }
+    } catch (error) {
+      toast.error("Failed to export PDF. Please try again.");
+      console.error("PDF export error:", error);
+    }
+  };
+
   return (
     <>
       <div className="relative z-2 mb-10 2xl:mx-auto mt-30 text-gray-800 dark:text-light max-w-7xl px-6 xl:ml-29 lg:ml-20">
-        <IncomeHeader totalIncome={totalIncome} onNewIncome={handleNewIncome} />
+        <IncomeHeader
+          totalIncome={totalIncome}
+          onNewIncome={handleNewIncome}
+          onExport={handleExportPdf}
+        />
 
         <StatsCards
           totalIncomeThisMonth={totalIncomeThisMonth}
@@ -113,17 +143,17 @@ export const Incomes = () => {
                   <div className="size-8 animate-spin rounded-full border-4 border-accent border-t-transparent"></div>
                 </div>
               ) : localIncomes.length === 0 ? (
-                 <div
-                    onClick={handleNewIncome}
-                    className="bg-gradient-to-br w-36 from-green-400/25 to-green-400/20 dark:from-accent/8 dark:to-amber-400/8 backdrop-blur-md rounded-xl p-4 border border-dashed border-green-700/70 hover:border-green-700/80 dark:border-accent/20 dark:hover:border-accent/30 transition-all duration-300 cursor-pointer flex items-center justify-center flex-col gap-2 group"
-                  >
-                    <div className="w-10 h-10 rounded-full bg-green-800/10 group-hover:bg-green-800/15 dark:bg-accent/15 flex items-center justify-center dark:group-hover:bg-accent/20 transition-colors">
-                      <Plus className="dark:text-accent text-green-700/70 w-5 h-5 group-hover:scale-110 transition-transform" />
-                    </div>
-                    <span className="dark:text-accent/80 text-green-700/80 text-xs font-medium">
-                      Add Income
-                    </span>
+                <div
+                  onClick={handleNewIncome}
+                  className="bg-gradient-to-br w-36 from-green-400/25 to-green-400/20 dark:from-accent/8 dark:to-amber-400/8 backdrop-blur-md rounded-xl p-4 border border-dashed border-green-700/70 hover:border-green-700/80 dark:border-accent/20 dark:hover:border-accent/30 transition-all duration-300 cursor-pointer flex items-center justify-center flex-col gap-2 group"
+                >
+                  <div className="w-10 h-10 rounded-full bg-green-800/10 group-hover:bg-green-800/15 dark:bg-accent/15 flex items-center justify-center dark:group-hover:bg-accent/20 transition-colors">
+                    <Plus className="dark:text-accent text-green-700/70 w-5 h-5 group-hover:scale-110 transition-transform" />
                   </div>
+                  <span className="dark:text-accent/80 text-green-700/80 text-xs font-medium">
+                    Add Income
+                  </span>
+                </div>
               ) : (
                 <>
                   <div
@@ -188,6 +218,14 @@ export const Incomes = () => {
             onRefetch={refetch}
           />
         </div>
+      </div>
+
+      <div className="fixed -left-[10000px] top-0">
+        <ReceiptPdf
+          ref={pdfRef}
+          incomes={localIncomes}
+          totalAmount={totalIncome}
+        />
       </div>
 
       <DeleteConfirmationModal
