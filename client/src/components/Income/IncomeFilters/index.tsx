@@ -32,7 +32,7 @@ export const IncomeFilters = ({
   return (
     <>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-        <h2 className="text-xl font-semibold text-light/90 flex items-center gap-2">
+        <h2 className="text-xl font-semibold  text-white dark:text-light/90 flex items-center gap-2">
           <Wallet className="w-5 h-5 text-accent" />
           All Incomes
         </h2>

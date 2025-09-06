@@ -133,11 +133,10 @@ const DashboardHeader = () => {
           <div className="mobile-menu-button" ref={buttonRef}>
             <button
               onClick={openMenu}
-              className={`p-2 rounded-lg backdrop-blur-sm border transition-colors duration-200 lg:hidden ${
-                shouldShowGlassmorphism
-                  ? "bg-gray-100 border-gray-300 text-gray-700 hover:bg-gray-200"
-                  : "bg-white/10 border-white/20 text-white hover:bg-white/20"
-              }`}
+              className={`p-2 border-none rounded-lg backdrop-blur-sm border transition-colors duration-200 lg:hidden ${shouldShowGlassmorphism
+          ? "bg-gray-100 hover:bg-gray-200 text-gray-700 dark:bg-gray-800/20 dark:hover:bg-gray-400/30 dark:text-white"
+          : "bg-white/10 hover:bg-white/20 text-white"
+      }`}
               aria-label="Toggle menu"
             >
               <Menu size={24} />
