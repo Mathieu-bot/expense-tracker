@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 import type { Income } from "../../types/Income";
-import { formatCurrency } from "../../utils/formatters";
+import { formatCurrency, formatDate } from "../../utils/formatters";
 
 interface ReceiptPdfProps {
   incomes: Income[];
@@ -11,13 +11,7 @@ interface ReceiptPdfProps {
 
 export const ReceiptPdf = forwardRef<HTMLDivElement, ReceiptPdfProps>(
   ({ incomes, startDate, endDate, totalAmount }, ref) => {
-    const formatDate = (dateString: string) => {
-      return new Date(dateString).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      });
-    };
+   
 
     const currentDate = new Date();
 

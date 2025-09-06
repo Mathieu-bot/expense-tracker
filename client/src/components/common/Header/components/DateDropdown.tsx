@@ -1,5 +1,6 @@
 import { Clock, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
+import { formatDate, formatTime } from "../../../../utils/formatters";
 
 const DateDropdown = ({
   shouldShowGlassmorphism,
@@ -7,23 +8,6 @@ const DateDropdown = ({
   shouldShowGlassmorphism: boolean;
 }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
-
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
-  };
-
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString([], {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
-  };
-
   const changeDate = (days: number) => {
     const newDate = new Date(currentDate);
     newDate.setDate(newDate.getDate() + days);
