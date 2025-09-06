@@ -9,6 +9,7 @@ import {
   Dot,
 } from "recharts";
 import { ChartTooltip } from "./ChartTooltip";
+import { useTheme } from "../../../contexts/ThemeContext";
 
 export interface LineChartData {
   date: string;
@@ -32,16 +33,20 @@ export const LineChart = ({
   strokeColor = "#FF6B6B",
   chartType = "timeline",
 }: LineChartProps) => {
+  const { isDark } = useTheme();
   return (
     <ResponsiveContainer width="100%" height={height}>
       <RechartsLineChart
         data={data}
         margin={{ top: 5, right: 5, left: 0, bottom: 5 }}
       >
-        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+        <CartesianGrid
+          strokeDasharray="3 3"
+          stroke={`${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.3)"}`}
+        />
         <XAxis
           dataKey="date"
-          stroke="rgba(255,255,255,0.6)"
+          stroke={`${isDark ? "rgba(255,255,255,0.6)" : "rgba(0,0,0,0.6)"}`}
           fontSize={12}
           tickLine={false}
           axisLine={false}
@@ -58,7 +63,7 @@ export const LineChart = ({
           }}
         />
         <YAxis
-          stroke="rgba(255,255,255,0.6)"
+          stroke={`${isDark ? "rgba(255,255,255,0.6)" : "rgba(0,0,0,0.6)"}`}
           fontSize={12}
           tickLine={false}
           axisLine={false}

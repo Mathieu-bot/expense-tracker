@@ -125,15 +125,18 @@ const DashboardHeader = () => {
       <header
         className={`flex justify-between items-center fixed top-4 left-4 right-4 lg:left-25 lg:right-10 z-50 px-4 lg:px-6 py-3 rounded-2xl transition-all duration-500 ${
           shouldShowGlassmorphism
-            ? "bg-white/10 backdrop-blur-sm shadow-lg border border-white/10"
-            : "bg-transparent border border-transparent"
+            ? "bg-white/80 backdrop-blur-sm shadow-lg border border-gray-200/70 text-gray-800 dark:bg-white/10 dark:border-white/10 dark:text-white"
+            : "bg-transparent border border-transparent text-white"
         }`}
       >
         <div className="flex items-center gap-4">
           <div className="mobile-menu-button" ref={buttonRef}>
             <button
               onClick={openMenu}
-              className="p-2 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 transition-colors duration-200 lg:hidden"
+              className={`p-2 border-none rounded-lg backdrop-blur-sm border transition-colors duration-200 lg:hidden ${shouldShowGlassmorphism
+          ? "bg-gray-100 hover:bg-gray-200 text-gray-700 dark:bg-gray-800/20 dark:hover:bg-gray-400/30 dark:text-white"
+          : "bg-white/10 hover:bg-white/20 text-white"
+      }`}
               aria-label="Toggle menu"
             >
               <Menu size={24} />
@@ -141,30 +144,47 @@ const DashboardHeader = () => {
           </div>
 
           <div className="hidden lg:flex lg:flex-col">
-            <h1 className="text-2xl font-bold text-white">
+            <h1 className="text-2xl font-bold">
               {getWelcomeMessage()}
               {user && (
-                <span className="bg-accent bg-clip-text text-transparent">
+                <span className="bg-[#ffdd33] bg-clip-text text-transparent">
                   {getUserDisplayName().split(" ")[0]}
                 </span>
               )}
             </h1>
-            <p className="text-indigo-100/90 font-light text-sm">
+            <p
+              className={`font-light text-sm ${
+                shouldShowGlassmorphism
+                  ? "text-gray-900 dark:text-indigo-100/90"
+                  : "text-white/90"
+              }`}
+            >
               Track all your transactions with PennyPal
             </p>
           </div>
         </div>
 
         <div className="hidden xl:flex items-center gap-6">
-          <DateDropdown />
-          <SearchInput placeholder="Search transactions..." />
+          <DateDropdown shouldShowGlassmorphism={shouldShowGlassmorphism} />
+          <SearchInput
+            placeholder="Search transactions..."
+            shouldShowGlassmorphism={shouldShowGlassmorphism}
+          />
         </div>
 
         <div className="hidden lg:flex items-center gap-5">
-          <ThemeToggle />
-          <NotificationBell hasNotifications={true} notifNumber={3} />
+          <ThemeToggle shouldShowGlassmorphism={shouldShowGlassmorphism} />
+          <NotificationBell
+            hasNotifications={true}
+            notifNumber={3}
+            shouldShowGlassmorphism={shouldShowGlassmorphism}
+          />
 
-          <div className="h-8 w-px bg-white/30"></div>
+          <div
+            className={`h-8 w-px ${
+              shouldShowGlassmorphism ? "bg-gray-300" : "bg-white/30"
+            }`}
+          ></div>
 
           <Link
             to={user ? "/profile" : "/login"}
@@ -184,24 +204,44 @@ const DashboardHeader = () => {
             </div>
 
             <div className="hidden lg:flex flex-col">
-              <span className="text-sm font-semibold text-white group-hover:text-amber-100 transition-colors duration-300">
+              <span
+                className={`text-sm font-semibold group-hover:text-primary transition-colors duration-300 ${
+                  shouldShowGlassmorphism
+                    ? "text-gray-800 dark:text-white dark:group-hover:text-amber-100"
+                    : "text-white group-hover:text-amber-100 dark:text-white dark:group-hover:text-amber-100"
+                }`}
+              >
                 {getUserDisplayName()}
               </span>
-              <span className="text-xs text-white/70 group-hover:text-amber-100/80 transition-colors duration-300">
+              <span
+                className={`text-xs group-hover:text-primary/80 transition-colors duration-300 ${
+                  shouldShowGlassmorphism
+                    ? "text-gray-600 dark:text-white/70 dark:group-hover:text-amber-100/80"
+                    : "text-white/70 group-hover:text-amber-100/80 dark:text-white/70 dark:group-hover:text-amber-100/80"
+                }`}
+              >
                 @{getUsername()}
               </span>
             </div>
 
             <ChevronDown
-              className="hidden lg:block text-white/70 group-hover:text-white transition-colors duration-200"
+              className={`hidden lg:block group-hover:text-gray-700 transition-colors duration-200 ${
+                shouldShowGlassmorphism
+                  ? "text-gray-500 dark:text-white/70 dark:group-hover:text-white"
+                  : "text-white/70 group-hover:text-white"
+              }`}
               size={16}
             />
           </Link>
         </div>
 
         <div className="flex lg:hidden items-center gap-3">
-          <ThemeToggle />
-          <NotificationBell hasNotifications={true} notifNumber={3} />
+          <ThemeToggle shouldShowGlassmorphism={shouldShowGlassmorphism} />
+          <NotificationBell
+            hasNotifications={true}
+            notifNumber={3}
+            shouldShowGlassmorphism={shouldShowGlassmorphism}
+          />
           <Link
             to={user ? "/profile" : "/login"}
             className="flex items-center gap-2"
@@ -232,7 +272,7 @@ const DashboardHeader = () => {
           />
           <div
             ref={menuRef}
-            className={`absolute left-0 top-0 h-full w-80 bg-gradient-to-b from-primary-dark to-primary shadow-2xl transform transition-transform duration-300 ${
+            className={`absolute left-0 top-0 h-full w-80 bg-white shadow-2xl transform transition-transform duration-300 dark:bg-gradient-to-b dark:from-primary-dark dark:to-primary ${
               isAnimating ? "translate-x-0" : "-translate-x-full"
             }`}
             style={{ zIndex: 10000 }}
@@ -246,15 +286,17 @@ const DashboardHeader = () => {
                     alt="Profile"
                   />
                   <div>
-                    <h2 className="text-white font-semibold">
+                    <h2 className="text-gray-800 font-semibold dark:text-white">
                       {getUserDisplayName()}
                     </h2>
-                    <p className="text-gray-400 text-sm">@{getUsername()}</p>
+                    <p className="text-gray-500 text-sm dark:text-gray-400">
+                      @{getUsername()}
+                    </p>
                   </div>
                 </div>
                 <button
                   onClick={closeMenu}
-                  className="p-2 text-white hover:bg-white/10 rounded-lg transition-colors duration-200"
+                  className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors duration-200 dark:text-white dark:hover:bg-white/10"
                   aria-label="Close menu"
                 >
                   <X size={24} />
@@ -267,7 +309,7 @@ const DashboardHeader = () => {
                     key={label}
                     to={href}
                     onClick={closeMenu}
-                    className="flex items-center gap-4 rounded-xl px-4 py-4 hover:bg-white/15 transition-all duration-200 text-white "
+                    className="flex items-center gap-4 rounded-xl px-4 py-4 hover:bg-gray-100 transition-all duration-200 text-gray-700 dark:text-white dark:hover:bg-white/15"
                   >
                     <Icon size={22} />
                     <span>{label}</span>
@@ -275,10 +317,10 @@ const DashboardHeader = () => {
                 ))}
               </nav>
 
-              <div className="mt-auto pt-6 border-t border-white/20">
+              <div className="mt-auto pt-6 border-t border-gray-200 dark:border-white/20">
                 <LogoutButton
                   size="large"
-                  className="w-full flex items-center justify-center gap-3 py-7 border-none rounded-xl hover:bg-white/15 transition-colors duration-200 text-white"
+                  className="w-full flex items-center justify-center gap-3 py-7 border-none rounded-xl hover:bg-gray-100 transition-colors duration-200 text-gray-700 dark:text-white dark:hover:bg-white/15"
                   startIcon={<LogOut size={22} />}
                 >
                   Logout

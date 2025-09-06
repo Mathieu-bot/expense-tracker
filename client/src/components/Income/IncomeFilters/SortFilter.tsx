@@ -20,10 +20,16 @@ export const SortFilter = ({ sortOrder, onSortChange }: SortFilterProps) => {
     <div className="relative" ref={sortRef}>
       <Button
         onClick={() => setShowSortOptions(!showSortOptions)}
-        className="bg-white/5 hover:bg-white/10 border border-white/10 text-light/90 hover:shadow-md transition-all"
+        className="
+          bg-gradient-to-br from-accent/25 to-accent/20 bg-white/80
+          text-amber-800/90
+          dark:bg-white/5 dark:hover:bg-white/10 dark:text-light/90
+          border border-accent/30 dark:border-white/10
+          hover:shadow-md transition-all
+        "
         endIcon={
           <ChevronDown
-            className="w-4 h-4 transition-transform"
+            className="w-4 h-4 transition-transform text-amber-800/90 dark:text-light/70"
             style={{
               transform: showSortOptions ? "rotate(180deg)" : "none",
             }}
@@ -34,15 +40,15 @@ export const SortFilter = ({ sortOrder, onSortChange }: SortFilterProps) => {
       </Button>
 
       {showSortOptions && (
-        <div className="absolute top-full right-0 mt-2 w-40 bg-primary-dark/95 backdrop-blur-xl rounded-xl border border-white/10 py-2 z-50 shadow-2xl animate-in fade-in-80">
+        <div className="absolute top-full overflow-hidden right-0 mt-2 w-40 bg-white/95 dark:bg-primary-dark/95 backdrop-blur-xl rounded-xl border border-gray-200 dark:border-white/10 z-50 shadow-2xl animate-in fade-in-80">
           <button
             onClick={() => {
               onSortChange("recent");
               setShowSortOptions(false);
             }}
-            className="w-full px-4 py-2 hover:bg-white/5 transition-all duration-200 text-left text-sm flex items-center gap-2"
+            className="w-full px-4 border-none py-4 hover:bg-gray-100 dark:hover:bg-white/5 transition-all duration-200 text-left text-sm text-gray-800 dark:text-light flex items-center gap-2"
           >
-            <TrendingUp className="w-4 h-4" />
+            <TrendingUp className="w-4 h-4 text-gray-600 dark:text-light/70" />
             Recent First
           </button>
           <button
@@ -50,9 +56,9 @@ export const SortFilter = ({ sortOrder, onSortChange }: SortFilterProps) => {
               onSortChange("oldest");
               setShowSortOptions(false);
             }}
-            className="w-full px-4 py-2 hover:bg-white/5 transition-all duration-200 text-left text-sm flex items-center gap-2"
+            className="w-full border-none px-4 py-4 hover:bg-gray-100 dark:hover:bg-white/5 transition-all duration-200 text-left text-sm text-gray-800 dark:text-light flex items-center gap-2"
           >
-            <TrendingUp className="w-4 h-4 rotate-180" />
+            <TrendingUp className="w-4 h-4 rotate-180 text-gray-600 dark:text-light/70" />
             Oldest First
           </button>
         </div>

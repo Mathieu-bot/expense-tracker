@@ -1,40 +1,57 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Palette, Sun, Moon } from "lucide-react";
+import { useTheme } from "../../contexts/ThemeContext";
 
 export const AppearanceTab = () => {
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const { toggleTheme, isDark } = useTheme();
 
-  const toggleTheme = () => {
+  const handleToggleTheme = () => {
+    toggleTheme();
     setIsDarkMode(!isDarkMode);
   };
 
+  useEffect(() => {
+    if (isDark) {
+      setIsDarkMode(true);
+    } else {
+      setIsDarkMode(false);
+    }
+  }, [isDark]);
+
   return (
-    <div className="bg-gradient-to-br from-primary-light/10 to-primary-dark/10 backdrop-blur-xl rounded-3xl p-8 border border-white/15 shadow-2xl transition-all duration-500">
+    <div className="bg-white/25  dark:bg-gradient-to-br dark:bg-none dark:bg-transparent dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-3xl p-8 border border-gray-200/70 dark:border-white/15 shadow-2xl transition-all duration-500">
       <div className="flex items-center gap-4 mb-8">
-        <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center">
-          <Palette className="w-6 h-6 text-purple-400" />
+        <div className="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-500/10 flex items-center justify-center">
+          <Palette className="w-6 h-6 text-purple-600 dark:text-purple-400" />
         </div>
         <div>
-          <h2 className="text-xl font-semibold text-white">Appearance</h2>
-          <p className="text-light/60 text-sm">Choose your preferred theme</p>
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+            Appearance
+          </h2>
+          <p className="text-gray-600 dark:text-light/60 text-sm">
+            Choose your preferred theme
+          </p>
         </div>
       </div>
 
-      <div className="bg-white/5 backdrop-blur-lg rounded-2xl p-8 border border-white/10">
+      <div className="bg-purple-100/80 dark:bg-white/5 backdrop-blur-lg rounded-2xl p-8 border border-gray-200/50 dark:border-white/10">
         <div className="text-center mb-8">
-          <h3 className="text-lg font-medium text-white mb-2">Theme</h3>
-          <p className="text-light/60 text-sm">
+          <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-2">
+            Theme
+          </h3>
+          <p className="text-gray-600 dark:text-light/60 text-sm">
             Switch between light and dark mode
           </p>
         </div>
 
         <div className="flex justify-center">
           <button
-            onClick={toggleTheme}
+            onClick={handleToggleTheme}
             className={`relative w-20 h-10 rounded-full p-1 transition-all duration-500 ease-in-out ${
               isDarkMode
                 ? "bg-gradient-to-r from-purple-500 to-blue-500"
-                : "bg-gradient-to-r to-accent from-orange-400"
+                : "bg-gradient-to-r from-amber-400 to-orange-400"
             } shadow-lg hover:shadow-xl`}
           >
             <div
@@ -59,9 +76,9 @@ export const AppearanceTab = () => {
         </div>
 
         <div className="text-center mt-6">
-          <p className="text-light/40 text-sm">
+          <p className="text-gray-500 dark:text-light/40 text-sm">
             Current theme:
-            <span className="text-white ml-2">
+            <span className="text-gray-800 dark:text-white ml-2">
               {isDarkMode ? "Dark" : "Light"}
             </span>
           </p>
