@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { X, Calendar, FileDown } from "lucide-react";
-import { Button } from "../../ui";
+import { FileDown, Download } from "lucide-react";
 import type { Income } from "../../types/Income";
+import { DatePicker } from "../../ui";
 
 interface ExportModalProps {
   open: boolean;
@@ -16,8 +16,8 @@ export const ExportModal = ({
   onExport,
   incomes,
 }: ExportModalProps) => {
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
   const [filteredIncomes, setFilteredIncomes] = useState<Income[]>([]);
   const [isExporting, setIsExporting] = useState(false);
 
@@ -53,8 +53,8 @@ export const ExportModal = ({
 
     try {
       const success = await onExport(
-        startDate || undefined,
-        endDate || undefined
+        startDate ? startDate.toISOString().split("T")[0] : undefined,
+        endDate ? endDate.toISOString().split("T")[0] : undefined
       );
 
       if (success) {
@@ -68,15 +68,11 @@ export const ExportModal = ({
   };
 
   const handleClear = () => {
-    setStartDate("");
-    setEndDate("");
+    setStartDate(null);
+    setEndDate(null);
   };
 
-  const isDateRangeValid = !(
-    startDate &&
-    endDate &&
-    new Date(startDate) > new Date(endDate)
-  );
+  const isDateRangeValid = !(startDate && endDate && startDate > endDate);
   const hasIncomesToExport = filteredIncomes.length > 0;
   const isExportDisabled =
     !isDateRangeValid || !hasIncomesToExport || isExporting;
@@ -84,113 +80,150 @@ export const ExportModal = ({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-primary-dark rounded-2xl w-full max-w-md overflow-hidden">
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-white/10">
-          <h2 className="text-xl font-semibold text-gray-800 dark:text-light/90 flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-accent" />
-            Export Receipts
-          </h2>
+    <div className="fixed inset-0 z-[1000] bg-black/50 backdrop-blur-md flex items-center justify-center p-4">
+      <div className="fixed inset-0" onClick={onClose} />
+
+      <div
+        className="bg-white/95 dark:bg-primary-light/20 border border-gray-300 dark:border-gray-700 rounded-xl shadow-2xl w-full max-w-lg z-10"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center relative justify-between p-5 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex items-center gap-5 mt-3">
+            <div className="p-2 bg-blue-100 dark:bg-blue-500/20 rounded-lg">
+              <Download className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+            </div>
+            <div>
+              <h3 className="text-gray-800 dark:text-white font-bold text-xl">
+                Income Receipts
+              </h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Choose a date range, or leave empty to export all incomes
+              </p>
+            </div>
+          </div>
           <button
             onClick={onClose}
-            className="p-1 hover:bg-gray-100 dark:hover:bg-white/10 rounded-lg transition-colors"
+            className="text-gray-500 top-5 right-5 absolute hover:text-gray-700 dark:text-gray-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full w-8 h-8 flex items-center justify-center transition-colors"
             disabled={isExporting}
           >
-            <X className="w-5 h-5 text-gray-600 dark:text-light/70" />
+            x
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6">
-          <div className="space-y-4">
+        <form
+          onSubmit={handleSubmit}
+          className="p-5 text-gray-700 dark:text-gray-200"
+        >
+          <div className="space-y-4 mb-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-light/80 mb-2">
-                Start Date (optional)
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-1">
+                Filter by Date Range
               </label>
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-white/20 rounded-lg bg-white dark:bg-primary-dark/50 text-gray-800 dark:text-light"
-                disabled={isExporting}
-              />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                    Start Date
+                  </div>
+                  <DatePicker
+                    classes={{
+                      calendar:
+                        "dark:bg-white/10 dark:backdrop-blur-xl rounded-2xl p-3 border border-white/10 shadow-lg",
+                      day: "dark:text-light/80 hover:bg-white/10 rounded-lg transition-colors",
+                      daySelected: "bg-accent dark:text-light font-medium",
+                      dayDisabled: "dark:text-light/30 cursor-not-allowed",
+                      nav: "flex justify-between items-center mb-2 dark:text-light/90",
+                      grid: "grid grid-cols-7 gap-1",
+                      input:
+                        "bg-white/5 backdrop-blur-md border border-white/10 text-primary-dark placeholder-primary-dark/80 rounded-xl",
+                      label:
+                        "rounded-full text-primary-dark",
+                    }}
+                    value={startDate}
+                    onChange={setStartDate}
+                    className="w-full"
+                  />
+                </div>
+                <div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                    End Date
+                  </div>
+                  <DatePicker
+                    classes={{
+                      calendar:
+                        "dark:bg-white/10 dark:backdrop-blur-xl rounded-2xl p-3 border border-white/10 shadow-lg",
+                      day: "dark:text-light/80 hover:bg-white/10 rounded-lg transition-colors",
+                      daySelected: "bg-accent dark:text-light font-medium",
+                      dayDisabled: "dark:text-light/30 cursor-not-allowed",
+                      nav: "flex justify-between items-center mb-2 dark:text-light/90",
+                      grid: "grid grid-cols-7 gap-1",
+                      input:
+                        "bg-white/5 backdrop-blur-md border border-white/10 text-primary-dark placeholder-primary-dark/80 rounded-xl",
+                      label:
+                        "rounded-full text-primary-dark",
+                    }}
+                    value={endDate}
+                    onChange={setEndDate}
+                    minDate={startDate || undefined}
+                    className="w-full"
+                  />
+                </div>
+              </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-light/80 mb-2">
-                End Date (optional)
-              </label>
-              <input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                min={startDate}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-white/20 rounded-lg bg-white dark:bg-primary-dark/50 text-gray-800 dark:text-light"
-                disabled={isExporting}
-              />
-            </div>
-
-            <div className="p-3 bg-gray-50 dark:bg-white/5 rounded-lg">
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-medium text-gray-700 dark:text-light/80">
-                  Incomes found:
+            <div className="p-4 bg-gray-100/60 dark:bg-gray-800/40 border border-gray-200 dark:border-gray-700 rounded-lg">
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Matching receipts:
                 </span>
                 <span
-                  className={`text-sm font-semibold ${
+                  className={`text-sm font-semibold px-2 py-1 rounded-full ${
                     hasIncomesToExport
-                      ? "text-green-600 dark:text-green-400"
-                      : "text-red-500 dark:text-red-400"
+                      ? "bg-green-100 text-green-800 dark:bg-green-500/20 dark:text-green-400"
+                      : "bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-400"
                   }`}
                 >
                   {filteredIncomes.length}
                 </span>
               </div>
-              {!hasIncomesToExport && (
-                <p className="text-xs text-red-500 dark:text-red-400 mt-1">
-                  No incomes found in the selected date range
-                </p>
-              )}
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                {hasIncomesToExport
+                  ? "Ready to export these receipts"
+                  : "No filter applied or no receipts in selected range"}
+              </p>
             </div>
 
-            {startDate &&
-              endDate &&
-              new Date(startDate) > new Date(endDate) && (
-                <p className="text-red-500 text-sm">
+            {startDate && endDate && startDate > endDate && (
+              <div className="p-3 bg-red-50 dark:bg-red-500/10 rounded-lg border border-red-200 dark:border-red-500/20">
+                <p className="text-red-600 dark:text-red-400 text-sm">
                   End date must be after start date
                 </p>
-              )}
+              </div>
+            )}
           </div>
 
-          <div className="flex flex-col gap-3 mt-6 pt-4 border-t border-gray-200 dark:border-white/10">
-            <div className="flex gap-3">
-              <Button
-                type="button"
-                onClick={handleClear}
-                className="flex-1"
-                disabled={isExporting || (!startDate && !endDate)}
-              >
-                Clear Dates
-              </Button>
-              <Button
-                type="submit"
-                className="flex-1 bg-green-600 hover:bg-green-700 text-white"
-                disabled={isExportDisabled}
-                loading={isExporting}
-              >
-                <FileDown className="w-4 h-4 mr-2" />
-                {isExporting ? "Exporting..." : "Export"}
-              </Button>
-            </div>
-
-            <div className="text-center">
-              <button
-                type="button"
-                onClick={onClose}
-                className="text-sm text-gray-600 dark:text-light/70 hover:text-gray-800 dark:hover:text-light/90 underline"
-                disabled={isExporting}
-              >
-                Cancel
-              </button>
-            </div>
+          <div className="flex gap-3 justify-end pt-4 border-t border-gray-200 dark:border-gray-700">
+            <button
+              type="button"
+              onClick={handleClear}
+              className="border border-gray-300 text-gray-700 bg-gray-100 hover:bg-gray-200 dark:border-gray-600 dark:text-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 px-4 py-2 rounded-lg transition-colors"
+              disabled={isExporting || (!startDate && !endDate)}
+            >
+              Clear
+            </button>
+            <button
+              type="submit"
+              className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white border-none px-4 py-2 rounded-lg transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isExportDisabled}
+            >
+              {isExporting ? (
+                "Exporting..."
+              ) : (
+                <>
+                  <FileDown className="w-4 h-4 mr-2" />
+                  Export
+                </>
+              )}
+            </button>
           </div>
         </form>
       </div>

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { formatCurrency, formatDate } from "../../../utils/formatters";
 import type { Income } from "../../../types/Income";
 
@@ -13,23 +13,6 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
   income,
   onClose,
 }) => {
-  useEffect(() => {
-    if (open) document.body.style.overflow = "hidden";
-    else document.body.style.overflow = "unset";
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [open]);
-
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    if (open) document.addEventListener("keydown", handleEscape);
-    return () => {
-      document.removeEventListener("keydown", handleEscape);
-    };
-  }, [open, onClose]);
 
   if (!open || !income) return null;
 
