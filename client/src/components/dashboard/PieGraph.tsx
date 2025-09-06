@@ -74,22 +74,26 @@ export default function PieGraph({
             wrapperStyle={{ color: "rgba(255,255,255,0.9)", marginTop: 20 }}
             content={({ payload }) => (
               <ul className="grid grid-cols-2 gap-x-4 gap-y-2 m-0 p-0 list-none mt-10">
-                {(payload ?? []).map((p) => (
-                  <li key={p.value} className="flex items-center gap-2">
-                    <span
-                      className="inline-block w-3 h-3 rounded-full"
-                      style={{ background: p.color }}
-                    />
-                    <span className="text-white/90">{p.value}</span>
-                  </li>
-                ))}
+                {(payload ?? []).map(
+                  (p) =>
+                    p.value != "value" && (
+                      <li key={p.value} className="flex items-center gap-2">
+                        <span
+                          className="inline-block w-3 h-3 rounded-full"
+                          style={{ background: p.color }}
+                        />
+                        <span className="text-white/90">{p.value}</span>
+                      </li>
+                    )
+                )}
               </ul>
             )}
           />
         </PieChart>
       </ResponsiveContainer>
       <span className="text-white text-2xl font-semibold text-center block mt-4">
-        Total: <br />{formatCurrency(total)}
+        Total: <br />
+        {formatCurrency(total)}
       </span>
     </Layout>
   );
