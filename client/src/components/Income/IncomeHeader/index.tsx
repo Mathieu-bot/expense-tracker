@@ -32,7 +32,7 @@ export const IncomeHeader = ({
         <Button
           onClick={onNewIncome}
           size="large"
-          className="bg-primary text-white font-semibold hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 group"
+          className="bg-green-400 dark:bg-primary text-white font-semibold hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 group"
           startIcon={<Plus className="w-4 h-4 transition-transform" />}
         >
           New Income
