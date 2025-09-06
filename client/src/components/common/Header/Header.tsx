@@ -147,7 +147,7 @@ const DashboardHeader = () => {
             <h1 className="text-2xl font-bold">
               {getWelcomeMessage()}
               {user && (
-                <span className="bg-accent bg-clip-text text-transparent">
+                <span className="bg-[#ffdd33] bg-clip-text text-transparent">
                   {getUserDisplayName().split(" ")[0]}
                 </span>
               )}

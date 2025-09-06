@@ -32,7 +32,7 @@ export const IncomeHeader = ({
         <Button
           onClick={onNewIncome}
           size="large"
-          className="
+          className="border-none
     bg-gradient-to-br from-green-400/25 to-green-400/20 bg-white/80
     text-green-700/80
     dark:bg-none dark:bg-primary dark:text-white
