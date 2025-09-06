@@ -25,8 +25,8 @@ export const DateRangeFilter = ({
   }, [dateError]);
 
   return (
-    <div className="bg-gradient-to-br dark:bg-transparent bg-white/10 dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl p-6 border border-white/5 mb-6 shadow-lg animate-in fade-in-50">
-      <h3 className="text-lg font-medium text-light/90 mb-4 flex items-center gap-2">
+    <div className="dark:bg-transparent bg-white/25 dark:bg-gradient-to-br dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl p-6 border border-white/5 mb-6 shadow-lg animate-in fade-in-50">
+      <h3 className="text-lg font-medium text-white dark:text-light/90 mb-4 flex items-center gap-2">
         <Calendar className="w-5 h-5 text-accent" />
         Filter Incomes
       </h3>
@@ -61,7 +61,11 @@ export const DateRangeFilter = ({
       <div className="flex gap-3">
         <Button
           onClick={onClear}
-          className="border border-white/30 text-light/80 bg-transparent hover:bg-white/10"
+          className="bg-gradient-to-br from-accent/25 to-accent/20 bg-white/80
+          text-amber-800/90
+          dark:bg-white/5 dark:hover:bg-white/10 dark:text-light/90
+          border border-accent/30 dark:border-white/10
+          hover:shadow-md transition-all"
         >
           Clear
         </Button>

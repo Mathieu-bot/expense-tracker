@@ -86,7 +86,7 @@ export const Incomes = () => {
 
   return (
     <>
-      <div className="relative z-2 mb-10 mt-30 mx-auto text-gray-800 dark:text-light max-w-7xl px-6 xl:ml-29 lg:ml-20">
+      <div className="relative z-2 mb-10 mx-auto mt-30 text-gray-800 dark:text-light max-w-7xl px-6 xl:ml-29 lg:ml-20">
         <IncomeHeader totalIncome={totalIncome} onNewIncome={handleNewIncome} />
 
         <StatsCards
@@ -172,7 +172,7 @@ export const Incomes = () => {
           onClearDateFilter={clearDateFilter}
         />
 
-        <div className="bg-white/80 dark:bg-gradient-to-br dark:bg-transparent dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl p-6 border border-gray-200/70 dark:border-white/5 shadow-lg relative overflow-hidden">
+        <div className="bg-white/25 dark:bg-gradient-to-br dark:bg-transparent dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl p-6 border border-gray-200/70 dark:border-white/5 shadow-lg relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 rounded-full -translate-y-16 translate-x-16 bg-cyan-400/10 dark:bg-cyan-400/5"></div>
           <div className="absolute bottom-0 left-0 w-24 h-24 bg-accent/10 dark:bg-accent/5 rounded-full translate-y-12 -translate-x-12"></div>
 

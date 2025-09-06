@@ -35,7 +35,7 @@ const ProfileInfo = ({ user, activeTab, onTabChange }: ProfileInfoProps) => {
   return (
     <div className="relative">
       <div
-        className="bg-gradient-to-br dark:bg-transparent bg-white/10 dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl
+        className="bg-gradient-to-br dark:bg-transparent bg-white/80 dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl
                       rounded-3xl py-5 border border-white/15 shadow-2xl h-full 
                       relative overflow-hidden group flex"
       >

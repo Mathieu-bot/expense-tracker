@@ -45,8 +45,9 @@ export const IncomeFilters = ({
               onChange={(e) => onSearchChange(e.target.value)}
               classes={{
                 input:
-                  "bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-xl",
-                label: "text-white rounded-lg peer-placeholder-shown:text-white/60",
+                  "bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-xl",
+                label:
+                  "text-white rounded-lg peer-placeholder-shown:text-white/60",
               }}
             />
           </div>
@@ -55,7 +56,7 @@ export const IncomeFilters = ({
 
           <Button
             onClick={() => setShowAdvancedSearch(!showAdvancedSearch)}
-            className="bg-white/5 hover:bg-white/10 border border-white/10 text-light/90 hover:shadow-md transition-all"
+            className="bg-white/10 dark:bg-white/5 border-white/20 hover:bg-white/20 hover:border-white/30 dark:hover:bg-white/10 border dark:border-white/10 text-white dark:text-light/90 hover:shadow-md transition-all"
             startIcon={<Calendar className="w-4 h-4" />}
           >
             Filter
