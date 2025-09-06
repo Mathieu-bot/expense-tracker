@@ -49,7 +49,7 @@ export default function MiniStatCard({
       <div className="flex items-center justify-between">
         <div
           className={`text-2xl font-semibold tracking-tight ${
-            value < 0 ? "text-red-400" : "text-white"
+            value < 0 ? "text-red-500" : "text-white"
           }`}
         >
           {valueStr}

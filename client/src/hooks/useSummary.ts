@@ -7,7 +7,7 @@ import {
 } from "../services/SummaryService";
 import getLastSixMonths from "../utils/getLastSixMonth";
 import { DefaultService } from "../api";
-import { formatMonth } from "../utils/formatter";
+import { formatMonth } from "../utils/formatters";
 import { useMascotStore } from "../stores/mascotStore";
 
 export const useSummaryAlert = () => {

@@ -14,7 +14,10 @@ import {
 import SummaryAlert from "../components/dashboard/SummaryAlert";
 import { useExpenses } from "../hooks/useExpenses";
 import { GlassDatePicker } from "../components/Income";
-import { computeEvolutionBetweenValues } from "../utils/evolutionBetweenValues";
+import {
+  computeEvolutionBetweenValues,
+  computeSoldRatio,
+} from "../utils/evolutionBetweenValues";
 
 function Dashboard() {
   const { data: summaryAlert } = useSummaryAlert();
@@ -102,29 +105,29 @@ function Dashboard() {
             ? "bg-rose-500/20"
             : null,
       },
-
-      {
-        label: "Sold",
-        value: sold,
-        icon: Percent,
-        deltaPct:
-          computeEvolutionBetweenValues(
-            lastMonthSummary?.netBalance ?? 0,
-            thisMonthSummary?.netBalance ?? 0
-          ) ?? 0,
-      },
     ],
     [
-      lastMonthSummary?.netBalance,
       lastMonthSummary?.totalExpense,
       lastMonthSummary?.totalIncome,
-      sold,
-      thisMonthSummary?.netBalance,
       thisMonthSummary?.totalExpense,
       thisMonthSummary?.totalIncome,
       totalExpense,
       totalIncome,
     ]
+  );
+
+  const soldToDisplay = useMemo(
+    () => ({
+      label: "Sold",
+      value: sold,
+      icon: Percent,
+      deltaPct:
+        computeSoldRatio(
+          lastMonthSummary?.netBalance ?? 0,
+          thisMonthSummary?.netBalance ?? 0
+        ) ?? 0,
+    }),
+    [lastMonthSummary?.netBalance, sold, thisMonthSummary?.netBalance]
   );
 
   /* Totals */
@@ -217,6 +220,7 @@ function Dashboard() {
       )}
       <div className="col-span-3 flex flex-col gap-5">
         {/* FILTER */}
+
         <div className="flex items-center text-white justify-between">
           <h1 className="text-4xl pl-10 font-semibold">Filters</h1>
           <div className="flex gap-5 items-center">
@@ -245,6 +249,11 @@ function Dashboard() {
           {toDisplay.map((item, idx) => (
             <MiniStatCard key={idx} {...item} filterWasUsed={filterWasUsed} />
           ))}
+          <MiniStatCard
+            key={"sold"}
+            {...soldToDisplay}
+            filterWasUsed={filterWasUsed}
+          />
         </div>
 
         {/* BARCHART */}

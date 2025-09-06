@@ -39,3 +39,11 @@ export const fmt = (dateStr?: string | null) => {
     return "";
   }
 };
+
+export function formatMonth(ym: string) {
+  const [year, month] = ym.split("-");
+  return new Date(Number(year), Number(month) - 1).toLocaleDateString("en-US", {
+    month: "short",
+    year: "numeric",
+  });
+}
