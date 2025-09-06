@@ -209,7 +209,7 @@ function Dashboard() {
   };
 
   return (
-    <div className="min-w-screen max-h-screen pt-22 md:pl-30 md:pr-22 flex flex-col items-center gap-10 md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 z-30">
+    <div className="min-w-screen max-h-screen pt-26 md:pl-30 md:pr-22 flex flex-col items-center gap-10 md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 z-30">
       {summaryAlert.alert && (
         <SummaryAlert
           alert={summaryAlert.alert}

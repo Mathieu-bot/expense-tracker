@@ -12,7 +12,6 @@ import type { Expense } from "../../types/Expense";
 import { formatCurrency } from "../../utils/formatters";
 
 const FALLBACK_COLORS = ["#93C5FD", "#A7F3D0", "#FDE68A", "#FCA5A5", "#FDBA74"];
-const formatAr = (v: number) => `Ar ${v.toLocaleString("fr-MG")}`;
 
 export default function PieGraph({
   title,
@@ -67,7 +66,7 @@ export default function PieGraph({
             ))}
           </Pie>
 
-          <Tooltip formatter={(v: number) => formatAr(v)} />
+          <Tooltip formatter={(v: number) => formatCurrency(v)} />
 
           <Legend
             verticalAlign="bottom"

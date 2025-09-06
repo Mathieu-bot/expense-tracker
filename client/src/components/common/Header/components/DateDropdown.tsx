@@ -1,7 +1,8 @@
-import { Clock, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
+import { Clock, Calendar } from "lucide-react";
 import { useState } from "react";
 
 const DateDropdown = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const formatDate = (date: Date) => {
@@ -18,12 +19,6 @@ const DateDropdown = () => {
       minute: "2-digit",
       hour12: true,
     });
-  };
-
-  const changeDate = (days: number) => {
-    const newDate = new Date(currentDate);
-    newDate.setDate(newDate.getDate() + days);
-    setCurrentDate(newDate);
   };
 
   return (
