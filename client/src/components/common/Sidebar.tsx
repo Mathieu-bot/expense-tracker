@@ -29,7 +29,7 @@ export default function Sidebar() {
                       href={href}
                       className="
                         flex items-center gap-3 rounded-xl px-3 py-3
-                        hover:bg-gray-100 focus:outline-none focus:ring-2 ring-primary/30
+                        hover:bg-gray-900/5 focus:outline-none focus:ring-2 ring-primary/30
                         transition-colors text-gray-700
                         dark:text-white dark:hover:bg-white/15 dark:focus:ring-white/30
                       "
@@ -51,7 +51,7 @@ export default function Sidebar() {
                       href={href}
                       className="
                         flex items-center gap-3 rounded-xl px-3 py-3
-                        hover:bg-gray-100 focus:outline-none focus:ring-2 ring-primary/30
+                        hover:bg-gray-900/5 focus:outline-none focus:ring-2 ring-primary/30
                         transition-colors text-gray-700
                         dark:text-white dark:hover:bg-white/15 dark:focus:ring-white/30
                       "
@@ -68,7 +68,7 @@ export default function Sidebar() {
                   <LogoutButton
                     size="large"
                     className="text-left w-full flex items-center !justify-start gap-3 
-                      rounded-xl !p-3 hover:bg-gray-100 focus:outline-none focus:ring-2 
+                      rounded-xl !p-3 hover:bg-gray-900/5 focus:outline-none focus:ring-2 
                       ring-primary/30 transition-colors text-gray-700 border-none font-normal
                       dark:text-white dark:hover:bg-white/15 dark:focus:ring-white/30"
                     startIcon={
