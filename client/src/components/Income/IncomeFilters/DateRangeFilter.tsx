@@ -32,13 +32,13 @@ export const DateRangeFilter = ({
       </h3>
 
       {showError && dateError && (
-        <div className="mb-4 bg-rose-400/20 border border-rose-400/30 text-rose-400 px-4 py-3 rounded-xl backdrop-blur-sm flex items-center justify-between animate-in slide-in-from-top-5 duration-300">
+        <div className="mb-4 bg-gradient-to-r from-red-100 to-pink-100 dark:bg-rose-400/20 border border-red-200 dark:border-rose-400/30 text-red-700 dark:text-rose-400 px-4 py-3 rounded-xl backdrop-blur-sm flex items-center justify-between animate-in slide-in-from-top-5 duration-300">
           <span className="flex-1">{dateError}</span>
           <button
             onClick={() => setShowError(false)}
-            className="ml-3 p-1 hover:bg-rose-400/30 rounded transition-colors"
+            className="ml-3 p-1 hover:bg-red-200/50 dark:hover:bg-rose-400/30 rounded transition-colors"
           >
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4 text-red-600 dark:text-rose-400" />
           </button>
         </div>
       )}

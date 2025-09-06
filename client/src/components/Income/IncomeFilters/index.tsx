@@ -47,7 +47,7 @@ export const IncomeFilters = ({
                 input:
                   "bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-xl",
                 label:
-                  "text-white rounded-lg peer-placeholder-shown:text-white/60",
+                  "rounded-lg peer-placeholder-shown:text-white/60",
               }}
             />
           </div>

@@ -80,7 +80,7 @@ const Receipt = ({ items, onViewReceipt }: ReceiptProps) => {
                     isDark ? "border-light/10" : "border-white/80"
                   }`}
                 >
-                  <span className="text-accent font-bold text-[11px] leading-none tracking-tight">
+                  <span className="text-[#ffdd33] font-bold text-[11px] leading-none tracking-tight">
                     {formatCurrency(item.amount)}
                   </span>
                 </div>

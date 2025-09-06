@@ -83,8 +83,8 @@ export const IncomeList = forwardRef<IncomeListRef, IncomeListProps>(
         !incomes ||
         incomes.length === 0 ||
         displayedItems.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-light/50">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-cyan-100 to-blue-100 dark:bg-white/5 flex items-center justify-center mb-4">
+          <div className="flex flex-col items-center justify-center py-12 text-white dark:text-light/50">
+            <div className="w-16 h-16 rounded-full dark:bg-none bg-gradient-to-br from-cyan-100 to-blue-100 dark:bg-white/5 flex items-center justify-center mb-4">
               <Eye className="w-8 h-8 text-cyan-600 dark:text-light/50" />
             </div>
             <p className="text-lg mb-2">No incomes found</p>
