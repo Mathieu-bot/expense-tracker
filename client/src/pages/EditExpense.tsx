@@ -3,7 +3,11 @@ import type React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, useToast, Skeleton } from "../ui";
 import { ExpenseService } from "../services/ExpenseService";
-import type { Expense, UpdateExpenseRequest, ExpenseType } from "../types/Expense";
+import type {
+  Expense,
+  UpdateExpenseRequest,
+  ExpenseType,
+} from "../types/Expense";
 
 export const EditExpense = () => {
   const { id } = useParams<{ id: string }>();
@@ -53,7 +57,8 @@ export const EditExpense = () => {
       toast.success("Expense updated successfully");
       navigate("/expenses");
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to update expense";
+      const message =
+        error instanceof Error ? error.message : "Failed to update expense";
       toast.error(message);
       throw error;
     }
@@ -79,11 +84,14 @@ export const EditExpense = () => {
     );
   }
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const onChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setLocal((f) => ({
       ...f,
-      [name]: name === "amount" ? (value === "" ? undefined : Number(value)) : value,
+      [name]:
+        name === "amount" ? (value === "" ? undefined : Number(value)) : value,
     }));
   };
 
@@ -118,7 +126,11 @@ export const EditExpense = () => {
   return (
     <div className="p-6 max-w-2xl mx-auto pt-20 text-light">
       <div className="flex items-center mb-6">
-        <Button onClick={handleCancel} className="mr-4 border border-gray-300" size="small">
+        <Button
+          onClick={handleCancel}
+          className="mr-4 border border-gray-300"
+          size="small"
+        >
           ← Back
         </Button>
         <h1 className="text-2xl font-semibold">Edit Expense</h1>
@@ -179,7 +191,7 @@ export const EditExpense = () => {
               <input
                 name="date"
                 type="date"
-                value={local.date || ""}
+                value={local.date?.slice(0, 10) || ""}
                 onChange={onChange}
                 required
                 className="w-full rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
@@ -193,7 +205,7 @@ export const EditExpense = () => {
                 <input
                   name="startDate"
                   type="date"
-                  value={local.startDate || ""}
+                  value={local.startDate?.slice(0, 10) || ""}
                   onChange={onChange}
                   required
                   className="w-full rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
@@ -204,7 +216,7 @@ export const EditExpense = () => {
                 <input
                   name="endDate"
                   type="date"
-                  value={local.endDate || ""}
+                  value={local.endDate?.slice(0, 10) || ""}
                   onChange={onChange}
                   className="w-full rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
                 />

@@ -38,7 +38,9 @@ export default function Expenses() {
         <input
           type="date"
           value={start ?? ""}
-          onChange={(e) => setStart(e.target.value || undefined)}
+          onChange={(e) => {
+            setStart(e.target.value || undefined);
+          }}
           className="rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
           placeholder="Start date"
         />
