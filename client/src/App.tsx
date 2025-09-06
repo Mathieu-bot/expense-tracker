@@ -12,61 +12,62 @@ import SignupPage from "./pages/SignupPage";
 import AuthCallback from "./pages/AuthCallback";
 import { Profile } from "./pages/Profile";
 import PostAuthGate from "./components/auth/PostAuthGate";
-import DashboardHeader  from "./components/common/Header/Header";
+import DashboardHeader from "./components/common/Header/Header";
 import Expenses from "./pages/Expenses";
 import { CreateExpense } from "./pages/CreateExpense";
 import { EditExpense } from "./pages/EditExpense";
 import { CreateIncome } from "./pages/CreateIncome";
-
+import { ThemeProvider } from "./contexts/ThemeContext";
 
 function App() {
   const location = useLocation();
   return (
-    <ToastProvider
-      max={4}
-      dense={false}
-      pauseOnHover={true}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
-    >
-      <div className="App min-h-screen relative overflow-x-hidden">
-        {location.pathname.includes("/login") ||
-        location.pathname.includes("/signup") ? null : (
-          <>
-            <BackgroundImage />
-            <DashboardHeader />
-            <Sidebar />
-          </>
-        )}
-        {location.pathname.includes("/login") ||
-        location.pathname.includes("/signup") ? null : (
-          <Mascot className="z-50" />
-        )}
-        {!(
-          location.pathname.includes("/login") ||
-          location.pathname.includes("/signup")
-        ) && <PostAuthGate />}
-        <Routes>
-          {/* Public routes */}
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/auth/callback" element={<AuthCallback />} />
+    <ThemeProvider>
+      <ToastProvider
+        max={4}
+        dense={false}
+        pauseOnHover={true}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <div className="App min-h-screen relative overflow-x-hidden">
+          {location.pathname.includes("/login") ||
+          location.pathname.includes("/signup") ? null : (
+            <>
+              <BackgroundImage />
+              <DashboardHeader />
+              <Sidebar />
+            </>
+          )}
+          {location.pathname.includes("/login") ||
+          location.pathname.includes("/signup") ? null : (
+            <Mascot className="z-50" />
+          )}
+          {!(
+            location.pathname.includes("/login") ||
+            location.pathname.includes("/signup")
+          ) && <PostAuthGate />}
+          <Routes>
+            {/* Public routes */}
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/auth/callback" element={<AuthCallback />} />
 
-          {/* Protected routes */}
-          <Route element={<RequireAuth />}>
+            {/* Protected routes */}
+            <Route element={<RequireAuth />}>
               <Route path="/" element={<Dashboard />} />
               <Route path="/expenses" element={<Expenses />} />
               <Route path="/expenses/new" element={<CreateExpense />} />
               <Route path="/expenses/:id/edit" element={<EditExpense />} />
               <Route path="/incomes" element={<Incomes />} />
-              <Route path="/incomes/new" element={<CreateIncome/>} />
+              <Route path="/incomes/new" element={<CreateIncome />} />
               <Route path="/incomes/:id/edit" element={<EditIncome />} />
               <Route path="/profile" element={<Profile />} />
-          </Route>
-        </Routes>
-      </div>
-    </ToastProvider>
+            </Route>
+          </Routes>
+        </div>
+      </ToastProvider>
+    </ThemeProvider>
   );
 }
 
 export default App;
-

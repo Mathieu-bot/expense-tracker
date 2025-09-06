@@ -1,5 +1,5 @@
 import userPlaceholder from "./person.png";
-import bgLight from "./bgLight.jpg";
+import bgLight from "./bgLight.png";
 import bgDark from "./bgDark.jpg";
 import logoLight from "./logoLight.png";
 import logoDark from "./logoDark.png";
