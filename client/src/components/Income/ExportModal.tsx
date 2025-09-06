@@ -121,10 +121,8 @@ export const ExportModal = ({
               </label>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
-                    Start Date
-                  </div>
                   <DatePicker
+                  label="Start Date"
                     classes={{
                       calendar:
                         "dark:bg-white/10 dark:backdrop-blur-xl rounded-2xl p-3 border border-white/10 shadow-lg",
@@ -144,10 +142,8 @@ export const ExportModal = ({
                   />
                 </div>
                 <div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
-                    End Date
-                  </div>
                   <DatePicker
+                  label="End Date"
                     classes={{
                       calendar:
                         "dark:bg-white/10 dark:backdrop-blur-xl rounded-2xl p-3 border border-white/10 shadow-lg",
@@ -173,7 +169,7 @@ export const ExportModal = ({
             <div className="p-4 bg-gray-100/60 dark:bg-gray-800/40 border border-gray-200 dark:border-gray-700 rounded-lg">
               <div className="flex justify-between items-center mb-1">
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Matching receipts:
+                  Receipts found:
                 </span>
                 <span
                   className={`text-sm font-semibold px-2 py-1 rounded-full ${
@@ -187,8 +183,8 @@ export const ExportModal = ({
               </div>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                 {hasIncomesToExport
-                  ? "Ready to export these receipts"
-                  : "No filter applied or no receipts in selected range"}
+                  ? "Ready to export"
+                  : "No filter applied or no receipt found in selected range"}
               </p>
             </div>
 
