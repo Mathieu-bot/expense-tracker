@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
-import type { Income } from "../../types/Income";
-import { formatCurrency, formatDate } from "../../utils/formatters";
+import type { Income } from "../../../types/Income";
+import { formatCurrency, formatDate } from "../../../utils/formatters";
 
 interface ReceiptPdfProps {
   incomes: Income[];

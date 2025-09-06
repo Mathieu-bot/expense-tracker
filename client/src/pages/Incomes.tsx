@@ -18,7 +18,7 @@ import { Plus, Wallet } from "lucide-react";
 import { StatsCards } from "../components/Income/IncomeHeader/StatsCards";
 import type { Income } from "../types/Income";
 import { useState, useMemo, useRef } from "react";
-import { ReceiptPdf } from "../components/Income/ReceiptPdf";
+import { ReceiptPdf } from "../components/Income/IncomePdf/ReceiptPdf";
 import {
   PdfExportService,
   Resolution,

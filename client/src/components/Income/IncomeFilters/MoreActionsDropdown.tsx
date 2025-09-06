@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { MoreHorizontal, FileDown } from "lucide-react";
 import { Button } from "../../../ui";
 import { useClickOutside } from "../../../hooks/useClickOutside";
-import { ExportModal } from "../ExportModal";
+import { ExportModal } from "../IncomePdf/ExportModal";
 import type { Income } from "../../../types/Income";
 
 interface MoreActionsDropdownProps {

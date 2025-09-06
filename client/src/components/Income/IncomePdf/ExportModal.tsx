@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { FileDown, Download } from "lucide-react";
-import type { Income } from "../../types/Income";
-import { DatePicker } from "../../ui";
+import type { Income } from "../../../types/Income";
+import { DatePicker } from "../../../ui";
 
 interface ExportModalProps {
   open: boolean;
@@ -122,7 +122,7 @@ export const ExportModal = ({
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <DatePicker
-                  label="Start Date"
+                    label="Start Date"
                     classes={{
                       calendar:
                         "dark:bg-white/10 dark:backdrop-blur-xl rounded-2xl p-3 border border-white/10 shadow-lg",
@@ -133,8 +133,7 @@ export const ExportModal = ({
                       grid: "grid grid-cols-7 gap-1",
                       input:
                         "bg-white/5 backdrop-blur-md border border-white/10 text-primary-dark placeholder-primary-dark/80 rounded-xl",
-                      label:
-                        "rounded-full text-primary-dark",
+                      label: "rounded-full text-primary-dark",
                     }}
                     value={startDate}
                     onChange={setStartDate}
@@ -143,7 +142,7 @@ export const ExportModal = ({
                 </div>
                 <div>
                   <DatePicker
-                  label="End Date"
+                    label="End Date"
                     classes={{
                       calendar:
                         "dark:bg-white/10 dark:backdrop-blur-xl rounded-2xl p-3 border border-white/10 shadow-lg",
@@ -154,8 +153,7 @@ export const ExportModal = ({
                       grid: "grid grid-cols-7 gap-1",
                       input:
                         "bg-white/5 backdrop-blur-md border border-white/10 text-primary-dark placeholder-primary-dark/80 rounded-xl",
-                      label:
-                        "rounded-full text-primary-dark",
+                      label: "rounded-full text-primary-dark",
                     }}
                     value={endDate}
                     onChange={setEndDate}
