@@ -1,15 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Palette, Sun, Moon } from "lucide-react";
 import { useTheme } from "../../contexts/ThemeContext";
 
 export const AppearanceTab = () => {
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const { toggleTheme } = useTheme();
+  const { toggleTheme, isDark } = useTheme();
 
   const handleToggleTheme = () => {
     toggleTheme();
     setIsDarkMode(!isDarkMode);
   };
+
+  useEffect(() => {
+    if (isDark) {
+      setIsDarkMode(true);
+    } else {
+      setIsDarkMode(false);
+    }
+  }, [isDark]);
 
   return (
     <div className="bg-white/25  dark:bg-gradient-to-br dark:bg-none dark:bg-transparent dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-3xl p-8 border border-gray-200/70 dark:border-white/15 shadow-2xl transition-all duration-500">
