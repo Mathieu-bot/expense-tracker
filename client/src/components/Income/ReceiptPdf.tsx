@@ -53,7 +53,7 @@ export const ReceiptPdf = forwardRef<HTMLDivElement, ReceiptPdfProps>(
                 letterSpacing: "-0.5px",
               }}
             >
-              Income Receipts
+              Income Receipt
             </h1>
           </div>
         </div>

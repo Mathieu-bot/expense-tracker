@@ -255,7 +255,7 @@ export const Incomes = () => {
       </div>
 
       {/* hidden pdf template when exporting */}
-      <div className="fixed top-50 z-[50000] left-100">
+      <div className="fixed -left-[10000px] top-0">
         <ReceiptPdf
           ref={pdfRef}
           incomes={filteredIncomesForPdf}

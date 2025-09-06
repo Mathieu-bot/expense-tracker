@@ -77,7 +77,7 @@ const Receipt = ({ items, onViewReceipt }: ReceiptProps) => {
 
                 <div
                   className={`flex justify-end items-end pt-2 border-t ${
-                    isDark ? "border-light/10" : "border-white/80"
+                    isDark ? "border-light/10" : "text-purple-900/50"
                   }`}
                 >
                   <span className="text-[#ffdd33] font-bold text-[11px] leading-none tracking-tight">
