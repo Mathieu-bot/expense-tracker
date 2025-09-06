@@ -51,14 +51,14 @@ const Receipt = ({ items, onViewReceipt }: ReceiptProps) => {
                 <div className="mb-2">
                   <h3
                     className={`font-semibold text-[10px] leading-tight tracking-wider mb-1 truncate ${
-                      isDark ? "text-light/90" : "text-white"
+                      isDark ? "text-light/90" : "text-purple-900/80"
                     }`}
                   >
                     {item.source}
                   </h3>
                   <p
-                    className={`text-[8px] leading-tight tracking-tight font-light ${
-                      isDark ? "text-light/50" : "text-white/70"
+                    className={`text-[9px] leading-tight tracking-tight font-light ${
+                      isDark ? "text-light/50" : "text-purple-900"
                     }`}
                   >
                     {formatDate(item.date)}
@@ -68,7 +68,7 @@ const Receipt = ({ items, onViewReceipt }: ReceiptProps) => {
                 {item.description && (
                   <p
                     className={`text-[8px] leading-tight tracking-tight mb-2 line-clamp-2 ${
-                      isDark ? "text-light/60" : "text-white/80"
+                      isDark ? "text-light/60" : "text-purple-900/80"
                     }`}
                   >
                     {item.description}
