@@ -32,7 +32,7 @@ export class PdfExportService {
       canvas: { mimeType: "image/png" as const, qualityRatio: 1 },
     };
 
-    await generatePDF(targetRef, pdfOptions);
+    generatePDF(() => targetRef.current as HTMLDivElement, pdfOptions);
   }
 
   static generateFilename(startDate?: string, endDate?: string): string {

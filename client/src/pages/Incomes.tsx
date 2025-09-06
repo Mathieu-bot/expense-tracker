@@ -91,9 +91,40 @@ export const Incomes = () => {
   );
 
   const pdfRef = useRef<HTMLDivElement>(null);
+  const [filteredIncomesForPdf, setFilteredIncomesForPdf] = useState<Income[]>(
+    []
+  );
+  const [filteredTotalAmount, setFilteredTotalAmount] = useState(0);
 
   const handleExportPdf = async (startDate?: string, endDate?: string) => {
     try {
+      let filteredIncomes = localIncomes;
+
+      if (startDate || endDate) {
+        filteredIncomes = localIncomes.filter((income) => {
+          const incomeDate = new Date(income.date);
+          const start = startDate ? new Date(startDate) : null;
+          const end = endDate ? new Date(endDate) : null;
+
+          if (start && end) {
+            return incomeDate >= start && incomeDate <= end;
+          } else if (start) {
+            return incomeDate >= start;
+          } else if (end) {
+            return incomeDate <= end;
+          }
+          return true;
+        });
+      }
+
+      const totalAmount = filteredIncomes.reduce(
+        (sum, income) => sum + income.amount,
+        0
+      );
+
+      setFilteredIncomesForPdf(filteredIncomes);
+      setFilteredTotalAmount(totalAmount);
+
       await new Promise((resolve) => setTimeout(resolve, 100));
 
       if (pdfRef.current) {
@@ -103,11 +134,13 @@ export const Incomes = () => {
           margin: Margin.MEDIUM,
         });
         toast.success("PDF exported successfully!");
+        return true; //success
       }
     } catch (error) {
       toast.error("Failed to export PDF. Please try again.");
       console.error("PDF export error:", error);
     }
+    return false; //filure
   };
 
   return (
@@ -117,6 +150,7 @@ export const Incomes = () => {
           totalIncome={totalIncome}
           onNewIncome={handleNewIncome}
           onExport={handleExportPdf}
+          incomes={localIncomes}
         />
 
         <StatsCards
@@ -220,11 +254,12 @@ export const Incomes = () => {
         </div>
       </div>
 
+      {/* hidden pdf template when exporting */}
       <div className="fixed -left-[10000px] top-0">
         <ReceiptPdf
           ref={pdfRef}
-          incomes={localIncomes}
-          totalAmount={totalIncome}
+          incomes={filteredIncomesForPdf}
+          totalAmount={filteredTotalAmount}
         />
       </div>
 

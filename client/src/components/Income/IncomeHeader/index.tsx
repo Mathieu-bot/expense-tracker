@@ -2,17 +2,20 @@ import { Plus } from "lucide-react";
 import { Button } from "../../../ui";
 import { MoreActionsDropdown } from "../IncomeFilters/MoreActionsDropdown";
 import { TotalIncome } from "../IncomeHeader/TotalIncome";
+import type { Income } from "../../../types/Income";
 
 interface IncomeHeaderProps {
   totalIncome: number;
   onNewIncome: () => void;
-  onExport: (startDate?: string, endDate?: string) => void;
+  onExport: (startDate?: string, endDate?: string) => Promise<boolean>;
+  incomes: Income[];
 }
 
 export const IncomeHeader = ({
   totalIncome,
   onNewIncome,
   onExport,
+  incomes,
 }: IncomeHeaderProps) => {
   return (
     <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6 mb-8">
@@ -31,7 +34,7 @@ export const IncomeHeader = ({
       </div>
 
       <div className="flex items-center gap-3">
-        <MoreActionsDropdown onExport={onExport} />
+        <MoreActionsDropdown onExport={onExport} incomes={incomes} />
         <Button
           onClick={onNewIncome}
           size="large"
