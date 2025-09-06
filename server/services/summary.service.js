@@ -50,7 +50,6 @@ const getSummaryForAMonth = async (user_id, month, year) => {
   const nextMonth = (parseInt(month, 10) + 1).toString().padStart(2, "0");
   const end = new Date(`${year}-${nextMonth}-01T00:00:00.000Z`);
 
-
   const incomeSummary = await prisma.income.aggregate({
     _sum: { amount: true },
     where: {
@@ -132,7 +131,7 @@ const getAlert = async (user_id) => {
   return totalExpense > totalIncome
     ? {
         alert: true,
-        message: `You've exceeded your monthly budget by ${
+        message: `You've exceeded your monthly budget by $${
           totalExpense - totalIncome
         }`,
       }

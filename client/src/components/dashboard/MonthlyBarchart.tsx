@@ -9,7 +9,7 @@ import {
   YAxis,
 } from "recharts";
 import Layout from "./Layout";
-import { fmtAr, fmtShort } from "../../utils/formatter";
+import { formatCurrency } from "../../utils/formatters";
 export type Row = {
   totalIncome: number;
   totalExpense: number;
@@ -43,7 +43,7 @@ export function MonthlyBarChart({ data }: { data: Row[] }) {
               : "bg-white/10 text-white/80 hover:text-white"
           }`}
         >
-          Spending • {fmtShort(totals.spending)}
+          Spending • {formatCurrency(totals.spending)}
         </button>
         <button
           onClick={() => setShow((s) => ({ ...s, income: !s.income }))}
@@ -53,7 +53,7 @@ export function MonthlyBarChart({ data }: { data: Row[] }) {
               : "bg-white/10 text-white/80 hover:text-white"
           }`}
         >
-          Income • {fmtShort(totals.income)}
+          Income • {formatCurrency(totals.income)}
         </button>
       </div>
 
@@ -85,7 +85,7 @@ export function MonthlyBarChart({ data }: { data: Row[] }) {
           <XAxis dataKey="month" tick={{ fill: "rgba(255,255,255,0.8)" }} />
           <YAxis
             tick={{ fill: "rgba(255,255,255,0.8)" }}
-            tickFormatter={(v: number) => `Ar ${fmtShort(v)}`}
+            tickFormatter={(v: number) => `${formatCurrency(v)}`}
             allowDecimals={false}
             domain={["auto", "auto"]}
           />
@@ -96,7 +96,10 @@ export function MonthlyBarChart({ data }: { data: Row[] }) {
               borderRadius: 8,
               color: "#fff",
             }}
-            formatter={(v, name: string) => [fmtAr(Number(v)), String(name)]}
+            formatter={(v, name: string) => [
+              formatCurrency(Number(v)),
+              String(name),
+            ]}
           />
 
           {show.spending && (

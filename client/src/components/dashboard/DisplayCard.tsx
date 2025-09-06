@@ -1,5 +1,6 @@
 import React from "react";
 import { TrendingUp, TrendingDown, type LucideProps } from "lucide-react";
+import { formatCurrency } from "../../utils/formatters";
 
 export type MiniStatItem = {
   label: string;
@@ -8,18 +9,11 @@ export type MiniStatItem = {
   deltaPct?: number;
   hint?: string;
   valueSuffix?: string;
-  formatValue?: (v: number) => string;
   className?: string;
   filterWasUsed: boolean;
+  customDeltaColor?: string | undefined | null;
+  customBgColor?: string | undefined | null;
 };
-
-const nfMG = new Intl.NumberFormat("fr-MG");
-const fmtArShort = (n: number) =>
-  n >= 1_000_000
-    ? `Ar ${(n / 1_000_000).toFixed(1)}M`
-    : n >= 1_000 || n <= -1_000
-    ? `Ar ${(n / 1_000).toFixed(1)}k`
-    : `Ar ${nfMG.format(n)}`;
 
 export default function MiniStatCard({
   label,
@@ -27,8 +21,9 @@ export default function MiniStatCard({
   icon: Icon,
   deltaPct,
   valueSuffix,
-  formatValue,
   filterWasUsed,
+  customDeltaColor,
+  customBgColor,
 }: MiniStatItem) {
   const isUp = typeof deltaPct === "number" ? deltaPct >= 0 : undefined;
   const deltaColor =
@@ -38,11 +33,7 @@ export default function MiniStatCard({
       ? "bg-emerald-500/20 text-emerald-400"
       : "bg-rose-500/20 text-rose-400";
 
-  const valueStr = formatValue
-    ? formatValue(value)
-    : valueSuffix
-    ? nfMG.format(value)
-    : fmtArShort(value);
+  const valueStr = formatCurrency(value);
 
   return (
     <div className="bg-gradient-to-br from-primary/20 to-gray-800/20 backdrop-blur-xl rounded-2xl py-4 px-5 border border-white/5 shadow-lg hover:shadow-accent/20 transition-shadow duration-300 flex flex-col gap-3">
@@ -67,7 +58,7 @@ export default function MiniStatCard({
 
         {typeof deltaPct === "number" && !filterWasUsed ? (
           <span
-            className={`ml-3 text-sm font-semibold px-2.5 py-1 rounded-full inline-flex items-center gap-1 ${deltaColor}`}
+            className={`ml-3 text-sm font-semibold px-2.5 py-1 rounded-full inline-flex items-center gap-1 ${deltaColor} ${customDeltaColor} ${customBgColor}`}
           >
             {isUp ? (
               <TrendingUp className="w-3.5 h-3.5" />

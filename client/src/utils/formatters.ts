@@ -1,7 +1,15 @@
+// export const formatCurrency = (amount: number): string => {
+//   return new Intl.NumberFormat("en-US", {
+//     style: "currency",
+//     currency: "USD",
+//   }).format(amount);
+// };
+
 export const formatCurrency = (amount: number): string => {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
+    notation: "compact",
   }).format(amount);
 };
 
@@ -21,7 +29,7 @@ export const formatShortDate = (dateString: string): string => {
   });
 };
 
-export const fmt =(dateStr?: string | null) => {
+export const fmt = (dateStr?: string | null) => {
   if (!dateStr) return "";
   try {
     const d = new Date(dateStr);
@@ -30,5 +38,4 @@ export const fmt =(dateStr?: string | null) => {
   } catch {
     return "";
   }
-}
-
+};

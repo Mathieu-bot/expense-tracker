@@ -8,8 +8,8 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import { fmtAr } from "../../utils/formatter";
 import type { Expense } from "../../types/Expense";
+import { formatCurrency } from "../../utils/formatters";
 
 const FALLBACK_COLORS = ["#93C5FD", "#A7F3D0", "#FDE68A", "#FCA5A5", "#FDBA74"];
 const formatAr = (v: number) => `Ar ${v.toLocaleString("fr-MG")}`;
@@ -90,7 +90,7 @@ export default function PieGraph({
         </PieChart>
       </ResponsiveContainer>
       <span className="text-white text-2xl font-semibold text-center block mt-4">
-        Total: <br />{fmtAr(total)}
+        Total: <br />{formatCurrency(total)}
       </span>
     </Layout>
   );

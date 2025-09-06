@@ -47,7 +47,6 @@ function Dashboard() {
     startDate,
     endDate
   );
-  console.log(expenses);
 
   /* Last month stat for the comparison */
   const { data: lastMonthSummary } = useMonthlySummary(
@@ -88,7 +87,22 @@ function Dashboard() {
             lastMonthSummary?.totalExpense ?? 0,
             thisMonthSummary?.totalExpense ?? 0
           ) ?? 0,
+        customDeltaColor:
+          computeEvolutionBetweenValues(
+            lastMonthSummary?.totalExpense ?? 0,
+            thisMonthSummary?.totalExpense ?? 0
+          )! >= 0
+            ? "text-rose-400"
+            : null,
+        customBgColor:
+          computeEvolutionBetweenValues(
+            lastMonthSummary?.totalExpense ?? 0,
+            thisMonthSummary?.totalExpense ?? 0
+          )! >= 0
+            ? "bg-rose-500/20"
+            : null,
       },
+
       {
         label: "Sold",
         value: sold,

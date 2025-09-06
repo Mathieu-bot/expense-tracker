@@ -33,7 +33,7 @@ export default function SummaryAlert({
           </div>
 
           <span className="text-white text-sm sm:text-base font-medium leading-snug">
-            {message} Ar
+            {message}
           </span>
 
           <button
