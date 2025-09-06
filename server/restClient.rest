@@ -1,5 +1,0 @@
-### getAlert
-GET http://localhost:8080/api/summary/alerts
-Cookie:token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6InJha290b2FyaXNvYWpvbmF0aGFuMEBnbWFpbC5jb20iLCJpYXQiOjE3NTY2NTQ3NDUsImV4cCI6MTc1NzI1OTU0NX0.Yh7cG_lyY2wiKFX_gLBnmIJm0PXX5gw1WQLjyxH7EuI
-
-
