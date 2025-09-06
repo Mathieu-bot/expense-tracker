@@ -96,7 +96,7 @@ export const Incomes = () => {
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          <div className="bg-gradient-to-br  bg-white/10 dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl p-6 border border-white/5 shadow-lg relative overflow-hidden">
+          <div className="bg-gradient-to-br dark:bg-transparent  bg-white/10 dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl p-6 border border-white/5 shadow-lg relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-accent/10 dark:bg-accent/5 rounded-full -translate-y-16 translate-x-16"></div>
             <div className="absolute bottom-0 left-0 w-24 h-24 bg-cyan-400/10 dark:bg-cyan-400/5 rounded-full translate-y-12 -translate-x-12"></div>
 
@@ -146,7 +146,7 @@ export const Incomes = () => {
             </div>
           </div>
 
-          <div className="bg-gradient-to-br bg-white/10 dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl p-6 border border-white/5 shadow-lg relative overflow-hidden">
+          <div className="bg-gradient-to-br dark:bg-transparent bg-white/10 dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl p-6 border border-white/5 shadow-lg relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-accent/10 dark:bg-accent/5 rounded-full -translate-y-16 translate-x-16"></div>
             <div className="absolute bottom-0 left-0 w-24 h-24 bg-cyan-400/10 dark:bg-cyan-400/5 rounded-full translate-y-12 -translate-x-12"></div>
 
@@ -172,7 +172,7 @@ export const Incomes = () => {
           onClearDateFilter={clearDateFilter}
         />
 
-        <div className="bg-gradient-to-br bg-white/10 dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl p-6 border border-white/5 shadow-lg relative overflow-hidden">
+        <div className="bg-gradient-to-br dark:bg-transparent bg-white/10 dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl p-6 border border-white/5 shadow-lg relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32  rounded-full -translate-y-16 translate-x-16 bg-cyan-400/10 dark:bg-cyan-400/5"></div>
           <div className="absolute bottom-0 left-0 w-24 h-24 bg-accent/10 dark:bg-accent/5 rounded-full translate-y-12 -translate-x-12"></div>
 

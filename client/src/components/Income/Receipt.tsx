@@ -9,8 +9,7 @@ interface ReceiptProps {
 }
 
 const Receipt = ({ items, onViewReceipt }: ReceiptProps) => {
-
-  const {isDark} = useTheme();
+  const { isDark } = useTheme();
 
   return (
     <div className="flex gap-4">
@@ -42,29 +41,45 @@ const Receipt = ({ items, onViewReceipt }: ReceiptProps) => {
                 V 10
                 Q 0,0 10,0
               "
-              fill={`${isDark? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.1)"}`}
-              stroke="rgba(255,255,255,0.12)"
+              fill={isDark ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.8)"}
+              stroke={isDark ? "rgba(255,255,255,0.12)" : "rgba(1,21,62,0.2)"}
               strokeWidth="0.8"
             />
 
             <foreignObject x="8" y="8" width="84" height="104">
               <div className="flex flex-col justify-between h-full p-2">
                 <div className="mb-2">
-                  <h3 className="font-semibold text-light/90 text-[10px] leading-tight tracking-wider mb-1 truncate">
+                  <h3
+                    className={`font-semibold text-[10px] leading-tight tracking-wider mb-1 truncate ${
+                      isDark ? "text-light/90" : "text-primary-dark"
+                    }`}
+                  >
                     {item.source}
                   </h3>
-                  <p className="text-light/50 text-[8px] leading-tight tracking-tight font-light">
+                  <p
+                    className={`text-[8px] leading-tight tracking-tight font-light ${
+                      isDark ? "text-light/50" : "text-primary-dark/70"
+                    }`}
+                  >
                     {formatDate(item.date)}
                   </p>
                 </div>
 
                 {item.description && (
-                  <p className="text-light/60 text-[8px] leading-tight tracking-tight mb-2 line-clamp-2">
+                  <p
+                    className={`text-[8px] leading-tight tracking-tight mb-2 line-clamp-2 ${
+                      isDark ? "text-light/60" : "text-primary-dark/80"
+                    }`}
+                  >
                     {item.description}
                   </p>
                 )}
 
-                <div className="flex justify-end items-end pt-2 border-t border-light/10">
+                <div
+                  className={`flex justify-end items-end pt-2 border-t ${
+                    isDark ? "border-light/10" : "border-primary-dark/20"
+                  }`}
+                >
                   <span className="text-accent font-bold text-[11px] leading-none tracking-tight">
                     {formatCurrency(item.amount)}
                   </span>
