@@ -41,8 +41,8 @@ const Receipt = ({ items, onViewReceipt }: ReceiptProps) => {
                 V 10
                 Q 0,0 10,0
               "
-              fill={isDark ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.8)"}
-              stroke={isDark ? "rgba(255,255,255,0.12)" : "rgba(1,21,62,0.2)"}
+              fill={isDark ? "rgba(255,255,255,0.04)" : "rgba(162, 126, 232, 0.4)"}
+              stroke={isDark ? "rgba(255,255,255,0.12)" : "rgba(162, 126, 232, 0.5)"}
               strokeWidth="0.8"
             />
 
@@ -51,14 +51,14 @@ const Receipt = ({ items, onViewReceipt }: ReceiptProps) => {
                 <div className="mb-2">
                   <h3
                     className={`font-semibold text-[10px] leading-tight tracking-wider mb-1 truncate ${
-                      isDark ? "text-light/90" : "text-primary-dark"
+                      isDark ? "text-light/90" : "text-white"
                     }`}
                   >
                     {item.source}
                   </h3>
                   <p
                     className={`text-[8px] leading-tight tracking-tight font-light ${
-                      isDark ? "text-light/50" : "text-primary-dark/70"
+                      isDark ? "text-light/50" : "text-white/70"
                     }`}
                   >
                     {formatDate(item.date)}
@@ -68,7 +68,7 @@ const Receipt = ({ items, onViewReceipt }: ReceiptProps) => {
                 {item.description && (
                   <p
                     className={`text-[8px] leading-tight tracking-tight mb-2 line-clamp-2 ${
-                      isDark ? "text-light/60" : "text-primary-dark/80"
+                      isDark ? "text-light/60" : "text-white/80"
                     }`}
                   >
                     {item.description}
@@ -77,7 +77,7 @@ const Receipt = ({ items, onViewReceipt }: ReceiptProps) => {
 
                 <div
                   className={`flex justify-end items-end pt-2 border-t ${
-                    isDark ? "border-light/10" : "border-primary-dark/20"
+                    isDark ? "border-light/10" : "border-white/80"
                   }`}
                 >
                   <span className="text-accent font-bold text-[11px] leading-none tracking-tight">

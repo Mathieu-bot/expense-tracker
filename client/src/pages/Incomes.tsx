@@ -86,7 +86,7 @@ export const Incomes = () => {
 
   return (
     <>
-      <div className="relative z-2 mb-10 mt-30 mx-auto text-light max-w-7xl px-6 xl:ml-29 lg:ml-20">
+      <div className="relative z-2 mb-10 mt-30 mx-auto text-gray-800 dark:text-light max-w-7xl px-6 xl:ml-29 lg:ml-20">
         <IncomeHeader totalIncome={totalIncome} onNewIncome={handleNewIncome} />
 
         <StatsCards
@@ -96,12 +96,12 @@ export const Incomes = () => {
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          <div className="bg-gradient-to-br dark:bg-transparent  bg-white/10 dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl p-6 border border-white/5 shadow-lg relative overflow-hidden">
+          <div className="bg-white/80 dark:bg-gradient-to-br dark:bg-transparent dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl p-6 border border-gray-200/70 dark:border-white/5 shadow-lg relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-accent/10 dark:bg-accent/5 rounded-full -translate-y-16 translate-x-16"></div>
             <div className="absolute bottom-0 left-0 w-24 h-24 bg-cyan-400/10 dark:bg-cyan-400/5 rounded-full translate-y-12 -translate-x-12"></div>
 
             <div className="flex justify-between items-center mb-6 relative z-10">
-              <h2 className="text-xl font-semibold text-light/90 flex items-center gap-2">
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-light/90 flex items-center gap-2">
                 <Wallet className="w-5 h-5 text-accent" />
                 Recent Incomes
               </h2>
@@ -113,27 +113,27 @@ export const Incomes = () => {
                   <div className="size-8 animate-spin rounded-full border-4 border-accent border-t-transparent"></div>
                 </div>
               ) : localIncomes.length === 0 ? (
-                <div
-                  onClick={handleNewIncome}
-                  className="bg-gradient-to-br w-36 from-accent/10 to-amber-400/10 dark:from-accent/8 dark:to-amber-400/8 backdrop-blur-md rounded-xl p-4 border border-dashed border-accent/20 hover:border-accent/30 transition-all duration-300 cursor-pointer flex items-center justify-center flex-col gap-2 group"
-                >
-                  <div className="w-10 h-10 rounded-full bg-accent/15 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
-                    <Plus className="text-accent w-5 h-5 group-hover:scale-110 transition-transform" />
+                 <div
+                    onClick={handleNewIncome}
+                    className="bg-gradient-to-br w-36 from-green-400/25 to-green-400/20 dark:from-accent/8 dark:to-amber-400/8 backdrop-blur-md rounded-xl p-4 border border-dashed border-green-700/70 hover:border-green-700/80 dark:border-accent/20 dark:hover:border-accent/30 transition-all duration-300 cursor-pointer flex items-center justify-center flex-col gap-2 group"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-green-800/10 group-hover:bg-green-800/15 dark:bg-accent/15 flex items-center justify-center dark:group-hover:bg-accent/20 transition-colors">
+                      <Plus className="dark:text-accent text-green-700/70 w-5 h-5 group-hover:scale-110 transition-transform" />
+                    </div>
+                    <span className="dark:text-accent/80 text-green-700/80 text-xs font-medium">
+                      Add Income
+                    </span>
                   </div>
-                  <span className="text-accent/80 text-xs font-medium">
-                    Add Income
-                  </span>
-                </div>
               ) : (
                 <>
                   <div
                     onClick={handleNewIncome}
-                    className="bg-gradient-to-br w-36 from-accent/10 to-amber-400/10 dark:from-accent/8 dark:to-amber-400/8 backdrop-blur-md rounded-xl p-4 border border-dashed border-accent/20 hover:border-accent/30 transition-all duration-300 cursor-pointer flex items-center justify-center flex-col gap-2 group"
+                    className="bg-gradient-to-br w-36 from-green-400/25 to-green-400/20 dark:from-accent/8 dark:to-amber-400/8 backdrop-blur-md rounded-xl p-4 border border-dashed border-green-700/70 hover:border-green-700/80 dark:border-accent/20 dark:hover:border-accent/30 transition-all duration-300 cursor-pointer flex items-center justify-center flex-col gap-2 group"
                   >
-                    <div className="w-10 h-10 rounded-full bg-accent/15 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
-                      <Plus className="text-accent w-5 h-5 group-hover:scale-110 transition-transform" />
+                    <div className="w-10 h-10 rounded-full bg-green-800/10 group-hover:bg-green-800/15 dark:bg-accent/15 flex items-center justify-center dark:group-hover:bg-accent/20 transition-colors">
+                      <Plus className="dark:text-accent text-green-700/70 w-5 h-5 group-hover:scale-110 transition-transform" />
                     </div>
-                    <span className="text-accent/80 text-xs font-medium">
+                    <span className="dark:text-accent/80 text-green-700/80 text-xs font-medium">
                       Add Income
                     </span>
                   </div>
@@ -146,8 +146,8 @@ export const Incomes = () => {
             </div>
           </div>
 
-          <div className="bg-gradient-to-br dark:bg-transparent bg-white/10 dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl p-6 border border-white/5 shadow-lg relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-accent/10 dark:bg-accent/5 rounded-full -translate-y-16 translate-x-16"></div>
+          <div className="bg-white/80 dark:bg-gradient-to-br dark:bg-transparent dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl p-6 border border-gray-200/70 dark:border-white/5 shadow-lg relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-purple-400/10 dark:bg-purple-400/5 rounded-full -translate-y-16 translate-x-16"></div>
             <div className="absolute bottom-0 left-0 w-24 h-24 bg-cyan-400/10 dark:bg-cyan-400/5 rounded-full translate-y-12 -translate-x-12"></div>
 
             <IncomeChart
@@ -172,8 +172,8 @@ export const Incomes = () => {
           onClearDateFilter={clearDateFilter}
         />
 
-        <div className="bg-gradient-to-br dark:bg-transparent bg-white/10 dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl p-6 border border-white/5 shadow-lg relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32  rounded-full -translate-y-16 translate-x-16 bg-cyan-400/10 dark:bg-cyan-400/5"></div>
+        <div className="bg-white/80 dark:bg-gradient-to-br dark:bg-transparent dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl p-6 border border-gray-200/70 dark:border-white/5 shadow-lg relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 rounded-full -translate-y-16 translate-x-16 bg-cyan-400/10 dark:bg-cyan-400/5"></div>
           <div className="absolute bottom-0 left-0 w-24 h-24 bg-accent/10 dark:bg-accent/5 rounded-full translate-y-12 -translate-x-12"></div>
 
           <IncomeList

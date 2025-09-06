@@ -22,7 +22,7 @@ export const IncomeHeader = ({
           </div>
           <TotalIncome total={totalIncome} />
         </div>
-        <p className="text-light/60 text-sm mt-3 flex items-center gap-2">
+        <p className="dark:text-light/60 text-white/90 text-sm mt-3 flex items-center gap-2">
           Track and manage your income streams
         </p>
       </div>
@@ -32,7 +32,13 @@ export const IncomeHeader = ({
         <Button
           onClick={onNewIncome}
           size="large"
-          className="bg-green-400 dark:bg-primary text-white font-semibold hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 group"
+          className="
+    bg-gradient-to-br from-green-400/25 to-green-400/20 bg-white/80
+    text-green-700/80
+    dark:bg-none dark:bg-primary dark:text-white
+    font-semibold hover:shadow-lg hover:shadow-primary/20
+    transition-all duration-300 group
+  "
           startIcon={<Plus className="w-4 h-4 transition-transform" />}
         >
           New Income

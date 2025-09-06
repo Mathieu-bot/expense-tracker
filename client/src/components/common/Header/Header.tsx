@@ -209,7 +209,7 @@ const DashboardHeader = () => {
                 className={`text-sm font-semibold group-hover:text-primary transition-colors duration-300 ${
                   shouldShowGlassmorphism
                     ? "text-gray-800 dark:text-white dark:group-hover:text-amber-100"
-                    : "text-white group-hover:text-amber-100"
+                    : "text-white group-hover:text-amber-100 dark:text-white dark:group-hover:text-amber-100"
                 }`}
               >
                 {getUserDisplayName()}
@@ -218,7 +218,7 @@ const DashboardHeader = () => {
                 className={`text-xs group-hover:text-primary/80 transition-colors duration-300 ${
                   shouldShowGlassmorphism
                     ? "text-gray-600 dark:text-white/70 dark:group-hover:text-amber-100/80"
-                    : "text-white/70 group-hover:text-amber-100/80"
+                    : "text-white/70 group-hover:text-amber-100/80 dark:text-white/70 dark:group-hover:text-amber-100/80"
                 }`}
               >
                 @{getUsername()}
