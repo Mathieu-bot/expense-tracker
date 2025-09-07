@@ -41,8 +41,8 @@ const Receipt = ({ items, onViewReceipt }: ReceiptProps) => {
                 V 10
                 Q 0,0 10,0
               "
-              fill={isDark ? "rgba(255,255,255,0.04)" : "rgba(162, 126, 232, 0.4)"}
-              stroke={isDark ? "rgba(255,255,255,0.12)" : "rgba(162, 126, 232, 0.5)"}
+              fill={isDark ? "rgba(255,255,255,0.04)" : "rgba(162, 126, 232, 0.2)"}
+              stroke={isDark ? "rgba(255,255,255,0.12)" : "rgba(162, 126, 232, 0.4)"}
               strokeWidth="0.8"
             />
 
@@ -80,7 +80,7 @@ const Receipt = ({ items, onViewReceipt }: ReceiptProps) => {
                     isDark ? "border-light/10" : "text-purple-900/50"
                   }`}
                 >
-                  <span className="text-[#ffdd33] font-bold text-[11px] leading-none tracking-tight">
+                  <span className="text-accent font-bold text-[11px] leading-none tracking-tight">
                     {formatCurrency(item.amount)}
                   </span>
                 </div>

@@ -33,7 +33,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
           <div className="flex w-full items-center justify-center mb-6">
             <img src="./Monogram.png" alt="Logo" className="w-12 h-12" />
           </div>
-          <h2 className="text-[#ffdd33] font-bold text-lg">INCOME RECEIPT</h2>
+          <h2 className="text-primary-light font-bold text-lg">INCOME RECEIPT</h2>
           <p className="text-gray-500 dark:text-gray-400 text-sm">
             {formatDate(income.date)}
           </p>
@@ -43,7 +43,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
           <p className="text-gray-500 dark:text-gray-400 text-sm">
             Amount Received
           </p>
-          <p className="text-[#ffdd33] font-bold text-3xl">
+          <p className="text-primary-light font-bold text-3xl">
             {formatCurrency(income.amount)}
           </p>
         </div>
