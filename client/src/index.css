@@ -8,7 +8,11 @@
   --color-primary: #01153e;
   --color-primary-light: #052261;
   --color-light: #e0e9f5;
+<<<<<<< HEAD
   --color-accent: #cc7a00;
+=======
+  --color-accent: #ffb300;
+>>>>>>> 2ed47e3e995a07b0b8e0a84d9c72c7cbe26e914d
 }
 
 .dark{
