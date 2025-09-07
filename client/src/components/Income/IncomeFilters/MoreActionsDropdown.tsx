@@ -7,12 +7,14 @@ import type { Income } from "../../../types/Income";
 
 interface MoreActionsDropdownProps {
   onExport: (startDate?: string, endDate?: string) => Promise<boolean>;
+  onPreview: (startDate?: string, endDate?: string) => void;
   incomes: Income[];
 }
 
 export const MoreActionsDropdown = ({
   onExport,
   incomes,
+  onPreview
 }: MoreActionsDropdownProps) => {
   const [showMoreActions, setShowMoreActions] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
@@ -59,6 +61,7 @@ export const MoreActionsDropdown = ({
         open={showExportModal}
         onClose={() => setShowExportModal(false)}
         onExport={onExport}
+        onPreview={onPreview} 
         incomes={incomes}
       />
     </>
