@@ -32,7 +32,7 @@ export const IncomeFilters = ({
   return (
     <>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-        <h2 className="text-xl font-semibold text-light/90 flex items-center gap-2">
+        <h2 className="text-xl font-semibold  text-white dark:text-light/90 flex items-center gap-2">
           <Wallet className="w-5 h-5 text-accent" />
           All Incomes
         </h2>
@@ -40,14 +40,14 @@ export const IncomeFilters = ({
         <div className="flex items-center gap-3 w-full md:w-auto">
           <div className="flex-1 md:flex-initial">
             <TextField
-              placeholder="Search incomes..."
+              label="Search incomes..."
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
               classes={{
                 input:
-                  "bg-white/5 backdrop-blur-md border border-white/10 text-light placeholder-light/60 rounded-xl",
+                  "bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-xl",
                 label:
-                  "rounded-full text-primary-dark ", 
+                  "rounded-lg peer-placeholder-shown:text-white/60",
               }}
             />
           </div>
@@ -56,7 +56,7 @@ export const IncomeFilters = ({
 
           <Button
             onClick={() => setShowAdvancedSearch(!showAdvancedSearch)}
-            className="bg-white/5 hover:bg-white/10 border border-white/10 text-light/90 hover:shadow-md transition-all"
+            className="bg-white/10 dark:bg-white/5 border-white/20 hover:bg-white/20 hover:border-white/30 dark:hover:bg-white/10 border dark:border-white/10 text-white dark:text-light/90 hover:shadow-md transition-all"
             startIcon={<Calendar className="w-4 h-4" />}
           >
             Filter

@@ -13,7 +13,7 @@ export const formatCurrency = (amount: number): string => {
   }).format(amount);
 };
 
-export const formatDate = (dateString: string): string => {
+export const formatDate = (dateString: string | Date): string => {
   return new Date(dateString).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
@@ -40,6 +40,13 @@ export const fmt = (dateStr?: string | null) => {
   }
 };
 
+export const formatTime = (date: Date) => {
+  return date.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+};
 export function formatMonth(ym: string) {
   const [year, month] = ym.split("-");
   return new Date(Number(year), Number(month) - 1).toLocaleDateString("en-US", {
