@@ -19,8 +19,8 @@ export class PdfExportService {
 
     const {
       filename = "income-receipts.pdf",
-      resolution = Resolution.HIGH,
-      margin = Margin.SMALL,
+      resolution = Resolution.LOW,
+      margin = Margin.MEDIUM,
       format = "A4",
       orientation = "portrait",
     } = options;
