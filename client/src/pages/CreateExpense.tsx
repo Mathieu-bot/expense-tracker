@@ -20,13 +20,26 @@ export const CreateExpense = () => {
     receipt: undefined,
   });
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const onChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setForm((f) => ({ ...f, [name]: value }));
   };
 
-  const onFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    // const buffer = await file?.arrayBuffer();
+    // const bytes = new Uint8Array(buffer!);
+
+    // const blob = new Blob([bytes], { type: file?.type });
+    // const fileBlob = new File([blob], "test", { type: blob?.type });
+
+    // const url = URL.createObjectURL(fileBlob);
+    // const a = document.createElement("a");
+    // a.href = url;
+    // a.download = file!.name;
+    // a.click();
     setForm((f) => ({ ...f, receipt: file }));
   };
 
@@ -36,7 +49,8 @@ export const CreateExpense = () => {
     if ((form.type as ExpenseType) === "one-time") {
       if (!form.date) return "Date is required for one-time expense";
     } else if ((form.type as ExpenseType) === "recurring") {
-      if (!form.startDate) return "Start date is required for recurring expense";
+      if (!form.startDate)
+        return "Start date is required for recurring expense";
     }
     return null;
   };
@@ -53,15 +67,18 @@ export const CreateExpense = () => {
         description: form.description || undefined,
         type: (form.type as ExpenseType) || undefined,
         date: form.type === "one-time" ? form.date || undefined : undefined,
-        startDate: form.type === "recurring" ? form.startDate || undefined : undefined,
-        endDate: form.type === "recurring" ? form.endDate || undefined : undefined,
+        startDate:
+          form.type === "recurring" ? form.startDate || undefined : undefined,
+        endDate:
+          form.type === "recurring" ? form.endDate || undefined : undefined,
         categoryId: form.categoryId,
         receipt: form.receipt,
       });
       toast.success("Expense created successfully");
       navigate("/expenses");
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to create expense";
+      const message =
+        error instanceof Error ? error.message : "Failed to create expense";
       toast.error(message);
     }
   };
@@ -73,7 +90,11 @@ export const CreateExpense = () => {
   return (
     <div className="p-6 max-w-2xl mx-auto pt-20 text-light">
       <div className="flex items-center mb-6">
-        <Button onClick={handleCancel} className="mr-4 border border-gray-300" size="small">
+        <Button
+          onClick={handleCancel}
+          className="mr-4 border border-gray-300"
+          size="small"
+        >
           ← Back
         </Button>
         <h1 className="text-2xl font-semibold">Create New Expense</h1>

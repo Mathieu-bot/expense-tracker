@@ -130,7 +130,7 @@ export const Incomes = () => {
       if (pdfRef.current) {
         await PdfExportService.generatePdf(pdfRef, {
           filename: PdfExportService.generateFilename(startDate, endDate),
-          resolution: Resolution.HIGH,
+          resolution: Resolution.LOW,
           margin: Margin.MEDIUM,
         });
         toast.success("PDF exported successfully!");
