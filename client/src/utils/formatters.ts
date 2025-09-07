@@ -1,11 +1,19 @@
+// export const formatCurrency = (amount: number): string => {
+//   return new Intl.NumberFormat("en-US", {
+//     style: "currency",
+//     currency: "USD",
+//   }).format(amount);
+// };
+
 export const formatCurrency = (amount: number): string => {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
+    notation: "compact",
   }).format(amount);
 };
 
-export const formatDate = (dateString: string): string => {
+export const formatDate = (dateString: string | Date): string => {
   return new Date(dateString).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
@@ -21,7 +29,7 @@ export const formatShortDate = (dateString: string): string => {
   });
 };
 
-export const fmt =(dateStr?: string | null) => {
+export const fmt = (dateStr?: string | null) => {
   if (!dateStr) return "";
   try {
     const d = new Date(dateStr);
@@ -30,5 +38,19 @@ export const fmt =(dateStr?: string | null) => {
   } catch {
     return "";
   }
-}
+};
 
+export const formatTime = (date: Date) => {
+  return date.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+};
+export function formatMonth(ym: string) {
+  const [year, month] = ym.split("-");
+  return new Date(Number(year), Number(month) - 1).toLocaleDateString("en-US", {
+    month: "short",
+    year: "numeric",
+  });
+}

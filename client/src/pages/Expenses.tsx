@@ -17,6 +17,8 @@ export default function Expenses() {
   );
   const navigate = useNavigate();
 
+  console.log(expenses);
+
   return (
     <div className="relative z-2 mb-10 mt-30 mx-auto text-light max-w-6xl px-6">
       <div className="flex items-center justify-between mb-6">
