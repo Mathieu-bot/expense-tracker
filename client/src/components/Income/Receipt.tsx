@@ -1,36 +1,15 @@
+import { useTheme } from "../../contexts/ThemeContext";
 import type { Income } from "../../types/Income";
-import { Eye } from "lucide-react";
-import { formatCurrency } from "../../utils/formatters";
+import { formatCurrency, formatDate } from "../../utils/formatters";
 
 interface ReceiptProps {
   items: Income[];
   onViewReceipt: (income: Income) => void;
   emptyMessage?: string;
 }
-const Receipt = ({
-  items,
-  onViewReceipt,
-  emptyMessage = "No receipts to display",
-}: ReceiptProps) => {
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "2-digit",
-      month: "short",
-      day: "numeric",
-    });
-  };
 
-  if (items.length === 0) {
-    return (
-      <div className="flex-1 flex flex-col items-center justify-center text-light/50">
-        <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-3">
-          <Eye className="w-6 h-6" />
-        </div>
-        <p className="text-sm">{emptyMessage}</p>
-        <p className="text-xs mt-1">Add incomes to see receipts</p>
-      </div>
-    );
-  }
+const Receipt = ({ items, onViewReceipt }: ReceiptProps) => {
+  const { isDark } = useTheme();
 
   return (
     <div className="flex gap-4">
@@ -62,29 +41,45 @@ const Receipt = ({
                 V 10
                 Q 0,0 10,0
               "
-              fill="rgba(255,255,255,0.04)"
-              stroke="rgba(255,255,255,0.12)"
+              fill={isDark ? "rgba(255,255,255,0.04)" : "rgba(162, 126, 232, 0.2)"}
+              stroke={isDark ? "rgba(255,255,255,0.12)" : "rgba(162, 126, 232, 0.4)"}
               strokeWidth="0.8"
             />
 
             <foreignObject x="8" y="8" width="84" height="104">
               <div className="flex flex-col justify-between h-full p-2">
                 <div className="mb-2">
-                  <h3 className="font-semibold text-light/90 text-[10px] leading-tight tracking-wider mb-1 truncate">
+                  <h3
+                    className={`font-semibold text-[10px] leading-tight tracking-wider mb-1 truncate ${
+                      isDark ? "text-light/90" : "text-purple-900/80"
+                    }`}
+                  >
                     {item.source}
                   </h3>
-                  <p className="text-light/50 text-[8px] leading-tight tracking-tight font-light">
+                  <p
+                    className={`text-[9px] leading-tight tracking-tight font-light ${
+                      isDark ? "text-light/50" : "text-purple-900"
+                    }`}
+                  >
                     {formatDate(item.date)}
                   </p>
                 </div>
 
                 {item.description && (
-                  <p className="text-light/60 text-[8px] leading-tight tracking-tight mb-2 line-clamp-2">
+                  <p
+                    className={`text-[8px] leading-tight tracking-tight mb-2 line-clamp-2 ${
+                      isDark ? "text-light/60" : "text-purple-900/80"
+                    }`}
+                  >
                     {item.description}
                   </p>
                 )}
 
-                <div className="flex justify-end items-end pt-2 border-t border-light/10">
+                <div
+                  className={`flex justify-end items-end pt-2 border-t ${
+                    isDark ? "border-light/10" : "text-purple-900/50"
+                  }`}
+                >
                   <span className="text-accent font-bold text-[11px] leading-none tracking-tight">
                     {formatCurrency(item.amount)}
                   </span>

@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import type { Income, IncomeFormData } from "../../types/Income";
-import { AlertCircle } from "lucide-react";
 import { useMascot } from "../../hooks/useMascot";
 import { validateIncomeData } from "../../utils/validators";
+import { useToast } from "../../ui";
+import { useTheme } from "../../contexts/ThemeContext";
 
 interface IncomeFormProps {
   income?: Income;
@@ -11,21 +12,17 @@ interface IncomeFormProps {
   open: boolean;
 }
 
-interface ErrorDisplay {
-  message: string;
-  visible: boolean;
-}
-
 export const IncomeForm: React.FC<IncomeFormProps> = ({
   income,
   onSave,
   onCancel,
   open,
 }) => {
+  const { isDark } = useTheme();
   const [saving, setSaving] = useState(false);
   const { showSuccess, showError } = useMascot();
+  const { error: toastError } = useToast();
   const submitRef = useRef<HTMLButtonElement>(null);
-  const errorTimeoutRef = useRef<number | null>(null);
   const [hasChanges, setHasChanges] = useState(false);
 
   const [formData, setFormData] = useState<IncomeFormData>({
@@ -38,10 +35,6 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [errorDisplay, setErrorDisplay] = useState<ErrorDisplay>({
-    message: "",
-    visible: false,
-  });
 
   useEffect(() => {
     if (income) {
@@ -60,7 +53,6 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
       });
     }
     setErrors({});
-    setErrorDisplay({ message: "", visible: false });
     setHasChanges(false);
   }, [income, open]);
 
@@ -79,26 +71,6 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
     setHasChanges(hasFormChanged);
   }, [formData, income]);
 
-  useEffect(() => {
-    return () => {
-      if (errorTimeoutRef.current) {
-        clearTimeout(errorTimeoutRef.current);
-      }
-    };
-  }, []);
-
-  const showErrorWithTimeout = (errorMessage: string) => {
-    setErrorDisplay({ message: errorMessage, visible: true });
-
-    if (errorTimeoutRef.current) {
-      clearTimeout(errorTimeoutRef.current);
-    }
-
-    errorTimeoutRef.current = setTimeout(() => {
-      setErrorDisplay((prev) => ({ ...prev, visible: false }));
-    }, 3000);
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -108,7 +80,7 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
 
     const numericAmount = Number(formData.amount);
     if (isNaN(numericAmount) || numericAmount < 0) {
-      showErrorWithTimeout("Amount must be a valid number");
+      toastError("Amount must be a valid number");
       return;
     }
 
@@ -120,7 +92,7 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       const firstErrorKey = Object.keys(validationErrors)[0];
-      showErrorWithTimeout(validationErrors[firstErrorKey]);
+      toastError(validationErrors[firstErrorKey]);
       return;
     }
 
@@ -130,6 +102,9 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
       showSuccess();
     } catch (error) {
       console.error(error);
+      const message =
+        error instanceof Error ? error.message : "Failed to save income";
+      toastError(message);
       showError();
     } finally {
       setSaving(false);
@@ -182,7 +157,9 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
                 V 10
                 Q 0,0 10,0
               "
-              fill="rgba(255,255,255,0.1)"
+              fill={`${
+                isDark ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.2)"
+              }`}
               stroke="rgba(255,255,255,0.15)"
               strokeWidth={0.8}
             />
@@ -200,14 +177,14 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
                   type="text"
                   value={formData.source}
                   onChange={(e) => handleChange("source", e.target.value)}
-                  className="font-semibold text-light/90 text-[10px] leading-tight truncate border-none outline-none w-full"
+                  className="font-semibold text-white dark:text-light/90 text-[10px] leading-tight truncate border-none outline-none w-full"
                   placeholder="Source"
                 />
 
                 <textarea
                   value={formData.description}
                   onChange={(e) => handleChange("description", e.target.value)}
-                  className="flex-1 text-light/70 text-[4.5px] leading-snug mb-2 bg-transparent mt-1 outline-none resize-none"
+                  className="flex-1 text-white dark:text-light/70 text-[4.5px] leading-snug mb-2 bg-transparent mt-1 outline-none resize-none"
                   placeholder="Add description (Optional)"
                 />
 
@@ -216,7 +193,7 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
                     type="text"
                     value={formData.amount.toString()}
                     onChange={(e) => handleChange("amount", e.target.value)}
-                    className="text-accent py-2 font-bold text-[11px] leading-none tracking-tight border-none outline-none w-full text-right"
+                    className="text-[#ffdd33] py-2 font-bold text-[11px] leading-none tracking-tight border-none outline-none w-full text-right"
                     placeholder="Amount"
                   />
                 </div>
@@ -243,49 +220,41 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
             <div className="space-y-4 w-full max-w-xs">
               <div>
                 <label className="text-sm text-gray-100">Source</label>
-                <p className="text-gray-500 font-medium">
+                <p className="text-[#ffdd33] dark:text-gray-500 font-medium">
                   {formData.source || "Not specified"}
                 </p>
               </div>
 
               <div>
                 <label className="text-sm text-gray-100">Amount</label>
-                <p className="font-medium text-gray-500">${formData.amount}</p>
+                <p className="font-medium text-[#ffdd33] dark:text-gray-500">
+                  ${formData.amount}
+                </p>
               </div>
 
               <div>
                 <label className="text-sm text-gray-100">Date</label>
-                <p className="text-gray-500 font-medium">{formData.date}</p>
+                <p className="text-[#ffdd33] dark:text-gray-500 font-medium">
+                  {formData.date}
+                </p>
               </div>
 
               <div>
                 <label className="text-sm text-gray-100">Description</label>
-                <p className="text-gray-500 font-medium">
+                <p className="text-[#ffdd33] dark:text-gray-500 font-medium">
                   {formData.description || "No description"}
                 </p>
               </div>
             </div>
 
-            {errorDisplay.visible && (
-              <div className="mt-6 p-3 bg-red-900/30 border border-red-700/50 rounded-lg w-full max-w-xs animate-fadeIn">
-                <div className="flex items-center gap-2 text-red-400">
-                  <AlertCircle size={16} />
-                  <span className="font-medium text-sm">Validation Error</span>
-                </div>
-                <p className="text-red-300 text-xs mt-1">
-                  {errorDisplay.message}
-                </p>
-              </div>
-            )}
-
             <div className="flex gap-4 mt-10">
               <button
                 onClick={() => submitRef.current?.click()}
                 disabled={saving || (!hasChanges && !!income)}
-                className={`px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 ${
+                className={`px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 border-none ${
                   saving || (!hasChanges && !!income)
                     ? "bg-gray-400/50 text-gray-200 cursor-not-allowed"
-                    : "bg-primary-light text-white hover:bg-primary"
+                    : "bg-gradient-to-br from-green-400/25 to-green-400/20 bg-white/80 text-green-700/80 dark:bg-none dark:bg-primary-light dark:text-white hover:shadow-green-400/20 font-semibold"
                 }`}
               >
                 {saving

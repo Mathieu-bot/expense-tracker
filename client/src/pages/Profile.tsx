@@ -46,7 +46,7 @@ export const Profile: React.FC = () => {
   }
 
   return (
-    <div className="h-[76dvh]  mt-22 ml-15">
+    <div className="h-[76dvh]  mt-33 2xl:mx-auto px-6 xl:ml-29 lg:ml-20">
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-6 gap-6">
           <div className="lg:col-span-2">
