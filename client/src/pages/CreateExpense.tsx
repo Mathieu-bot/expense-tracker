@@ -48,7 +48,6 @@ export const CreateExpense = () => {
   const validate = (): string | null => {
     if (!form.amount) return "Amount is required";
     if (!form.categoryId) return "Category is required";
-    if (!/^\d+$/.test(String(form.categoryId))) return "Invalid category selection";
     if ((form.type as ExpenseType) === "one-time") {
       if (!form.date) return "Date is required for one-time expense";
     } else if ((form.type as ExpenseType) === "recurring") {
