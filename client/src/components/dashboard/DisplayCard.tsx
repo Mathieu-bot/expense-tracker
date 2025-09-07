@@ -1,5 +1,6 @@
 import React from "react";
 import { TrendingUp, TrendingDown, type LucideProps } from "lucide-react";
+import { formatCurrency } from "../../utils/formatters";
 
 export type MiniStatItem = {
   label: string;
@@ -8,71 +9,56 @@ export type MiniStatItem = {
   deltaPct?: number;
   hint?: string;
   valueSuffix?: string;
-  formatValue?: (v: number) => string;
   className?: string;
+  filterWasUsed: boolean;
+  customDeltaColor?: string | undefined | null;
+  customBgColor?: string | undefined | null;
 };
-
-const nfMG = new Intl.NumberFormat("fr-MG");
-const fmtArShort = (n: number) =>
-  n >= 1_000_000
-    ? `Ar ${(n / 1_000_000).toFixed(1)}M`
-    : n >= 1_000
-    ? `Ar ${(n / 1_000).toFixed(1)}k`
-    : `Ar ${nfMG.format(n)}`;
 
 export default function MiniStatCard({
   label,
   value,
   icon: Icon,
   deltaPct,
-  hint = "From last month",
   valueSuffix,
-  formatValue,
-  className = "",
+  filterWasUsed,
+  customDeltaColor,
+  customBgColor,
 }: MiniStatItem) {
   const isUp = typeof deltaPct === "number" ? deltaPct >= 0 : undefined;
   const deltaColor =
     isUp === undefined
-      ? "bg-slate-100 text-slate-600"
+      ? "bg-slate-500/20 text-slate-300"
       : isUp
-      ? "bg-emerald-50 text-emerald-600"
-      : "bg-rose-50 text-rose-600";
+      ? "bg-emerald-500/20 text-emerald-400"
+      : "bg-rose-500/20 text-rose-400";
 
-  const valueStr = formatValue
-    ? formatValue(value)
-    : valueSuffix
-    ? nfMG.format(value)
-    : fmtArShort(value);
+  const valueStr = formatCurrency(value);
 
   return (
-    <div
-      className={[
-        "rounded-xl bg-primary/50 shadow-sm min-w-[250px] border border-gray-700",
-        "p-4 flex flex-col gap-3",
-        className,
-      ].join(" ")}
-    >
+    <div className="bg-gradient-to-br from-primary/20 to-gray-800/20 backdrop-blur-xl rounded-2xl py-4 px-5 border border-white/5 shadow-lg hover:shadow-accent/20 transition-shadow duration-300 flex flex-col gap-3">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="w-8 h-8 rounded-lg bg-slate-100/20 text-white flex items-center justify-center">
-            <Icon className="w-4 h-4" />
-          </span>
-          <span className="text-lg text-white font-semibold">{label}</span>
-        </div>
-      </div>
-
-      {/* Value */}
-      <div className="text-3xl font-normal tracking-tight text-white">
-        {valueStr}
-        {valueSuffix ? valueSuffix : ""}
-      </div>
-
-      {/* Delta */}
       <div className="flex items-center gap-2">
-        {typeof deltaPct === "number" && (
+        <span className="w-9 h-9 rounded-xl bg-white/10 text-white flex items-center justify-center">
+          <Icon className="w-5 h-5" />
+        </span>
+        <span className="text-base text-white/80 font-medium">{label}</span>
+      </div>
+
+      {/* Value + Delta alignés */}
+      <div className="flex items-center justify-between">
+        <div
+          className={`text-2xl font-semibold tracking-tight ${
+            value < 0 ? "text-red-500" : "text-white"
+          }`}
+        >
+          {valueStr}
+          {valueSuffix ? valueSuffix : ""}
+        </div>
+
+        {typeof deltaPct === "number" && !filterWasUsed ? (
           <span
-            className={`text-sm font-semibold px-2 py-0.5 rounded-full inline-flex items-center gap-1 ${deltaColor}`}
+            className={`ml-3 text-sm font-semibold px-2.5 py-1 rounded-full inline-flex items-center gap-1 ${deltaColor} ${customDeltaColor} ${customBgColor}`}
           >
             {isUp ? (
               <TrendingUp className="w-3.5 h-3.5" />
@@ -82,8 +68,7 @@ export default function MiniStatCard({
             {isUp ? "+" : ""}
             {deltaPct.toFixed(1)}%
           </span>
-        )}
-        <span className="text-sm text-white">{hint}</span>
+        ) : null}
       </div>
     </div>
   );

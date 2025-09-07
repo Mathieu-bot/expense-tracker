@@ -8,26 +8,36 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import { fmtAr } from "../../utils/formatter";
+import type { Expense } from "../../types/Expense";
+import { formatCurrency } from "../../utils/formatters";
 
-export type PieItem = { name: string; value: number; color?: string };
-
-const FALLBACK_COLORS = ["#FF8042", "#0088FE", "#00C49F", "#FFBB28", "#AF19FF"];
-const formatAr = (v: number) => `Ar ${v.toLocaleString("fr-MG")}`;
+const FALLBACK_COLORS = ["#93C5FD", "#A7F3D0", "#FDE68A", "#FCA5A5", "#FDBA74"];
 
 export default function PieGraph({
-  title = "By category",
+  title,
   data,
   heightClass = "h-44 sm:h-56 md:h-64",
 }: {
   title?: string;
-  data: PieItem[];
+  data: Expense[];
   heightClass?: string;
 }) {
   const total = useMemo(
-    () => data.reduce((acc, item) => acc + item.value, 0),
+    () => data.reduce((acc, item) => acc + item.amount, 0),
     [data]
   );
+  const chartData = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const exp of data) {
+      const label = exp.category?.category_name ?? "Autres";
+      map.set(label, (map.get(label) ?? 0) + exp.amount);
+    }
+    return Array.from(map.entries()).map(([name, value]) => ({
+      name,
+      value,
+    }));
+  }, [data]);
+
   return (
     <Layout
       title={title}
@@ -35,63 +45,56 @@ export default function PieGraph({
       titleClassName="text-center!"
     >
       <ResponsiveContainer width="100%" height="100%">
-        <PieChart margin={{ top: 10, right: 10, bottom: 10, left: 10 }}>
+        <PieChart margin={{ top: 20, right: 10, bottom: 10, left: 10 }}>
           <Pie
-            data={data}
+            data={chartData}
             cx="50%"
             cy="50%"
             innerRadius={50}
             outerRadius={80}
             label={false}
             dataKey="value"
+            paddingAngle={2}
+            cornerRadius={3}
           >
-            {data.map((d, i) => (
+            {chartData.map((d, i) => (
               <Cell
                 key={d.name}
-                fill={d.color ?? FALLBACK_COLORS[i % FALLBACK_COLORS.length]}
+                stroke="none"
+                fill={FALLBACK_COLORS[i % FALLBACK_COLORS.length]}
               />
             ))}
           </Pie>
 
-          <Tooltip formatter={(v: number) => formatAr(v)} />
+          <Tooltip formatter={(v: number) => formatCurrency(v)} />
 
           <Legend
             verticalAlign="bottom"
             align="center"
-            iconType="circle"
-            wrapperStyle={{ color: "rgba(255,255,255,0.9)" }}
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            wrapperStyle={{ color: "rgba(255,255,255,0.9)", marginTop: 20 }}
             content={({ payload }) => (
-              <ul style={{ listStyle: "none", padding: 0, marginTop: 0 }}>
-                {data.map((d, i) => (
-                  <li
-                    key={d.name}
-                    style={{
-                      color:
-                        d.color ?? FALLBACK_COLORS[i % FALLBACK_COLORS.length],
-                    }}
-                  >
-                    <span
-                      style={{
-                        display: "inline-block",
-                        width: 10,
-                        height: 10,
-                        backgroundColor:
-                          d.color ??
-                          FALLBACK_COLORS[i % FALLBACK_COLORS.length],
-                        borderRadius: "50%",
-                        marginRight: 8,
-                      }}
-                    ></span>
-                    {d.name}
-                  </li>
-                ))}
+              <ul className="grid grid-cols-2 gap-x-4 gap-y-2 m-0 p-0 list-none mt-10">
+                {(payload ?? []).map(
+                  (p) =>
+                    p.value != "value" && (
+                      <li key={p.value} className="flex items-center gap-2">
+                        <span
+                          className="inline-block w-3 h-3 rounded-full"
+                          style={{ background: p.color }}
+                        />
+                        <span className="text-white/90">{p.value}</span>
+                      </li>
+                    )
+                )}
               </ul>
             )}
           />
         </PieChart>
       </ResponsiveContainer>
-      <span className="text-white text-center">Total: {fmtAr(total)}</span>
+      <span className="text-white text-2xl font-semibold text-center block mt-4">
+        Total: <br />
+        {formatCurrency(total)}
+      </span>
     </Layout>
   );
 }

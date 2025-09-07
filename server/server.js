@@ -11,6 +11,7 @@ import authRoutes from './routes/auth.route.js';
 import categoryRoutes from './routes/category.route.js';
 import userRoutes from './routes/user.route.js';
 import expenseRoutes from './routes/expense.route.js';
+import summaryRoutes from "./routes/summary.route.js";
 import { configureNetwork } from './utils/network.js';
 import path from 'node:path';
 
@@ -18,7 +19,7 @@ dotenv.config();
 
 // Prefer IPv4 to mitigate environments where IPv6 routes time out
 try {
-  dns.setDefaultResultOrder('ipv4first');
+  dns.setDefaultResultOrder("ipv4first");
 } catch {}
 
 try {
@@ -30,14 +31,17 @@ const PORT = process.env.PORT || 8080;
 
 app.use(
   helmet({
-    contentSecurityPolicy: process.env.NODE_ENV === 'production' ? undefined : false,
+    contentSecurityPolicy:
+      process.env.NODE_ENV === "production" ? undefined : false,
   })
 );
 
-app.use(cors({
-  origin: process.env.CORS_ORIGIN || true,
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN || true,
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 
@@ -49,6 +53,7 @@ app.use('/api/incomes', requireAuth, incomeRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/user', requireAuth, userRoutes);
 app.use('/api/expenses', expenseRoutes);
+app.use("/api/summary" , requireAuth , summaryRoutes);
 
 // Initialize a single Prisma client instance
 const prisma = new PrismaClient();

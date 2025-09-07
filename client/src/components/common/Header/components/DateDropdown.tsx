@@ -1,5 +1,4 @@
-import { Clock, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { Clock, Calendar } from "lucide-react";
 import { formatDate, formatTime } from "../../../../utils/formatters";
 
 const DateDropdown = ({
@@ -7,12 +6,7 @@ const DateDropdown = ({
 }: {
   shouldShowGlassmorphism: boolean;
 }) => {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const changeDate = (days: number) => {
-    const newDate = new Date(currentDate);
-    newDate.setDate(newDate.getDate() + days);
-    setCurrentDate(newDate);
-  };
+  const currentDate = new Date();
 
   return (
     <div className="flex items-center gap-3">
@@ -50,7 +44,7 @@ const DateDropdown = ({
         <span className="font-medium text-sm">{formatDate(currentDate)}</span>
       </div>
 
-      <div className="flex items-center gap-1">
+      {/* <div className="flex items-center gap-1">
         <button
           onClick={() => changeDate(-1)}
           className="p-1 focus:outline-none border-none"
@@ -89,7 +83,7 @@ const DateDropdown = ({
             }
           />
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

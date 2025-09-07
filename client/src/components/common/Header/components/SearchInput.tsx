@@ -27,7 +27,7 @@ const SearchInput = ({
       <input
         type="text"
         placeholder={placeholder}
-        className={`w-full pl-10 pr-4 py-3 border rounded-xl placeholder-gray-500 focus:outline-none focus:ring-2 transition-colors duration-300 ${
+        className={`w-full pl-10 pr-4 py-2 border rounded-xl placeholder-gray-500 focus:outline-none focus:ring-2 transition-colors duration-300 ${
           shouldShowGlassmorphism
             ? "border-gray-600 text-gray-800 dark:bg-transparent placeholder:text-gray-700 focus:ring-primary/30 dark:border-white/20 dark:text-white dark:placeholder-white/70 dark:focus:ring-white/30"
             : "border-white/30 dark:bg-transparent text-white placeholder-white/70 focus:ring-white/30 bg-white/10 backdrop-blur-sm"

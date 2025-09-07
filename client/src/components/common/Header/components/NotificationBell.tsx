@@ -25,6 +25,6 @@ const NotificationBell = ({
       )}
     </button>
   );
-}
+};
 
 export default NotificationBell;
