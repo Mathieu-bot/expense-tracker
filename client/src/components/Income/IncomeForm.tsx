@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import type { Income, IncomeFormData } from "../../types/Income";
 import { useMascot } from "../../hooks/useMascot";
 import { validateIncomeData } from "../../utils/validators";
-import { useToast } from "../../ui";
+import { DatePicker, useToast } from "../../ui";
 import { useTheme } from "../../contexts/ThemeContext";
 
 interface IncomeFormProps {
@@ -129,6 +129,13 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
     }
   };
 
+  const handleDateChange = (date: Date | null) => {
+    if (date) {
+      const dateString = new Date(date).toISOString().split("T")[0];
+      handleChange("date", dateString);
+    }
+  };
+
   if (!open) return null;
 
   return (
@@ -165,19 +172,30 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
             />
 
             <foreignObject x={8} y={8} width={84} height={134}>
-              <form onSubmit={handleSubmit} className="flex flex-col h-full">
-                <input
-                  type="date"
-                  value={formData.date}
-                  onChange={(e) => handleChange("date", e.target.value)}
-                  className="text-light/50 text-[5px] leading-tight tracking-tight font-light border-none outline-none w-full accent-light/70"
+              <form onSubmit={handleSubmit} className="flex flex-col h-full mt-1">
+                <DatePicker
+                  value={formData.date ? new Date(formData.date) : null}
+                  onChange={handleDateChange}
+                  classes={{
+                    root: "w-full",
+                    input:
+                      "!bg-transparent !border-none !outline-none !ring-0 focus:!ring-0 !shadow-none text-white dark:text-light/50 !font-semibold text-[5px] font-light w-full !p-0",
+                    label: "hidden",
+                    calendar:
+                      "dark:bg-white/10 dark:backdrop-blur-xl rounded-2xl p-3 border border-white/10 shadow-lg",
+                    nav: "flex justify-between items-center p-2 border-b border-gray-700",
+                    grid: "grid grid-cols-7 gap-1 p-2",
+                    day: "dark:text-light/80 hover:bg-white/10 rounded-lg transition-colors border-none",
+                    daySelected: "bg-blue-500 text-white",
+                    dayDisabled: "text-gray-500 cursor-not-allowed",
+                  }}
                 />
 
                 <input
                   type="text"
                   value={formData.source}
                   onChange={(e) => handleChange("source", e.target.value)}
-                  className="font-semibold text-white dark:text-light/90 text-[10px] leading-tight truncate border-none outline-none w-full"
+                  className="font-semibold mt-1 text-white dark:text-light/90 text-[10px] leading-tight truncate border-none outline-none w-full"
                   placeholder="Source"
                 />
 
@@ -188,7 +206,7 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
                   placeholder="Add description (Optional)"
                 />
 
-                <div className="flex justify-end border-t border-light/10">
+                <div className="flex mb-1 justify-end border-t border-light/10">
                   <input
                     type="text"
                     value={formData.amount.toString()}
@@ -221,7 +239,7 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
               <div>
                 <label className="text-sm text-gray-100">Source</label>
                 <p className="text-[#ffdd33] dark:text-gray-500 font-medium">
-                  {formData.source || "Not specified"}
+                  {formData.source || "-"}
                 </p>
               </div>
 
@@ -242,7 +260,7 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
               <div>
                 <label className="text-sm text-gray-100">Description</label>
                 <p className="text-[#ffdd33] dark:text-gray-500 font-medium">
-                  {formData.description || "No description"}
+                  {formData.description || "-"}
                 </p>
               </div>
             </div>
