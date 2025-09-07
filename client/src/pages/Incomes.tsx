@@ -309,8 +309,8 @@ export const Incomes = () => {
       {isPreviewModalOpen && (
         <div className="fixed inset-0 z-[1000] bg-black/70 backdrop-blur-md flex items-center justify-center p-4">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b">
-              <h2 className="text-xl font-semibold">PDF Preview</h2>
+            <div className="flex items-center justify-between p-4 border-b border-primary">
+              <h2 className="text-xl text-primary font-semibold">PDF Preview</h2>
               <button
                 onClick={handleClosePreviewModal}
                 className="p-1 hover:bg-gray-100 rounded-full"
