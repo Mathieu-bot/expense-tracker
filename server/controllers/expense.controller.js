@@ -1,3 +1,4 @@
+// src/controllers/expense.controller.js
 import { validationResult } from "express-validator";
 import {
   createExpense,
@@ -46,7 +47,7 @@ export const createExpenseController = async (req, res) => {
   }
 };
 
-// @desc    Get a single expense by ID (includes receipt meta)
+// @desc    Get a single expense by ID (includes receipt_url/meta)
 // @route   GET /api/expenses/:id
 // @access  Private
 export const getExpenseController = async (req, res) => {
@@ -69,7 +70,7 @@ export const getExpenseController = async (req, res) => {
   }
 };
 
-// @desc    Get all expenses for a user (each with receipt meta flag)
+// @desc    Get all expenses for a user (each with receipt_url/meta)
 // @route   GET /api/expenses
 // @access  Private
 export const getAllExpensesController = async (req, res) => {
@@ -78,6 +79,7 @@ export const getAllExpensesController = async (req, res) => {
     const { start, end, category, type, view, month } = req.query;
 
     if (view === "monthly") {
+      // month=YYYY-MM (facultatif)
       let year, monthIndex;
       if (month && /^\d{4}-\d{2}$/.test(month)) {
         const [y, m] = month.split("-");
@@ -160,7 +162,7 @@ export const updateExpenseController = async (req, res) => {
   }
 };
 
-// @desc    Delete an expense (receipt is removed by FK ON DELETE CASCADE)
+// @desc    Delete an expense (also removes receipt file from Storage if present)
 // @route   DELETE /api/expenses/:id
 // @access  Private
 export const deleteExpenseController = async (req, res) => {
@@ -169,6 +171,7 @@ export const deleteExpenseController = async (req, res) => {
     const userId = req.user.user_id;
 
     const result = await deleteExpense(id, userId);
+
     if (!result.success) {
       const statusCode = String(result.error || "").includes("not found")
         ? 404

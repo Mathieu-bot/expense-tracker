@@ -26,8 +26,8 @@ router.use(requireAuth);
 // @access  Private
 router.post(
   "/",
-  upload.single("file"), // Handle receipt file upload
   createExpenseValidator,
+  upload.single("file"),
   createExpenseController
 );
 
@@ -46,8 +46,8 @@ router.get("/", listExpensesValidator, getAllExpensesController);
 // @access  Private
 router.put(
   "/:id",
-  upload.single("file"), // Handle receipt file upload
   updateExpenseValidator,
+  upload.single("file"),
   updateExpenseController
 );
 

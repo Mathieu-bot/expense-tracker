@@ -41,6 +41,9 @@ CREATE TABLE "public"."expense" (
     "last_processed" TIMESTAMP(3),
     "user_id" INTEGER NOT NULL,
     "category_id" INTEGER NOT NULL,
+    "receipt_url" VARCHAR(1024),
+    "receipt_mime" VARCHAR(50),
+    "receipt_size" INTEGER,
 
     CONSTRAINT "expense_pkey" PRIMARY KEY ("expense_id")
 );
@@ -58,36 +61,8 @@ CREATE TABLE "public"."income" (
     CONSTRAINT "income_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
-CREATE TABLE "public"."receipt" (
-    "receipt_id" SERIAL NOT NULL,
-    "user_id" INTEGER,
-    "expense_id" INTEGER NOT NULL,
-    "filename" TEXT NOT NULL,
-    "mime_type" VARCHAR(50) NOT NULL,
-    "size" INTEGER NOT NULL,
-    "bytes" BYTEA NOT NULL,
-    "sha256" TEXT NOT NULL,
-    "creation_date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "receipt_pkey" PRIMARY KEY ("receipt_id")
-);
-
 -- CreateIndex
 CREATE UNIQUE INDEX "user_email_key" ON "public"."user"("email");
-
--- CreateIndex
-CREATE UNIQUE INDEX "receipt_expense_id_key" ON "public"."receipt"("expense_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "receipt_sha256_key" ON "public"."receipt"("sha256");
-
--- CreateIndex
-CREATE INDEX "receipt_user_id_idx" ON "public"."receipt"("user_id");
-
--- CreateIndex
-CREATE INDEX "receipt_mime_type_idx" ON "public"."receipt"("mime_type");
 
 -- AddForeignKey
 ALTER TABLE "public"."expense_category" ADD CONSTRAINT "expense_category_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."user"("user_id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -100,9 +75,3 @@ ALTER TABLE "public"."expense" ADD CONSTRAINT "expense_category_id_fkey" FOREIGN
 
 -- AddForeignKey
 ALTER TABLE "public"."income" ADD CONSTRAINT "income_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."user"("user_id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "public"."receipt" ADD CONSTRAINT "receipt_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."user"("user_id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "public"."receipt" ADD CONSTRAINT "receipt_expense_id_fkey" FOREIGN KEY ("expense_id") REFERENCES "public"."expense"("expense_id") ON DELETE CASCADE ON UPDATE CASCADE;
