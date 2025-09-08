@@ -1,14 +1,16 @@
 import { useState } from "react";
 import type React from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, useToast } from "../ui";
+import { Button, useToast, Select } from "../ui";
 import { ExpenseService } from "../services/ExpenseService";
+import { useCategories } from "../hooks/useCategories";
 import type { CreateExpenseRequest, ExpenseType } from "../types/Expense";
 import { Loader2 } from "lucide-react";
 
 export const CreateExpense = () => {
   const navigate = useNavigate();
   const toast = useToast();
+  const { categories, loading: categoriesLoading } = useCategories();
 
   const [form, setForm] = useState<CreateExpenseRequest>({
     amount: "",
@@ -124,14 +126,13 @@ export const CreateExpense = () => {
             />
           </div>
           <div>
-            <label className="block text-sm mb-1">Category ID</label>
-            <input
-              name="categoryId"
-              type="text"
-              value={form.categoryId}
-              onChange={onChange}
-              className="w-full rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
-              placeholder="e.g. 1"
+            <label className="block text-sm mb-1">Category</label>
+            <Select
+              value={form.categoryId || null}
+              onChange={(v) => setForm((f) => ({ ...f, categoryId: String(v) }))}
+              options={categories.map((c) => ({ label: c.category_name, value: String(c.category_id) }))}
+              placeholder="Select a category"
+              disabled={categoriesLoading}
             />
           </div>
         </div>

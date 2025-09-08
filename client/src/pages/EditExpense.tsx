@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button, useToast, Skeleton } from "../ui";
+import { Button, useToast, Skeleton, Select } from "../ui";
 import { ExpenseService } from "../services/ExpenseService";
 import type {
   Expense,
@@ -9,11 +9,15 @@ import type {
   ExpenseType,
 } from "../types/Expense";
 import { Loader2 } from "lucide-react";
+import { useCategories } from "../hooks/useCategories";
+import type { Expense, UpdateExpenseRequest, ExpenseType } from "../types/Expense";
+
 
 export const EditExpense = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const toast = useToast();
+  const { categories, loading: categoriesLoading } = useCategories();
 
   const [expense, setExpense] = useState<Expense | null>(null);
   const [loading, setLoading] = useState(true);
@@ -157,13 +161,13 @@ export const EditExpense = () => {
             />
           </div>
           <div>
-            <label className="block text-sm mb-1">Category ID</label>
-            <input
-              name="categoryId"
-              type="text"
-              value={local.categoryId || ""}
-              onChange={onChange}
-              className="w-full rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
+            <label className="block text-sm mb-1">Category</label>
+            <Select
+              value={local.categoryId ? String(local.categoryId) : null}
+              onChange={(v) => setLocal((f) => ({ ...f, categoryId: String(v) }))}
+              options={categories.map((c) => ({ label: c.category_name, value: String(c.category_id) }))}
+              placeholder="Select a category"
+              disabled={categoriesLoading}
             />
           </div>
         </div>
