@@ -28,6 +28,7 @@ model User {
   categories ExpenseCategory[]
 
   @@map("user")
+  Receipt Receipt[]
 }
 
 model ExpenseCategory {
@@ -49,7 +50,6 @@ model Expense {
   amount         Float
   description    String?  @db.VarChar(2000)
   type           ExpenseType @default(ONE_TIME)
-  receipt_upload String?  @db.VarChar(2000)
   creation_date  DateTime @default(now())
   expense_date   DateTime?  // For one-time expenses or next occurrence of recurring
   start_date     DateTime?   // When the recurring expense starts
@@ -60,7 +60,10 @@ model Expense {
   category_id    Int
   category       ExpenseCategory @relation(fields: [category_id], references: [category_id], onDelete: Cascade)
 
+  receipt Receipt?
+  
   @@map("expense")
+  
 }
 
 enum ExpenseType {
@@ -80,4 +83,27 @@ model Income {
   user    User @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
 
   @@map("income")
+}
+
+model Receipt{
+  receipt_id Int @id @default(autoincrement())
+
+  user_id Int?
+  user User? @relation(fields: [user_id],references: [user_id],onDelete: SetNull)
+
+  expense_id Int @unique
+  expense Expense? @relation(fields: [expense_id],references: [expense_id],onDelete: Cascade)
+
+  filename String
+  mime_type String @db.VarChar(50)
+  size Int
+  bytes Bytes
+  sha256 String @unique
+  creation_date DateTime @default(now())
+  updated_at DateTime @updatedAt
+   
+
+   @@index([user_id])
+  @@index([mime_type])
+  @@map("receipt")
 }
