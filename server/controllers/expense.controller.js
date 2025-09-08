@@ -8,22 +8,18 @@ import {
 } from "../services/expense.service.js";
 import { getMonthlyExpenseSummary } from "../services/report.service.js";
 
-// @desc    Create a new expense
+// @desc    Create a new expense (+ optional receipt upload)
 // @route   POST /api/expenses
 // @access  Private
 export const createExpenseController = async (req, res) => {
-  // Validate request body
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({
-      success: false,
-      errors: errors.array(),
-    });
+    return res.status(400).json({ success: false, errors: errors.array() });
   }
 
   try {
     const userId = req.user.user_id;
-    // Build payload using API field names. Service will map to DB fields
+
     const expenseData = {
       amount: req.body.amount,
       description: req.body.description,
@@ -33,10 +29,11 @@ export const createExpenseController = async (req, res) => {
       startDate: req.body.startDate,
       endDate: req.body.endDate,
       user_id: userId,
-      ...(req.file ? { receipt_upload: req.file.path } : {}),
     };
 
-    const result = await createExpense(expenseData);
+    const receiptFile = req.file || null;
+
+    const result = await createExpense(expenseData, receiptFile);
     if (!result.success) {
       return res.status(400).json({ success: false, error: result.error });
     }
@@ -49,7 +46,7 @@ export const createExpenseController = async (req, res) => {
   }
 };
 
-// @desc    Get a single expense by ID
+// @desc    Get a single expense by ID (includes receipt meta)
 // @route   GET /api/expenses/:id
 // @access  Private
 export const getExpenseController = async (req, res) => {
@@ -60,26 +57,19 @@ export const getExpenseController = async (req, res) => {
     const result = await getExpenseById(id, userId);
 
     if (!result.success) {
-      return res.status(404).json({
-        success: false,
-        error: result.error,
-      });
+      return res.status(404).json({ success: false, error: result.error });
     }
 
-    return res.status(200).json({
-      success: true,
-      data: result.data,
-    });
+    return res.status(200).json({ success: true, data: result.data });
   } catch (error) {
     console.error("Error fetching expense:", error);
-    return res.status(500).json({
-      success: false,
-      error: "Server error while fetching expense",
-    });
+    return res
+      .status(500)
+      .json({ success: false, error: "Server error while fetching expense" });
   }
 };
 
-// @desc    Get all expenses for a user
+// @desc    Get all expenses for a user (each with receipt meta flag)
 // @route   GET /api/expenses
 // @access  Private
 export const getAllExpensesController = async (req, res) => {
@@ -87,9 +77,7 @@ export const getAllExpensesController = async (req, res) => {
     const userId = req.user.user_id;
     const { start, end, category, type, view, month } = req.query;
 
-    // Support monthly virtualization without a new endpoint
     if (view === "monthly") {
-      // Parse month=YYYY-MM or default to current month
       let year, monthIndex;
       if (month && /^\d{4}-\d{2}$/.test(month)) {
         const [y, m] = month.split("-");
@@ -103,20 +91,18 @@ export const getAllExpensesController = async (req, res) => {
       const monthStart = new Date(year, monthIndex, 1, 0, 0, 0, 0);
       const monthEnd = new Date(year, monthIndex + 1, 0, 23, 59, 59, 999);
 
-      const result = await getMonthlyExpenseSummary(userId, monthStart, monthEnd);
+      const result = await getMonthlyExpenseSummary(
+        userId,
+        monthStart,
+        monthEnd
+      );
       if (!result.success) {
         return res.status(400).json({ success: false, error: result.error });
       }
       return res.status(200).json({ success: true, data: result.data });
     }
 
-    const result = await getAllExpenses(userId, {
-      start,
-      end,
-      category,
-      type,
-    });
-
+    const result = await getAllExpenses(userId, { start, end, category, type });
     if (!result.success) {
       return res.status(400).json({ success: false, error: result.error });
     }
@@ -131,22 +117,19 @@ export const getAllExpensesController = async (req, res) => {
   }
 };
 
-// @desc    Update an expense
+// @desc    Update an expense (+ optional replace receipt)
 // @route   PUT /api/expenses/:id
 // @access  Private
 export const updateExpenseController = async (req, res) => {
-  // Validate request body
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({
-      success: false,
-      errors: errors.array(),
-    });
+    return res.status(400).json({ success: false, errors: errors.array() });
   }
 
   try {
     const { id } = req.params;
     const userId = req.user.user_id;
+
     const updateData = {
       amount: req.body.amount,
       description: req.body.description,
@@ -155,12 +138,15 @@ export const updateExpenseController = async (req, res) => {
       date: req.body.date,
       startDate: req.body.startDate,
       endDate: req.body.endDate,
-      ...(req.file ? { receipt_upload: req.file.path } : {}),
     };
 
-    const result = await updateExpense(id, userId, updateData);
+    const receiptFile = req.file || null;
+
+    const result = await updateExpense(id, userId, updateData, receiptFile);
     if (!result.success) {
-      const statusCode = result.error.includes("not found") ? 404 : 400;
+      const statusCode = String(result.error || "").includes("not found")
+        ? 404
+        : 400;
       return res
         .status(statusCode)
         .json({ success: false, error: result.error });
@@ -174,7 +160,7 @@ export const updateExpenseController = async (req, res) => {
   }
 };
 
-// @desc    Delete an expense
+// @desc    Delete an expense (receipt is removed by FK ON DELETE CASCADE)
 // @route   DELETE /api/expenses/:id
 // @access  Private
 export const deleteExpenseController = async (req, res) => {
@@ -183,21 +169,19 @@ export const deleteExpenseController = async (req, res) => {
     const userId = req.user.user_id;
 
     const result = await deleteExpense(id, userId);
-
     if (!result.success) {
-      const statusCode = result.error.includes("not found") ? 404 : 400;
-      return res.status(statusCode).json({
-        success: false,
-        error: result.error,
-      });
+      const statusCode = String(result.error || "").includes("not found")
+        ? 404
+        : 400;
+      return res
+        .status(statusCode)
+        .json({ success: false, error: result.error });
     }
-    // Per OpenAPI spec, return 204 No Content
     return res.status(204).send();
   } catch (error) {
     console.error("Error deleting expense:", error);
-    return res.status(500).json({
-      success: false,
-      error: "Server error while deleting expense",
-    });
+    return res
+      .status(500)
+      .json({ success: false, error: "Server error while deleting expense" });
   }
 };
