@@ -3,11 +3,6 @@ import type React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, useToast, Skeleton, Select } from "../ui";
 import { ExpenseService } from "../services/ExpenseService";
-import type {
-  Expense,
-  UpdateExpenseRequest,
-  ExpenseType,
-} from "../types/Expense";
 import { Loader2 } from "lucide-react";
 import { useCategories } from "../hooks/useCategories";
 import type { Expense, UpdateExpenseRequest, ExpenseType } from "../types/Expense";
