@@ -2,22 +2,31 @@ import { useExpenses } from "../hooks/useExpenses";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ExpenseItem from "../components/expense/ExpenseItem";
+import { Button} from "../ui";
+import { GlassDatePicker } from "../components/Income";
+import { Plus, RefreshCcw } from "lucide-react";
 
 export default function Expenses() {
-  const [start, setStart] = useState<string | undefined>();
-  const [end, setEnd] = useState<string | undefined>();
+  const [start, setStart] = useState<Date | null>(null);
+  const [end, setEnd] = useState<Date | null>(null);
   const [category, setCategory] = useState<string | undefined>();
   const [type, setType] = useState<"one-time" | "recurring" | undefined>();
 
+  const fmt = (d: Date | null) =>
+    d
+      ? `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+          2,
+          "0"
+        )}-${String(d.getDate()).padStart(2, "0")}`
+      : undefined;
+
   const { expenses, loading, error, refetch } = useExpenses(
-    start,
-    end,
+    fmt(start),
+    fmt(end),
     category,
     type
   );
   const navigate = useNavigate();
-
-  console.log(expenses);
 
   return (
     <div className="relative z-2 mb-10 mt-30 mx-auto text-light max-w-6xl px-6">
@@ -28,29 +37,24 @@ export default function Expenses() {
             Track your expenses and manage your budget
           </p>
         </div>
-        <button
+        <Button
           onClick={refetch}
-          className="px-3 py-1.5 rounded-md bg-white/10 hover:bg-white/15 border border-white/10"
+          className="px-3 py-1.5 rounded-md bg-white/10 hover:bg-white/15 border border-white/10 h-full"
+          startIcon={<RefreshCcw size={15} />}
         >
           Refresh
-        </button>
+        </Button>
       </div>
 
       <div className="mb-6 grid grid-cols-1 md:grid-cols-5 gap-3">
-        <input
-          type="date"
-          value={start ?? ""}
-          onChange={(e) => {
-            setStart(e.target.value || undefined);
-          }}
-          className="rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
+        <GlassDatePicker
+          value={start}
+          onChange={setStart}
           placeholder="Start date"
         />
-        <input
-          type="date"
-          value={end ?? ""}
-          onChange={(e) => setEnd(e.target.value || undefined)}
-          className="rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
+        <GlassDatePicker
+          value={end}
+          onChange={setEnd}
           placeholder="End date"
         />
         <input
@@ -76,12 +80,14 @@ export default function Expenses() {
           <option value="one-time">One-time</option>
           <option value="recurring">Recurring</option>
         </select>
-        <button
+        <Button
           onClick={() => navigate("/expenses/new")}
-          className="px-3 py-2 rounded-md bg-accent/20 hover:bg-accent/30 border border-accent/30"
+          size="large"
+          className="px-3 py-2 rounded-md bg-accent/20 hover:bg-accent/30 border border-accent/30 h-full text-accent text-2xl font-semibold"
+          startIcon={<Plus size={15} />}
         >
           New Expense
-        </button>
+        </Button>
       </div>
 
       {loading && (

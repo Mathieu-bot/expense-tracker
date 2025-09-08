@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { createPortal } from "react-dom";
-import { X } from "lucide-react";
 import type { Expense } from "../../../types/Expense";
 import { fmt, formatCurrency } from "../../../utils/formatters";
 
@@ -54,17 +53,11 @@ export const DeleteConfirmationModal: React.FC<
           <h3 className="text-red-600 font-bold text-lg sm:text-xl">
             Confirm Delete
           </h3>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-white hover:bg-gray-800 rounded-full w-8 h-8 flex items-center justify-center transition-colors"
-          >
-            <X size={18} />
-          </button>
         </div>
 
         <div className="p-4 sm:p-5 text-gray-200">
           <p className="mb-2 text-sm">
-            Are you sure you want to delete this expense?
+            Are you sure you want to delete this expense ?
           </p>
           <p className="mb-3 text-sm text-gray-300">
             This action cannot be undone.
