@@ -145,12 +145,10 @@ export const getAllExpenses = async (userId, filters = {}) => {
       AND: [],
     };
 
-    // Apply category filter by category name
+    // Apply category filter by category ID
     if (category) {
       where.AND.push({
-        category: {
-          category_name: category,
-        },
+        category_id: parseInt(category),
       });
     }
 

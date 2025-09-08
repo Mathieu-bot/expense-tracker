@@ -1,8 +1,9 @@
 import { useExpenses } from "../hooks/useExpenses";
+import { useCategories } from "../hooks/useCategories";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ExpenseItem from "../components/expense/ExpenseItem";
-import { Button} from "../ui";
+import { Button, Select } from "../ui";
 import { GlassDatePicker } from "../components/Income";
 import { Plus, RefreshCcw } from "lucide-react";
 
@@ -26,6 +27,7 @@ export default function Expenses() {
     category,
     type
   );
+  const { categories, loading: categoriesLoading } = useCategories();
   const navigate = useNavigate();
 
   return (
@@ -52,17 +54,19 @@ export default function Expenses() {
           onChange={setStart}
           placeholder="Start date"
         />
-        <GlassDatePicker
-          value={end}
-          onChange={setEnd}
-          placeholder="End date"
-        />
-        <input
-          type="text"
+        <GlassDatePicker value={end} onChange={setEnd} placeholder="End date" />
+        <Select
           value={category ?? ""}
-          onChange={(e) => setCategory(e.target.value || undefined)}
-          className="rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
-          placeholder="Category name"
+          onChange={(v) => setCategory(v === "" ? undefined : v)}
+          options={[
+            { label: "All categories", value: "" },
+            ...(categories ?? []).map((c) => ({
+              label: c.category_name,
+              value: String(c.category_id),
+            })),
+          ]}
+          placeholder="Select a category"
+          disabled={categoriesLoading}
         />
         <select
           value={type ?? ""}
