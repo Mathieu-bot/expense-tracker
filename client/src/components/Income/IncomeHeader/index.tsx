@@ -8,12 +8,14 @@ interface IncomeHeaderProps {
   totalIncome: number;
   onNewIncome: () => void;
   onExport: (startDate?: string, endDate?: string) => Promise<boolean>;
+  onPreview: (startDate?: string, endDate?: string) => void; // add this
   incomes: Income[];
 }
 
 export const IncomeHeader = ({
   totalIncome,
   onNewIncome,
+  onPreview,
   onExport,
   incomes,
 }: IncomeHeaderProps) => {
@@ -34,7 +36,7 @@ export const IncomeHeader = ({
       </div>
 
       <div className="flex items-center gap-3">
-        <MoreActionsDropdown onExport={onExport} incomes={incomes} />
+        <MoreActionsDropdown onPreview={onPreview} onExport={onExport} incomes={incomes} />
         <Button
           onClick={onNewIncome}
           size="large"
