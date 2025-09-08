@@ -22,8 +22,7 @@ function assertFileOk(file) {
     throw new Error(
       `File too large (> 5 Mo): ${(file.size / 1024 / 1024).toFixed(2)} Mo`
     );
-  if (!file.buffer)
-    throw new Error("No buffer found.");
+  if (!file.buffer) throw new Error("No buffer found.");
 }
 
 function extFromMime(mime) {
@@ -44,7 +43,6 @@ async function uploadPublicFile({ userId, expenseId, file }) {
 
   if (upErr) throw new Error(`Supabase upload failed: ${upErr.message}`);
 
-  // URL publique (bucket public)
   const { data } = supabase.storage.from(BUCKET).getPublicUrl(path);
   return { url: data.publicUrl, path };
 }
