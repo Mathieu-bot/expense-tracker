@@ -1,28 +1,34 @@
-import { useMemo, useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Bar,
   BarChart,
   CartesianGrid,
-  ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
+  ResponsiveContainer,
 } from "recharts";
-import Layout from "./Layout";
 import { formatCurrency } from "../../utils/formatters";
-export type Row = {
-  totalIncome: number;
-  totalExpense: number;
-  netBalance: number;
-};
 
 const COLORS = {
   spending: "#FF8042",
   income: "#00C49F",
 };
 
-export function MonthlyBarChart({ data }: { data: Row[] }) {
-  const [show, setShow] = useState({ spending: true, income: true });
+interface MonthlyBarChartProps {
+  data: { month: string; totalExpense: number; totalIncome: number }[];
+}
+
+const MonthlyBarChart: React.FC<MonthlyBarChartProps> = ({ data }) => {
+  const [visibleBars, setVisibleBars] = useState({
+    spending: true,
+    income: true,
+  });
+
+  const toggleBar = (bar: "spending" | "income") => {
+    setVisibleBars((prev) => ({ ...prev, [bar]: !prev[bar] }));
+  };
+
   const totals = useMemo(
     () => ({
       spending: data.reduce((a, c) => a + c.totalExpense, 0),
@@ -32,94 +38,117 @@ export function MonthlyBarChart({ data }: { data: Row[] }) {
   );
 
   return (
-    <Layout graphClassName="h-[300px]">
-      {/* Toggles */}
-      <div className="flex items-center justify-end gap-2 px-2 pb-2">
-        <button
-          onClick={() => setShow((s) => ({ ...s, spending: !s.spending }))}
-          className={`text-xs font-semibold px-2 py-1 rounded-md transition outline-none ${
-            show.spending
-              ? "bg-white text-slate-900"
-              : "bg-white/10 text-white/80 hover:text-white"
-          }`}
-        >
-          Spending • {formatCurrency(totals.spending)}
-        </button>
-        <button
-          onClick={() => setShow((s) => ({ ...s, income: !s.income }))}
-          className={`text-xs font-semibold px-2 py-1 rounded-md transition outline-none ${
-            show.income
-              ? "bg-white text-slate-900"
-              : "bg-white/10 text-white/80 hover:text-white"
-          }`}
-        >
-          Income • {formatCurrency(totals.income)}
-        </button>
+    <div className="bg-white/80 dark:bg-gradient-to-br dark:bg-transparent dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 w-full h-[380px] flex flex-col">
+      <div className="relative mt-3 ml-3 flex mb-6">
+        <div className="flex bg-gray-100 dark:bg-gray-800 rounded-xl overflow-hidden shadow-inner">
+          <button
+            onClick={() => toggleBar("spending")}
+            style={{
+              backgroundColor: visibleBars.spending
+                ? COLORS.spending
+                : "transparent",
+              color: visibleBars.spending ? "#fff" : "",
+            }}
+            className={`px-6 py-2 font-medium transition-all duration-300 flex items-center gap-2 ${
+              !visibleBars.spending && "text-gray-600 dark:text-gray-300"
+            }`}
+            onMouseEnter={(e) => {
+              if (!visibleBars.spending) {
+                (e.currentTarget as HTMLButtonElement).style.color =
+                  COLORS.spending;
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!visibleBars.spending) {
+                (e.currentTarget as HTMLButtonElement).style.color = "";
+              }
+            }}
+          >
+            <span>Expense</span>
+            <span className="text-xs opacity-80">
+              {formatCurrency(totals.spending)}
+            </span>
+          </button>
+
+          <button
+            onClick={() => toggleBar("income")}
+            style={{
+              backgroundColor: visibleBars.income
+                ? COLORS.income
+                : "transparent",
+              color: visibleBars.income ? "#fff" : "",
+            }}
+            className={`px-6 py-2 font-medium transition-all duration-300 flex items-center gap-2 ${
+              !visibleBars.income && "text-gray-600 dark:text-gray-300"
+            }`}
+            onMouseEnter={(e) => {
+              if (!visibleBars.income) {
+                (e.currentTarget as HTMLButtonElement).style.color =
+                  COLORS.income;
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!visibleBars.income) {
+                (e.currentTarget as HTMLButtonElement).style.color = "";
+              }
+            }}
+          >
+            <span>Income</span>
+            <span className="text-xs opacity-80">
+              {formatCurrency(totals.income)}
+            </span>
+          </button>
+        </div>
       </div>
 
-      <ResponsiveContainer
-        width="100%"
-        height="100%"
-        className={"outline-none"}
-      >
-        <BarChart data={data} barCategoryGap="22%" barGap={2}>
-          <defs>
-            <linearGradient id="gradSpending" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={COLORS.spending} stopOpacity={0.9} />
-              <stop
-                offset="100%"
-                stopColor={COLORS.spending}
-                stopOpacity={0.3}
-              />
-            </linearGradient>
-            <linearGradient id="gradIncome" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={COLORS.income} stopOpacity={0.9} />
-              <stop offset="100%" stopColor={COLORS.income} stopOpacity={0.3} />
-            </linearGradient>
-          </defs>
-
-          <CartesianGrid
-            strokeDasharray="3 3"
-            stroke="rgba(255,255,255,0.12)"
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart
+          data={data}
+          margin={{ top: 20, right: 30 }}
+          barCategoryGap="30%"
+        >
+          <CartesianGrid strokeDasharray="3 3" className="opacity-40" />
+          <XAxis
+            dataKey="month"
+            tick={{ fill: "currentColor" }}
+            className="text-gray-700 dark:text-gray-300"
           />
-          <XAxis dataKey="month" tick={{ fill: "rgba(255,255,255,0.8)" }} />
           <YAxis
-            tick={{ fill: "rgba(255,255,255,0.8)" }}
-            tickFormatter={(v: number) => `${formatCurrency(v)}`}
-            allowDecimals={false}
-            domain={["auto", "auto"]}
+            tick={{ fill: "currentColor" }}
+            className="text-gray-700 dark:text-gray-300"
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: "#0b0f1a",
+              backgroundColor: "rgba(255, 255, 255, 0.8)",
+              borderRadius: "12px",
               border: "none",
-              borderRadius: 8,
-              color: "#fff",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
             }}
-            formatter={(v, name: string) => [
-              formatCurrency(Number(v)),
-              String(name),
-            ]}
+            itemStyle={{ color: "#111" }}
+            labelStyle={{ color: "#111", fontWeight: "bold" }}
           />
-
-          {show.spending && (
+          {visibleBars.spending && (
             <Bar
               dataKey="totalExpense"
-              name="Spending"
-              fill="url(#gradSpending)"
+              name="Expense"
+              fill={COLORS.spending}
               radius={[8, 8, 0, 0]}
+              barSize={40}
             />
           )}
-          {show.income && (
+          {visibleBars.income && (
             <Bar
               dataKey="totalIncome"
               name="Income"
-              fill="url(#gradIncome)"
+              fill={COLORS.income}
               radius={[8, 8, 0, 0]}
+              barSize={40}
             />
           )}
         </BarChart>
       </ResponsiveContainer>
-    </Layout>
+    </div>
   );
-}
+};
+
+export default MonthlyBarChart;

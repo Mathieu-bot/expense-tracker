@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { MonthlyBarChart } from "../components/dashboard/MonthlyBarchart";
 import { Percent, ReceiptCent, Wallet, X } from "lucide-react";
 import PieGraph from "../components/dashboard/PieGraph";
 import { useIncomes } from "../hooks/useIncomes";
@@ -18,7 +17,7 @@ import {
   computeEvolutionBetweenValues,
   computeSoldRatio,
 } from "../utils/evolutionBetweenValues";
-
+import MonthlyBarChart from "../components/dashboard/MonthlyBarchart";
 function Dashboard() {
   const { data: summaryAlert } = useSummaryAlert();
   const [alertOpen, setAlertOpen] = useState<boolean>(true);
