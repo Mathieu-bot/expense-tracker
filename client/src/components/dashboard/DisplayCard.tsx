@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { TrendingUp, TrendingDown, type LucideProps } from "lucide-react";
+import { TrendingUp, TrendingDown, type LucideProps, Plus } from "lucide-react";
 import { formatCurrency } from "../../utils/formatters";
+import { Link } from "react-router-dom";
 
 export type MiniStatItem = {
   label: string;
@@ -13,6 +14,7 @@ export type MiniStatItem = {
   filterWasUsed: boolean;
   customDeltaColor?: string | null;
   customBgColor?: string | null;
+  href?: string;
 };
 
 export default function MiniStatCard({
@@ -23,6 +25,7 @@ export default function MiniStatCard({
   valueSuffix,
   filterWasUsed,
   customBgColor = null,
+  href,
 }: MiniStatItem) {
   const [isVisible, setIsVisible] = useState(false);
   const [animatedValue, setAnimatedValue] = useState(0);
@@ -30,7 +33,6 @@ export default function MiniStatCard({
 
   const isUp = typeof deltaPct === "number" ? deltaPct >= 0 : undefined;
 
-  // Theme-aware colors
   const deltaColor =
     isUp === undefined
       ? "bg-slate-300 dark:bg-slate-500/20 text-slate-600 dark:text-slate-300"
@@ -90,18 +92,31 @@ export default function MiniStatCard({
       `}
     >
       {/* Header */}
-      <div className="flex items-center gap-2 relative z-10">
-        <span
-          className={`
+      <div className="flex items-center justify-between relative z-10">
+        <div className="flex items-center gap-2">
+          <span
+            className={`
               w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center
               transition-all duration-500 group-hover:scale-110
             `}
-        >
-          <Icon className="w-6 h-6 text-accent dark:text-accent transition-transform duration-300" />
-        </span>
-        <span className="text-base text-gray-700 dark:text-white/80 font-medium transition-all duration-300">
-          {label}
-        </span>
+          >
+            <Icon className="w-6 h-6 text-accent dark:text-accent transition-transform duration-300" />
+          </span>
+          <span className="text-base text-gray-700 dark:text-white/80 font-medium transition-all duration-300">
+            {label}
+          </span>
+        </div>
+
+        {href && (
+          <Link
+            to={href}
+            className="w-8 h-8 rounded-lg flex items-center justify-center bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 transition-colors duration-300"
+            aria-label={`Create New ${label}`}
+            title={`Create New ${label}`}
+          >
+            <Plus className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+          </Link>
+        )}
       </div>
 
       {/* Value + Delta alignés */}

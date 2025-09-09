@@ -49,7 +49,6 @@ model Expense {
   amount         Float
   description    String?  @db.VarChar(2000)
   type           ExpenseType @default(ONE_TIME)
-  receipt_upload String?  @db.VarChar(2000)
   creation_date  DateTime @default(now())
   expense_date   DateTime?  // For one-time expenses or next occurrence of recurring
   start_date     DateTime?   // When the recurring expense starts
@@ -60,7 +59,12 @@ model Expense {
   category_id    Int
   category       ExpenseCategory @relation(fields: [category_id], references: [category_id], onDelete: Cascade)
 
+  receipt_url    String?       @db.VarChar(1024)
+  receipt_mime   String?       @db.VarChar(50)
+  receipt_size   Int?  
+
   @@map("expense")
+  
 }
 
 enum ExpenseType {

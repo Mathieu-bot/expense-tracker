@@ -62,17 +62,35 @@ const DateRangeFilter = ({
       <div className="flex gap-2">
         <button
           onClick={() => setIsModalOpen(true)}
-          className="p-0 border-none w-10 h-10 flex items-center justify-center bg-white/80 dark:bg-blue-600 hover:bg-white/60 dark:hover:bg-blue-700 text-primary dark:text-white rounded-full transition-colors shadow-sm"
+          className={[
+            "w-10 h-10 flex items-center justify-center",
+            "rounded-full shadow-lg border-none p-0",
+            "bg-gradient-to-r from-blue-600 to-indigo-600",
+            "text-white hover:brightness-110 active:brightness-95",
+            "transition-transform duration-150",
+            "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500",
+            "dark:from-blue-500 dark:to-indigo-500 dark:focus:ring-offset-gray-900",
+          ].join(" ")}
         >
           <Calendar className="w-4 h-4" />
         </button>
 
         {!isDefaultRange() && startDate && endDate && (
-          <div className="flex items-center gap-2 bg-white/80 dark:bg-blue-900/20 text-primary dark:text-blue-200 px-3 py-1.5 rounded-lg border border-blue-200 dark:border-blue-800/30">
-            <span className="text-sm font-medium">{getDisplayText()}</span>
+          <div
+            className={[
+              "flex items-center gap-2",
+              "px-3 py-1.5 rounded-lg shadow-lg",
+              "bg-gradient-to-r from-blue-600/50 to-indigo-600/50",
+              "text-white font-medium",
+              "hover:brightness-110 active:brightness-95",
+              "transition-colors duration-150",
+              "border border-white/20 dark:border-blue-800/40",
+            ].join(" ")}
+          >
+            <span className="text-sm">{getDisplayText()}</span>
             <button
               onClick={handleCloseFilter}
-              className="text-blue-900 p-0 border-none dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 transition-colors"
+              className="text-white hover:text-gray-200 transition-colors p-0 border-none"
             >
               <X className="w-4 h-4" />
             </button>

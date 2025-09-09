@@ -33,14 +33,17 @@ CREATE TABLE "public"."expense" (
     "expense_id" SERIAL NOT NULL,
     "amount" DOUBLE PRECISION NOT NULL,
     "description" VARCHAR(2000),
-    "type" VARCHAR(20) NOT NULL DEFAULT 'ONE_TIME',
-    "receipt_upload" VARCHAR(2000),
+    "type" "public"."ExpenseType" NOT NULL DEFAULT 'ONE_TIME',
     "creation_date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "expense_date" TIMESTAMP(3),
     "start_date" TIMESTAMP(3),
     "end_date" TIMESTAMP(3),
+    "last_processed" TIMESTAMP(3),
     "user_id" INTEGER NOT NULL,
     "category_id" INTEGER NOT NULL,
+    "receipt_url" VARCHAR(1024),
+    "receipt_mime" VARCHAR(50),
+    "receipt_size" INTEGER,
 
     CONSTRAINT "expense_pkey" PRIMARY KEY ("expense_id")
 );

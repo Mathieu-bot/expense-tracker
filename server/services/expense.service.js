@@ -1,12 +1,66 @@
+// src/services/expense.service.js
+import crypto from "crypto";
 import { Prisma } from "@prisma/client";
 import { prisma } from "../db/prisma.js";
+import { supabase } from "../lib/supabase.js"; // <-- assure-toi d'avoir ce client service role
 
-/**
- * Create a new expense
- * @param {Object} expenseData - The expense data
- * @returns {Promise<Object>} Result object with success status and data/error
- */
-export const createExpense = async (expenseData) => {
+const MAX_BYTES = 5 * 1024 * 1024;
+const ALLOWED = new Set([
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "application/pdf",
+]);
+const BUCKET = process.env.SUPABASE_BUCKET_RECEIPTS || "Receipt";
+
+// Helpers --------------------------------------------------------------
+function assertFileOk(file) {
+  if (!file) return;
+  if (!ALLOWED.has(file.mimetype))
+    throw new Error(`Unhandled file type: ${file.mimetype}`);
+  if (file.size > MAX_BYTES)
+    throw new Error(
+      `File too large (> 5 Mo): ${(file.size / 1024 / 1024).toFixed(2)} Mo`
+    );
+  if (!file.buffer) throw new Error("No buffer found.");
+}
+
+function extFromMime(mime) {
+  if (mime === "image/jpeg" || mime === "image/jpg") return "jpg";
+  if (mime === "image/png") return "png";
+  if (mime === "application/pdf") return "pdf";
+  return "bin";
+}
+
+async function uploadPublicFile({ userId, expenseId, file }) {
+  const ext = extFromMime(file.mimetype);
+  const key = crypto.randomUUID();
+  const path = `${userId}/${expenseId}/${key}.${ext}`;
+
+  const { error: upErr } = await supabase.storage
+    .from(BUCKET)
+    .upload(path, file.buffer, { contentType: file.mimetype, upsert: false });
+
+  if (upErr) throw new Error(`Supabase upload failed: ${upErr.message}`);
+
+  const { data } = supabase.storage.from(BUCKET).getPublicUrl(path);
+  return { url: data.publicUrl, path };
+}
+
+function storagePathFromPublicUrl(url) {
+  const marker = `/storage/v1/object/public/${BUCKET}/`;
+  const idx = url.indexOf(marker);
+  return idx === -1 ? null : url.slice(idx + marker.length);
+}
+
+async function deletePublicFileByUrl(url) {
+  const path = storagePathFromPublicUrl(url);
+  if (!path) return;
+  await supabase.storage.from(BUCKET).remove([path]);
+}
+
+// ---------------------------------------------------------------------
+export const createExpense = async (expenseData, receiptFile = null) => {
   try {
     const {
       amount,
@@ -16,19 +70,14 @@ export const createExpense = async (expenseData) => {
       type = "one-time",
       startDate,
       endDate,
-      receipt_upload,
-      user_id, // from controller
+      user_id,
       ...rest
     } = expenseData;
 
-    // Convert amount to float
     const normalizedAmount =
       typeof amount === "string" ? parseFloat(amount) : amount;
-
-    // Map API type to DB type
     const dbType = type === "recurring" ? "RECURRING" : "ONE_TIME";
 
-    // Validate required fields based on type
     if (type === "one-time" && !date) {
       return {
         success: false,
@@ -53,18 +102,38 @@ export const createExpense = async (expenseData) => {
         expense_date: type === "one-time" ? new Date(date) : null,
         start_date: type === "recurring" ? new Date(startDate) : null,
         end_date: endDate ? new Date(endDate) : null,
-        receipt_upload,
       },
       include: { category: true },
     });
 
-    // Transform response to match API format (avoid duplicate snake_case + camelCase)
+    if (receiptFile) {
+      assertFileOk(receiptFile);
+      const { url } = await uploadPublicFile({
+        userId: created.user_id,
+        expenseId: created.expense_id,
+        file: receiptFile,
+      });
+
+      await prisma.expense.update({
+        where: { expense_id: created.expense_id },
+        data: {
+          receipt_url: url,
+          receipt_mime: receiptFile.mimetype,
+          receipt_size: receiptFile.size,
+        },
+      });
+
+      created.receipt_url = url;
+      created.receipt_mime = receiptFile.mimetype;
+      created.receipt_size = receiptFile.size;
+    }
+
+    // Réponse API
     const response = {
       expense_id: created.expense_id,
       amount: created.amount,
       description: created.description,
       type: created.type === "RECURRING" ? "recurring" : "one-time",
-      receipt_upload: created.receipt_upload,
       date: created.expense_date,
       startDate: created.start_date,
       endDate: created.end_date,
@@ -72,49 +141,38 @@ export const createExpense = async (expenseData) => {
       user_id: created.user_id,
       categoryId: created.category_id,
       category: created.category,
+      receipt_url: created.receipt_url ?? null,
+      receipt_mime: created.receipt_mime ?? null,
+      receipt_size: created.receipt_size ?? null,
+      has_receipt: Boolean(created.receipt_url),
     };
 
     return { success: true, data: response };
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2003") {
+      if (error.code === "P2003")
         return { success: false, error: "Invalid categoryId" };
-      }
     }
     console.error("Error in createExpense:", error);
     return { success: false, error: error.message };
   }
 };
 
-/**
- * Get an expense by ID
- * @param {string|number} expenseId - The expense ID
- * @param {string|number} userId - The user ID
- * @returns {Promise<Object>} Result object with success status and data/error
- */
+// ---------------------------------------------------------------------
 export const getExpenseById = async (expenseId, userId) => {
   try {
     const expense = await prisma.expense.findFirst({
-      where: {
-        expense_id: parseInt(expenseId),
-        user_id: parseInt(userId),
-      },
-      include: {
-        category: true,
-      },
+      where: { expense_id: parseInt(expenseId), user_id: parseInt(userId) },
+      include: { category: true },
     });
 
-    if (!expense) {
-      return { success: false, error: "Expense not found" };
-    }
+    if (!expense) return { success: false, error: "Expense not found" };
 
-    // Transform response to match API format (avoid duplicate snake_case + camelCase)
     const response = {
       expense_id: expense.expense_id,
       amount: expense.amount,
       description: expense.description,
       type: expense.type === "RECURRING" ? "recurring" : "one-time",
-      receipt_upload: expense.receipt_upload,
       date: expense.expense_date,
       startDate: expense.start_date,
       endDate: expense.end_date,
@@ -122,6 +180,10 @@ export const getExpenseById = async (expenseId, userId) => {
       user_id: expense.user_id,
       categoryId: expense.category_id,
       category: expense.category,
+      receipt_url: expense.receipt_url ?? null,
+      receipt_mime: expense.receipt_mime ?? null,
+      receipt_size: expense.receipt_size ?? null,
+      has_receipt: Boolean(expense.receipt_url),
     };
 
     return { success: true, data: response };
@@ -130,31 +192,19 @@ export const getExpenseById = async (expenseId, userId) => {
   }
 };
 
-/**
- * Get all expenses with filters
- * @param {string|number} userId - The user ID
- * @param {Object} filters - Filter options
- * @returns {Promise<Object>} Result object with success status and data/error
- */
+// ---------------------------------------------------------------------
+// READ MANY
 export const getAllExpenses = async (userId, filters = {}) => {
   try {
     const { start, end, category, type } = filters;
 
-    const where = {
-      user_id: parseInt(userId),
-      AND: [],
-    };
+    const where = { user_id: parseInt(userId), AND: [] };
 
-    // Apply category filter by category name
     if (category) {
-      where.AND.push({
-        category: {
-          category_name: category,
-        },
-      });
+      // filtre relationnel correct
+      where.AND.push({ category: { is: { category_name: category } } });
     }
 
-    // Apply date range filter and type filter respecting behaviors
     if (start || end) {
       const dateRange = {
         ...(start ? { gte: new Date(start) } : {}),
@@ -173,10 +223,9 @@ export const getAllExpenses = async (userId, filters = {}) => {
         },
       ];
 
-      // Apply type filter if specified without reassigning const
       if (type) {
         const dbType = type === "recurring" ? "RECURRING" : "ONE_TIME";
-        orConditions = orConditions.filter((condition) => condition.type === dbType);
+        orConditions = orConditions.filter((c) => c.type === dbType);
       }
 
       where.AND.push({ OR: orConditions });
@@ -194,20 +243,22 @@ export const getAllExpenses = async (userId, filters = {}) => {
       ],
     });
 
-    // Transform response to match API format (avoid duplicate snake_case + camelCase)
-    const response = expenses.map((expense) => ({
-      expense_id: expense.expense_id,
-      amount: expense.amount,
-      description: expense.description,
-      type: expense.type === "RECURRING" ? "recurring" : "one-time",
-      receipt_upload: expense.receipt_upload,
-      date: expense.expense_date,
-      startDate: expense.start_date,
-      endDate: expense.end_date,
-      last_processed: expense.last_processed,
-      user_id: expense.user_id,
-      categoryId: expense.category_id,
-      category: expense.category,
+    const response = expenses.map((e) => ({
+      expense_id: e.expense_id,
+      amount: e.amount,
+      description: e.description,
+      type: e.type === "RECURRING" ? "recurring" : "one-time",
+      date: e.expense_date,
+      startDate: e.start_date,
+      endDate: e.end_date,
+      last_processed: e.last_processed,
+      user_id: e.user_id,
+      categoryId: e.category_id,
+      category: e.category,
+      receipt_url: e.receipt_url ?? null,
+      receipt_mime: e.receipt_mime ?? null,
+      receipt_size: e.receipt_size ?? null,
+      has_receipt: Boolean(e.receipt_url),
     }));
 
     return { success: true, data: response };
@@ -217,36 +268,25 @@ export const getAllExpenses = async (userId, filters = {}) => {
   }
 };
 
-/**
- * Update an expense
- * @param {string|number} expenseId - The expense ID
- * @param {string|number} userId - The user ID
- * @param {Object} updateData - The data to update
- * @returns {Promise<Object>} Result object with success status and data/error
- */
-export const updateExpense = async (expenseId, userId, updateData) => {
+// ---------------------------------------------------------------------
+// UPDATE
+export const updateExpense = async (
+  expenseId,
+  userId,
+  updateData,
+  receiptFile = null
+) => {
   try {
-    const existingExpense = await prisma.expense.findFirst({
-      where: {
-        expense_id: parseInt(expenseId),
-        user_id: parseInt(userId),
-      },
+    const existing = await prisma.expense.findFirst({
+      where: { expense_id: parseInt(expenseId), user_id: parseInt(userId) },
+      select: { receipt_url: true },
     });
-
-    if (!existingExpense) {
+    if (!existing) {
       return { success: false, error: "Expense not found or access denied" };
     }
 
-    const {
-      amount,
-      date,
-      categoryId,
-      description,
-      type,
-      startDate,
-      endDate,
-      receipt_upload,
-    } = updateData;
+    const { amount, date, categoryId, description, type, startDate, endDate } =
+      updateData;
 
     const data = {
       ...(amount !== undefined && {
@@ -254,7 +294,6 @@ export const updateExpense = async (expenseId, userId, updateData) => {
       }),
       ...(description !== undefined && { description }),
       ...(categoryId !== undefined && { category_id: parseInt(categoryId) }),
-      ...(receipt_upload !== undefined && { receipt_upload }),
     };
 
     if (type === "one-time") {
@@ -269,72 +308,101 @@ export const updateExpense = async (expenseId, userId, updateData) => {
       data.expense_date = null;
     }
 
-    const updatedExpense = await prisma.expense.update({
-      where: {
-        expense_id: parseInt(expenseId),
-      },
+    const updated = await prisma.expense.update({
+      where: { expense_id: parseInt(expenseId) },
       data,
-      include: {
-        category: true,
-      },
+      include: { category: true },
     });
 
-    // Transform response to match API format (avoid duplicate snake_case + camelCase)
-    const response = {
-      expense_id: updatedExpense.expense_id,
-      amount: updatedExpense.amount,
-      description: updatedExpense.description,
-      type: updatedExpense.type === "RECURRING" ? "recurring" : "one-time",
-      receipt_upload: updatedExpense.receipt_upload,
-      date: updatedExpense.expense_date,
-      startDate: updatedExpense.start_date,
-      endDate: updatedExpense.end_date,
-      last_processed: updatedExpense.last_processed,
-      user_id: updatedExpense.user_id,
-      categoryId: updatedExpense.category_id,
-      category: updatedExpense.category,
-    };
+    if (receiptFile) {
+      assertFileOk(receiptFile);
+      if (existing.receipt_url) {
+        await deletePublicFileByUrl(existing.receipt_url);
+      }
+      const { url } = await uploadPublicFile({
+        userId: updated.user_id,
+        expenseId: updated.expense_id,
+        file: receiptFile,
+      });
 
-    return { success: true, data: response };
+      const withReceipt = await prisma.expense.update({
+        where: { expense_id: updated.expense_id },
+        data: {
+          receipt_url: url,
+          receipt_mime: receiptFile.mimetype,
+          receipt_size: receiptFile.size,
+        },
+        include: { category: true },
+      });
+
+      return {
+        success: true,
+        data: {
+          expense_id: withReceipt.expense_id,
+          amount: withReceipt.amount,
+          description: withReceipt.description,
+          type: withReceipt.type === "RECURRING" ? "recurring" : "one-time",
+          date: withReceipt.expense_date,
+          startDate: withReceipt.start_date,
+          endDate: withReceipt.end_date,
+          last_processed: withReceipt.last_processed,
+          user_id: withReceipt.user_id,
+          categoryId: withReceipt.category_id,
+          category: withReceipt.category,
+          receipt_url: withReceipt.receipt_url ?? null,
+          receipt_mime: withReceipt.receipt_mime ?? null,
+          receipt_size: withReceipt.receipt_size ?? null,
+          has_receipt: Boolean(withReceipt.receipt_url),
+        },
+      };
+    }
+    return {
+      success: true,
+      data: {
+        expense_id: updated.expense_id,
+        amount: updated.amount,
+        description: updated.description,
+        type: updated.type === "RECURRING" ? "recurring" : "one-time",
+        date: updated.expense_date,
+        startDate: updated.start_date,
+        endDate: updated.end_date,
+        last_processed: updated.last_processed,
+        user_id: updated.user_id,
+        categoryId: updated.category_id,
+        category: updated.category,
+        receipt_url: existing.receipt_url ?? null,
+        has_receipt: Boolean(existing.receipt_url),
+      },
+    };
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2025") {
+      if (error.code === "P2025")
         return { success: false, error: "Expense not found" };
-      }
-      if (error.code === "P2003") {
+      if (error.code === "P2003")
         return { success: false, error: "Invalid categoryId" };
-      }
     }
     console.error("Error in updateExpense:", error);
     return { success: false, error: error.message };
   }
 };
 
-/**
- * Delete an expense
- * @param {string|number} expenseId - The expense ID
- * @param {string|number} userId - The user ID
- * @returns {Promise<Object>} Result object with success status and data/error
- */
+// ---------------------------------------------------------------------
+// DELETE
 export const deleteExpense = async (expenseId, userId) => {
   try {
-    const existingExpense = await prisma.expense.findFirst({
-      where: {
-        expense_id: parseInt(expenseId),
-        user_id: parseInt(userId),
-      },
+    const existing = await prisma.expense.findFirst({
+      where: { expense_id: parseInt(expenseId), user_id: parseInt(userId) },
+      select: { receipt_url: true },
     });
-
-    if (!existingExpense) {
+    if (!existing) {
       return { success: false, error: "Expense not found or access denied" };
     }
 
-    await prisma.expense.delete({
-      where: {
-        expense_id: parseInt(expenseId),
-      },
-    });
+    if (existing.receipt_url) {
+      await deletePublicFileByUrl(existing.receipt_url);
+    }
 
+    await prisma.expense.delete({ where: { expense_id: parseInt(expenseId) } });
     return { success: true, data: { id: expenseId } };
   } catch (error) {
     if (

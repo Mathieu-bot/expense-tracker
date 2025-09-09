@@ -3,8 +3,10 @@ import type React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, useToast, Skeleton, Select } from "../ui";
 import { ExpenseService } from "../services/ExpenseService";
+import { Loader2 } from "lucide-react";
 import { useCategories } from "../hooks/useCategories";
 import type { Expense, UpdateExpenseRequest, ExpenseType } from "../types/Expense";
+
 
 export const EditExpense = () => {
   const { id } = useParams<{ id: string }>();
@@ -14,6 +16,7 @@ export const EditExpense = () => {
 
   const [expense, setExpense] = useState<Expense | null>(null);
   const [loading, setLoading] = useState(true);
+  const [updateLoading, setUpdateLoading] = useState(false);
   // Local editable copy, synced after expense loads
   const [local, setLocal] = useState<UpdateExpenseRequest>({});
 
@@ -21,6 +24,7 @@ export const EditExpense = () => {
     const fetchExpense = async () => {
       if (!id) return;
       try {
+        setLoading(true);
         const exp = await ExpenseService.getExpenseById(id);
         setExpense(exp);
       } catch {
@@ -44,20 +48,24 @@ export const EditExpense = () => {
       startDate: expense.startDate ?? undefined,
       endDate: expense.endDate ?? undefined,
       categoryId: String(expense.categoryId),
-      receipt: undefined,
+      receipt_url: expense.receipt_url,
     });
   }, [expense]);
 
   const handleSave = async (form: UpdateExpenseRequest) => {
     if (!id) return;
     try {
+      setUpdateLoading(true);
       await ExpenseService.updateExpense(id, form);
       toast.success("Expense updated successfully");
       navigate("/expenses");
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to update expense";
+      const message =
+        error instanceof Error ? error.message : "Failed to update expense";
       toast.error(message);
       throw error;
+    } finally {
+      setUpdateLoading(false);
     }
   };
 
@@ -67,7 +75,7 @@ export const EditExpense = () => {
 
   if (loading) {
     return (
-      <div className="p-6 max-w-2xl mx-auto pt-20">
+      <div className="p-6 max-w-2xl mx-auto pt-30">
         <Skeleton variant="rect" height={400} rounded="rounded-lg" />
       </div>
     );
@@ -81,11 +89,14 @@ export const EditExpense = () => {
     );
   }
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const onChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setLocal((f) => ({
       ...f,
-      [name]: name === "amount" ? (value === "" ? undefined : Number(value)) : value,
+      [name]:
+        name === "amount" ? (value === "" ? undefined : Number(value)) : value,
     }));
   };
 
@@ -113,6 +124,7 @@ export const EditExpense = () => {
       endDate: local.type === "recurring" ? local.endDate : undefined,
       categoryId: local.categoryId,
       receipt: local.receipt,
+      receipt_url: local.receipt_url,
     };
     await handleSave(payload);
   };
@@ -120,7 +132,11 @@ export const EditExpense = () => {
   return (
     <div className="p-6 max-w-2xl mx-auto pt-20 text-light">
       <div className="flex items-center mb-6">
-        <Button onClick={handleCancel} className="mr-4 border border-gray-300" size="small">
+        <Button
+          onClick={handleCancel}
+          className="mr-4 border border-gray-300"
+          size="small"
+        >
           ← Back
         </Button>
         <h1 className="text-2xl font-semibold">Edit Expense</h1>
@@ -215,6 +231,20 @@ export const EditExpense = () => {
           )}
         </div>
 
+        {local.receipt_url ? (
+          <div>
+            <label className="block text-xl text-red-600 font-bold mb-1">
+              A receipt is already attached
+            </label>
+            <input
+              name="receipt_url"
+              type="text"
+              value={local.receipt_url || ""}
+              onChange={onChange}
+              className="w-full rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
+            />
+          </div>
+        ) : null}
         <div>
           <label className="block text-sm mb-1">Receipt (replace)</label>
           <input type="file" onChange={onFile} />
@@ -224,7 +254,16 @@ export const EditExpense = () => {
           <Button onClick={handleCancel} className="border border-gray-300">
             Cancel
           </Button>
-          <Button onClick={onSubmit}>Save Changes</Button>
+          <Button onClick={onSubmit}>
+            {updateLoading ? (
+              <div className="flex items-center gap-3">
+                <Loader2 className="animate-spin" />
+                Saving your changes
+              </div>
+            ) : (
+              "Save Changes"
+            )}
+          </Button>
         </div>
       </div>
     </div>

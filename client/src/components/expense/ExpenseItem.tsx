@@ -30,9 +30,9 @@ const ExpenseItem = ({ e, refetch }: ExpenseListProps) => {
       </div>
       <div className="text-right font-semibold">{formatCurrency(e.amount)}</div>
       <div className="flex gap-2 justify-end">
-        {e.receipt_upload ? (
+        {e.receipt_url ? (
           <a
-            href={e.receipt_upload}
+            href={e.receipt_url}
             target="_blank"
             rel="noreferrer"
             className="px-2 py-1 text-xs rounded-md bg-white/10 hover:bg-white/15 border border-white/10"

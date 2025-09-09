@@ -131,7 +131,11 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
 
   const handleDateChange = (date: Date | null) => {
     if (date) {
-      const dateString = new Date(date).toISOString().split("T")[0];
+      const dateString = new Date(date as Date).toLocaleDateString("fr-CA", {
+        year: "numeric",
+        day: "numeric",
+        month: "numeric",
+      });
       handleChange("date", dateString);
     }
   };
@@ -172,7 +176,10 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
             />
 
             <foreignObject x={8} y={8} width={84} height={134}>
-              <form onSubmit={handleSubmit} className="flex flex-col h-full mt-1">
+              <form
+                onSubmit={handleSubmit}
+                className="flex flex-col h-full mt-1"
+              >
                 <DatePicker
                   value={formData.date ? new Date(formData.date) : null}
                   onChange={handleDateChange}

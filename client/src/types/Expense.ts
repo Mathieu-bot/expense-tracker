@@ -1,4 +1,4 @@
-export type ExpenseType = 'one-time' | 'recurring';
+export type ExpenseType = "one-time" | "recurring";
 
 export type Category = {
   category_id: number;
@@ -10,7 +10,6 @@ export type Expense = {
   amount: number;
   description: string | null;
   type: ExpenseType;
-  receipt_upload: string | null;
   date: string | null; // for one-time
   startDate: string | null; // for recurring
   endDate: string | null; // for recurring
@@ -18,6 +17,9 @@ export type Expense = {
   user_id: number;
   categoryId: number;
   category?: Category;
+  receipt_url: string | null;
+  receipt_mime: string | null;
+  receipt_size: number | null;
 };
 
 export type CreateExpenseRequest = {
@@ -28,9 +30,12 @@ export type CreateExpenseRequest = {
   type?: ExpenseType;
   startDate?: string; // required if recurring
   endDate?: string;
-  receipt?: File;
+  receipt?: File | null;
+  receipt_url? : string | null
 };
 
-export type UpdateExpenseRequest = Partial<Omit<CreateExpenseRequest, 'categoryId'>> & {
+export type UpdateExpenseRequest = Partial<
+  Omit<CreateExpenseRequest, "categoryId">
+> & {
   categoryId?: string;
 };

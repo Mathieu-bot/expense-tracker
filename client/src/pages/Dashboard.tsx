@@ -18,12 +18,15 @@ import {
 } from "../utils/evolutionBetweenValues";
 import MonthlyBarChart from "../components/dashboard/MonthlyBarchart";
 import DateRangeFilter from "../components/dashboard/DateRangeFilter";
+import ShowTipsButton from "../components/aiAdvice/ShowTipsButton";
+import AIAdvice from "../components/aiAdvice/AIAdvice";
 
 function Dashboard() {
   const { data: summaryAlert } = useSummaryAlert();
   const [alertOpen, setAlertOpen] = useState<boolean>(true);
   const { data: lastSixthMonthSummary } = useLastSixthMonthSummary();
   const now = new Date();
+  const [showTips, setShowTips] = useState<boolean>(false);
 
   const defaultStartDate = new Date(
     now.getFullYear(),
@@ -85,9 +88,10 @@ function Dashboard() {
             lastMonthSummary?.totalIncome ?? 0,
             thisMonthSummary?.totalIncome ?? 0
           ) ?? 0,
+        href: "/incomes/new",
       },
       {
-        label: "Expenses",
+        label: "Expense",
         value: totalExpense,
         icon: ReceiptCent,
         deltaPct:
@@ -109,6 +113,7 @@ function Dashboard() {
           )! >= 0
             ? "bg-rose-500/20"
             : null,
+        href: "/expenses/new",
       },
     ],
     [
@@ -196,7 +201,7 @@ function Dashboard() {
   };
 
   return (
-    <div className="min-w-screen max-h-screen pt-26 md:pl-30 md:pr-22 flex flex-col items-center gap-10 md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 z-30">
+    <div className="min-w-screen max-h-screen pt-26 md:pl-30 md:pr-22 flex flex-col items-center gap-10 md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
       {summaryAlert.alert && (
         <SummaryAlert
           alert={summaryAlert.alert}
@@ -205,6 +210,9 @@ function Dashboard() {
           setIsOpen={setAlertOpen}
         />
       )}
+      <ShowTipsButton open={showTips} setOpen={setShowTips} />
+      <AIAdvice open={showTips} setOpen={setShowTips} />
+
       <div className="col-span-3 flex flex-col w-full px-5 gap-5">
         {/* FILTER */}
         <div className="flex items-center text-foreground justify-between">
