@@ -28,7 +28,6 @@ export const createExpenseCategory = async (userId, data) => {
   return prisma.expenseCategory.create({
     data: {
       category_name: data.category_name,
-      icon_url: data.icon_url,
       is_custom: true,
       user: { connect: { user_id: userId } },
     },
@@ -55,7 +54,7 @@ export const updateExpenseCategory = async (id, userId, data) => {
 
   return prisma.expenseCategory.update({
     where: { category_id: categoryId },
-    data: { category_name: data.category_name, icon_url: data.icon_url },
+    data: { category_name: data.category_name },
   });
 };
 
