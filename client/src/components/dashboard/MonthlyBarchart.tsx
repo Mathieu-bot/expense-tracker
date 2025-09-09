@@ -99,7 +99,7 @@ const MonthlyBarChart: React.FC<MonthlyBarChartProps> = ({ data }) => {
             tick={{ fill: "currentColor" }}
             className="text-gray-700 dark:text-gray-300"
           />
-          <Tooltip content={<CustomTooltip />} animationDuration={300} />
+          <Tooltip content={<CustomTooltip />} animationDuration={300} cursor={{ fill: "rgba(59, 130, 246, 0.09)", stroke: "rgba(59, 130, 246, 0.3)" }} />
           {visibleBars.spending && (
             <Bar
               dataKey="totalExpense"
