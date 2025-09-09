@@ -1,6 +1,6 @@
 import React, { useMemo, useState, type SetStateAction } from "react";
 import { useAIAdvice } from "../../hooks/useAiAdvice";
-import { Lightbulb } from "lucide-react";
+import { Expand, Lightbulb, RefreshCcw, X } from "lucide-react";
 
 type AIAdviceProps = {
   open: boolean;
@@ -51,7 +51,7 @@ export default function AIAdvice({ open, setOpen }: AIAdviceProps) {
             aria-label="Refresh tips"
             disabled={loading}
           >
-            ⟳
+            <RefreshCcw size={16} />
           </button>
           <button
             type="button"
@@ -60,7 +60,7 @@ export default function AIAdvice({ open, setOpen }: AIAdviceProps) {
             title={minimized ? "Expand" : "Minimize"}
             aria-label={minimized ? "Expand tips" : "Minimize tips"}
           >
-            {minimized ? "▣" : "▭"}
+            {minimized ? <Expand size={16} /> : "–"}
           </button>
           <button
             type="button"
@@ -71,7 +71,7 @@ export default function AIAdvice({ open, setOpen }: AIAdviceProps) {
             title="Close"
             aria-label="Close"
           >
-            ✕
+            <X size={16} />
           </button>
         </div>
       </div>
