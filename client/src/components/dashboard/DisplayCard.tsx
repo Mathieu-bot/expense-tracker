@@ -139,7 +139,7 @@ export default function MiniStatCard({
         )}
       </div>
 
-      <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-accent to-transparent opacity-50" />
+      <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-accent/60 to-transparent" />
     </div>
   );
 }

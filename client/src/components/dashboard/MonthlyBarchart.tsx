@@ -53,17 +53,6 @@ const MonthlyBarChart: React.FC<MonthlyBarChartProps> = ({ data }) => {
             className={`px-6 py-2 font-medium transition-all border-none duration-300 flex items-center gap-2 ${
               !visibleBars.spending && "text-gray-600 dark:text-gray-300"
             }`}
-            onMouseEnter={(e) => {
-              if (!visibleBars.spending) {
-                (e.currentTarget as HTMLButtonElement).style.color =
-                  COLORS.spending;
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!visibleBars.spending) {
-                (e.currentTarget as HTMLButtonElement).style.color = "";
-              }
-            }}
           >
             <span>Expense</span>
             <span className="text-xs opacity-80">
@@ -82,17 +71,6 @@ const MonthlyBarChart: React.FC<MonthlyBarChartProps> = ({ data }) => {
             className={`px-6 py-2 font-medium transition-all border-none duration-300 flex items-center gap-2 ${
               !visibleBars.income && "text-gray-600 dark:text-gray-300"
             }`}
-            onMouseEnter={(e) => {
-              if (!visibleBars.income) {
-                (e.currentTarget as HTMLButtonElement).style.color =
-                  COLORS.income;
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!visibleBars.income) {
-                (e.currentTarget as HTMLButtonElement).style.color = "";
-              }
-            }}
           >
             <span>Income</span>
             <span className="text-xs opacity-80">
