@@ -81,11 +81,11 @@ export default function AIAdvice({ open, setOpen }: AIAdviceProps) {
         <div className="px-4 pb-4">
           {loading ? (
             <div className="flex items-center gap-2 text-sm">
-              <span className="font-medium">AI is thinking</span>
+              <span className="font-medium">Generating your answers</span>
               <span className="flex gap-1">
-                <span className="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:0ms]" />
-                <span className="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:150ms]" />
-                <span className="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:300ms]" />
+                <span className="w-2 h-2 rounded-full bg-violet-500 animate-bounce [animation-delay:0ms]" />
+                <span className="w-2 h-2 rounded-full bg-violet-500 animate-bounce [animation-delay:150ms]" />
+                <span className="w-2 h-2 rounded-full bg-violet-500 animate-bounce [animation-delay:300ms]" />
               </span>
             </div>
           ) : error ? (
