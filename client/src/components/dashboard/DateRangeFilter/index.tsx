@@ -62,17 +62,17 @@ const DateRangeFilter = ({
       <div className="flex gap-2">
         <button
           onClick={() => setIsModalOpen(true)}
-          className="p-0 w-10 h-10 flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white rounded-full transition-colors shadow-sm"
+          className="p-0 border-none w-10 h-10 flex items-center justify-center bg-white/80 dark:bg-blue-600 hover:bg-white/60 dark:hover:bg-blue-700 text-primary dark:text-white rounded-full transition-colors shadow-sm"
         >
           <Calendar className="w-4 h-4" />
         </button>
 
         {!isDefaultRange() && startDate && endDate && (
-          <div className="flex items-center gap-2 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 px-3 py-1.5 rounded-lg border border-blue-200 dark:border-blue-800">
+          <div className="flex items-center gap-2 bg-white/80 dark:bg-blue-900/20 text-primary dark:text-blue-200 px-3 py-1.5 rounded-lg border border-blue-200 dark:border-blue-800/30">
             <span className="text-sm font-medium">{getDisplayText()}</span>
             <button
               onClick={handleCloseFilter}
-              className="text-blue-600 p-0 border-none dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 transition-colors"
+              className="text-blue-900 p-0 border-none dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
