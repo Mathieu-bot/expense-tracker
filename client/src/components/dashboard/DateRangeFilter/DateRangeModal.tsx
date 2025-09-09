@@ -12,14 +12,20 @@ interface DateRangeModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: (startDate: string, endDate: string) => void;
+  onReset?: () => void;
   initialStartDate?: string;
   initialEndDate?: string;
+  defaultStartDate?: string;
+  defaultEndDate?: string;
 }
 
 const DateRangeModal = ({
   isOpen,
   onClose,
+  onReset,
   onConfirm,
+  defaultEndDate,
+  defaultStartDate,
   initialStartDate,
   initialEndDate,
 }: DateRangeModalProps) => {
@@ -67,7 +73,19 @@ const DateRangeModal = ({
   const handleConfirm = () => {
     const finalStartDate = startDate || new Date();
     const finalEndDate = endDate || new Date();
-    onConfirm(formatDateISO(finalStartDate), formatDateISO(finalEndDate));
+
+    const formattedStart = formatDateISO(finalStartDate); 
+    const formattedEnd = formatDateISO(finalEndDate); 
+
+    if (
+      formattedStart === defaultStartDate &&
+      formattedEnd === defaultEndDate
+    ) {
+      if (onReset) onReset(); 
+    } else {
+      onConfirm(formattedStart, formattedEnd);
+    }
+
     onClose();
   };
 
@@ -78,6 +96,8 @@ const DateRangeModal = ({
 
     setStartDate(firstDay);
     setEndDate(lastDay);
+
+    if (onReset) onReset();
   };
 
   if (!isOpen) return null;
@@ -123,7 +143,7 @@ const DateRangeModal = ({
             size="medium"
             fullWidth
             startIcon={<X className="w-4 h-4" />}
-            className="bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200 border border-gray-300 dark:border-gray-600"
+            className="bg-gray-200/80 hover:bg-gray-200/50 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200 border border-gray-300 dark:border-gray-600"
           >
             Reset
           </Button>
@@ -132,7 +152,7 @@ const DateRangeModal = ({
             size="medium"
             fullWidth
             startIcon={<Check className="w-4 h-4" />}
-            className="bg-accent hover:bg-accent/90 text-white"
+            className="bg-accent/80 hover:bg-accent/50 text-white"
           >
             Confirm
           </Button>

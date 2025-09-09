@@ -180,11 +180,15 @@ function Dashboard() {
   // };
 
   /* Event Handler */
-  const handleDateRangeChange = (newStartDate: string, newEndDate: string) => {
-    setFilterWasUsed(true);
-    setStartDate(newStartDate);
-    setEndDate(newEndDate);
-  };
+const handleDateRangeChange = (newStartDate: string, newEndDate: string) => {
+  const isDefault =
+    newStartDate === defaultStartDate && newEndDate === defaultEndDate;
+
+  setFilterWasUsed(!isDefault); //false if default, true otherwise
+  setStartDate(newStartDate);
+  setEndDate(newEndDate);
+};
+
 
   const handleDateRangeReset = () => {
     setFilterWasUsed(false);

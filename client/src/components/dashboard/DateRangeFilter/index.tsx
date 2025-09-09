@@ -74,7 +74,7 @@ const DateRangeFilter = ({
               onClick={handleCloseFilter}
               className="text-blue-600 p-0 border-none dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 transition-colors"
             >
-              <X className="w-4 h-4"/>
+              <X className="w-4 h-4" />
             </button>
           </div>
         )}
@@ -86,6 +86,9 @@ const DateRangeFilter = ({
         onConfirm={handleConfirm}
         initialStartDate={startDate}
         initialEndDate={endDate}
+        onReset={onReset}
+        defaultStartDate={defaultStart.toISOString().slice(0, 10)}
+        defaultEndDate={defaultEnd.toISOString().slice(0, 10)}
       />
     </div>
   );
