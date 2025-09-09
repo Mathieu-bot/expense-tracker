@@ -31,10 +31,10 @@ const DateRangeModal = ({
 }: DateRangeModalProps) => {
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
   const [startDate, setStartDate] = useState<Date | null>(
-    initialStartDate ? parseISO(initialStartDate) : new Date()
+    initialStartDate ? parseISO(initialStartDate) : null
   );
   const [endDate, setEndDate] = useState<Date | null>(
-    initialEndDate ? parseISO(initialEndDate) : new Date()
+    initialEndDate ? parseISO(initialEndDate) : null
   );
 
   useEffect(() => {
@@ -71,11 +71,10 @@ const DateRangeModal = ({
   };
 
   const handleConfirm = () => {
-    const finalStartDate = startDate || new Date();
-    const finalEndDate = endDate || new Date();
-
-    const formattedStart = formatDateISO(finalStartDate); 
-    const formattedEnd = formatDateISO(finalEndDate); 
+    if (!startDate || !endDate) return; 
+    
+    const formattedStart = formatDateISO(startDate); 
+    const formattedEnd = formatDateISO(endDate); 
 
     if (
       formattedStart === defaultStartDate &&
@@ -99,6 +98,8 @@ const DateRangeModal = ({
 
     if (onReset) onReset();
   };
+
+  const isSelectionComplete = startDate !== null && endDate !== null;
 
   if (!isOpen) return null;
 
@@ -152,7 +153,12 @@ const DateRangeModal = ({
             size="medium"
             fullWidth
             startIcon={<Check className="w-4 h-4" />}
-            className="bg-accent/80 hover:bg-accent/50 text-white"
+            className={`${
+              isSelectionComplete
+                ? "bg-accent/80 hover:bg-accent/50 text-white"
+                : "bg-gray-300/50 text-gray-500 cursor-not-allowed"
+            }`}
+            disabled={!isSelectionComplete}
           >
             Confirm
           </Button>
