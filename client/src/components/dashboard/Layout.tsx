@@ -17,7 +17,7 @@ export default function Layout({
       {title && (
         <h2
           className={
-            "text-white font-semibold text-xl text-center " + titleClassName
+            "dark:text-light/90 text-gray-800 font-semibold text-xl text-center " + titleClassName
           }
         >
           {title}

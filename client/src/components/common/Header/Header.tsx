@@ -144,7 +144,7 @@ const DashboardHeader = () => {
           </div>
 
           <div className="hidden lg:flex lg:flex-col">
-            <h1 className="text-2xl font-bold">
+            <h1 className="text-2xl font-bold text-light/90">
               {getWelcomeMessage()}
               {user && (
                 <span className= {`bg-clip-text text-transparent ${shouldShowGlassmorphism ? "bg-accent " : "bg-[#ffdd33]"}`}>
@@ -217,7 +217,7 @@ const DashboardHeader = () => {
                 className={`text-xs group-hover:text-primary/80 transition-colors duration-300 ${
                   shouldShowGlassmorphism
                     ? "text-gray-600 dark:text-white/70 dark:group-hover:text-amber-100/80"
-                    : "text-white/70 group-hover:text-amber-100/80 dark:text-white/70 dark:group-hover:text-amber-100/80"
+                    : "text-white/70 group-hover:text-amber-100/80 dark:text-lgiht/90 dark:group-hover:text-amber-100/80"
                 }`}
               >
                 @{getUsername()}

@@ -108,7 +108,7 @@ const DateRangeModal = ({
       onClick={onClose}
     >
       <div
-        className="bg-white/95 dark:bg-primary-light/20 rounded-2xl p-10 border border-gray-200 dark:border-gray-700 shadow-xl w-full max-w-md transform transition-all duration-300 scale-100 opacity-100"
+        className="bg-white/95 dark:bg-primary/75 rounded-2xl p-10 border border-gray-200 dark:border-gray-700 shadow-xl w-full max-w-md transform transition-all duration-300 scale-100 opacity-100"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="absolute top-3 right-3">
@@ -143,7 +143,7 @@ const DateRangeModal = ({
             size="medium"
             fullWidth
             startIcon={<X className="w-4 h-4" />}
-            className="bg-gray-200/80 hover:bg-gray-200/50 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200 border border-gray-300 dark:border-gray-600"
+            className="bg-gray-100/50 hover:bg-gray-100/80 text-gray-800 dark:bg-gray-700/50 dark:hover:bg-gray-600/50 dark:text-gray-200 border border-gray-300 dark:border-gray-600"
           >
             Reset
           </Button>

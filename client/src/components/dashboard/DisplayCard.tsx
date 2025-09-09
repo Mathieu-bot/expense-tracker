@@ -77,7 +77,7 @@ export default function MiniStatCard({
     <div
       ref={cardRef}
       className={`
-        relative bg-white/80 dark:bg-transparent dark:bg-gradient-to-br dark:from-primary/20 dark:to-gray-800/20 
+        relative bg-white/80 dark:bg-transparent dark:bg-gradient-to-br dark:from-primary/20 dark:to-primary-dark/10 
         backdrop-blur-xl rounded-2xl py-4 px-5 
         shadow-lg transition-all duration-500 flex flex-col gap-3 overflow-hidden
         transform-gpu hover:shadow-lg dark:hover:shadow-accent/10
@@ -110,7 +110,7 @@ export default function MiniStatCard({
           className={`text-2xl font-semibold tracking-tight transition-all duration-300 ${
             value < 0
               ? "text-rose-600 dark:text-rose-400"
-              : "text-gray-800 dark:text-white"
+              : "text-gray-800 dark:text-light/90"
           }`}
         >
           {valueStr}

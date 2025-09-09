@@ -15,7 +15,7 @@ import { useTheme } from "../../contexts/ThemeContext";
 const COLORS = {
   spending: "#FF8042",
   income: "#00C49F",
-}
+};
 
 interface MonthlyBarChartProps {
   data: { month: string; totalExpense: number; totalIncome: number }[];
@@ -42,7 +42,7 @@ const MonthlyBarChart: React.FC<MonthlyBarChartProps> = ({ data }) => {
   );
 
   return (
-    <div className="bg-white/80 dark:bg-gradient-to-br dark:bg-transparent dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl shadow-lg border border-gray-200/70 dark:border-white/5 p-6 w-full h-[380px] flex flex-col">
+    <div className="bg-white/80 dark:bg-gradient-to-br dark:bg-transparent dark:from-primary/20 dark:to-primary-dark/10  backdrop-blur-xl rounded-2xl shadow-lg border border-gray-200/70 dark:border-white/5 p-6 w-full h-[380px] flex flex-col">
       <div className="relative mt-3 ml-3 flex mb-6">
         <div className="flex border border-gray-400/30 dark:border-white/10 rounded-xl overflow-hidden">
           <button

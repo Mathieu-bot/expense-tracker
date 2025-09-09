@@ -42,7 +42,7 @@ export default function PieGraph({
     <Layout
       title={title}
       graphClassName={heightClass}
-      titleClassName="text-center!"
+      titleClassName="text-center! mt-5"
     >
       <ResponsiveContainer width="100%" height="100%">
         <PieChart margin={{ top: 20, right: 10, bottom: 10, left: 10 }}>
@@ -82,7 +82,7 @@ export default function PieGraph({
                           className="inline-block w-3 h-3 rounded-full"
                           style={{ background: p.color }}
                         />
-                        <span className="text-white/90">{p.value}</span>
+                        <span className="dark:text-light/90 text-gray-800">{p.value}</span>
                       </li>
                     )
                 )}
@@ -91,7 +91,7 @@ export default function PieGraph({
           />
         </PieChart>
       </ResponsiveContainer>
-      <span className="text-white text-2xl font-semibold text-center block mt-4">
+      <span className="dark:text-light/90 text-gray-800 text-2xl font-semibold text-center block mt-4">
         Total: <br />
         {formatCurrency(total)}
       </span>

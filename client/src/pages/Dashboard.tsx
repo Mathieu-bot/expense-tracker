@@ -180,15 +180,14 @@ function Dashboard() {
   // };
 
   /* Event Handler */
-const handleDateRangeChange = (newStartDate: string, newEndDate: string) => {
-  const isDefault =
-    newStartDate === defaultStartDate && newEndDate === defaultEndDate;
+  const handleDateRangeChange = (newStartDate: string, newEndDate: string) => {
+    const isDefault =
+      newStartDate === defaultStartDate && newEndDate === defaultEndDate;
 
-  setFilterWasUsed(!isDefault); //false if default, true otherwise
-  setStartDate(newStartDate);
-  setEndDate(newEndDate);
-};
-
+    setFilterWasUsed(!isDefault); //false if default, true otherwise
+    setStartDate(newStartDate);
+    setEndDate(newEndDate);
+  };
 
   const handleDateRangeReset = () => {
     setFilterWasUsed(false);
@@ -206,7 +205,7 @@ const handleDateRangeChange = (newStartDate: string, newEndDate: string) => {
           setIsOpen={setAlertOpen}
         />
       )}
-      <div className="col-span-3 flex flex-col gap-5">
+      <div className="col-span-3 flex flex-col w-full px-5 gap-5">
         {/* FILTER */}
         <div className="flex items-center text-foreground justify-between">
           <div className="flex gap-5 items-center">
@@ -234,7 +233,13 @@ const handleDateRangeChange = (newStartDate: string, newEndDate: string) => {
         <MonthlyBarChart data={lastSixthMonthSummary} />
       </div>
       {/* PIE */}
-      <div className="lg:col-span-1 flex flex-col md:h-full items-center gap-4 w-full md:bg-white/5 backdrop-blur-2xl py-2 px-5 rounded-lg">
+      <div
+        className="lg:col-span-1 flex flex-col md:h-full items-center gap-4 w-full 
+            bg-white/80 
+            dark:bg-transparent dark:bg-gradient-to-br dark:from-primary/20 dark:to-primary-dark/10
+            backdrop-blur-xl
+            py-2 px-5 rounded-lg"
+      >
         <PieGraph title={"Expense Overview"} data={expenses} />
       </div>
     </div>
