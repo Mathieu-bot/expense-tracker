@@ -126,6 +126,7 @@ const Select = <T extends string | number = string>({
       id={`${id}-listbox`}
       className={listCls}
       style={{ left: coords.left, top: coords.top, width: coords.width }}
+      onMouseLeave={() => setActiveIndex(-1)}
     >
       {filtered.map((opt, idx) => (
         <li
@@ -133,7 +134,7 @@ const Select = <T extends string | number = string>({
           role="option"
           aria-selected={opt.value === value}
           aria-disabled={opt.disabled || undefined}
-          className={[optionBase, idx === activeIndex ? 'bg-gray-100' : ''].filter(Boolean).join(' ')}
+          className={[optionBase, idx === activeIndex ? 'bg-black/10 dark:bg-white/10' : ''].filter(Boolean).join(' ')}
           onMouseEnter={() => setActiveIndex(idx)}
           onClick={() => {
             if (opt.disabled) return;
