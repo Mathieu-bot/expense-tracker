@@ -26,10 +26,10 @@ export const useAIAdvice = (): AdviceState => {
 
   const prompt = useMemo(
     () => `
-You are a budgeting coach. Using the JSON below, return ONE short message (max 60 words) with 2–3 concrete tips to improve cash flow THIS MONTH. Currency: Dollar ($).Also format correctly the number(ex: $10000 -> $10K).
+You are a budgeting coach. Using the JSON below, return ONE short message (max 60 words) with 2–3 concrete tips to improve cash flow THIS MONTH. Currency: Dollar ($).Also format correctly the number(ex: $10000 -> $10K).You can especially point out any areas that need improvement or an unnecessary expense but it's not obligatory. Give also advice about income and saving money
 
 Constraints:
-- Plain text only (no Markdown, no headings)
+- Plain text only (no lists, no headings)
 - Do NOT show totals, percentages, or category lists
 - Friendly, direct, imperative tone
 
