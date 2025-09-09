@@ -144,7 +144,7 @@ const DashboardHeader = () => {
           </div>
 
           <div className="hidden lg:flex lg:flex-col">
-            <h1 className="text-2xl font-bold text-light/90">
+            <h1 className="text-2xl font-bold">
               {getWelcomeMessage()}
               {user && (
                 <span className= {`bg-clip-text text-transparent ${shouldShowGlassmorphism ? "bg-accent " : "bg-[#ffdd33]"}`}>
@@ -156,7 +156,7 @@ const DashboardHeader = () => {
               className={`font-light text-sm ${
                 shouldShowGlassmorphism
                   ? "text-gray-900 dark:text-indigo-100/90"
-                  : "text-white/90"
+                  : "text-light/90"
               }`}
             >
               Track all your transactions with PennyPal
