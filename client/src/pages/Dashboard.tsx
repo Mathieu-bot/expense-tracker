@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Percent, ReceiptCent, Wallet, X } from "lucide-react";
+import { Percent, ReceiptCent, Wallet } from "lucide-react";
 import PieGraph from "../components/dashboard/PieGraph";
 import { useIncomes } from "../hooks/useIncomes";
 import { computeValueTotal } from "../utils/computeValueTotal";
@@ -12,35 +12,41 @@ import {
 } from "../hooks/useSummary";
 import SummaryAlert from "../components/dashboard/SummaryAlert";
 import { useExpenses } from "../hooks/useExpenses";
-import { GlassDatePicker } from "../components/Income";
 import {
   computeEvolutionBetweenValues,
   computeSoldRatio,
 } from "../utils/evolutionBetweenValues";
 import MonthlyBarChart from "../components/dashboard/MonthlyBarchart";
+import DateRangeFilter from "../components/dashboard/DateRangeFilter";
+
 function Dashboard() {
   const { data: summaryAlert } = useSummaryAlert();
   const [alertOpen, setAlertOpen] = useState<boolean>(true);
   const { data: lastSixthMonthSummary } = useLastSixthMonthSummary();
   const now = new Date();
 
-  const [startDate, setStartDate] = useState<string>(
-    new Date(now.getFullYear(), now.getMonth(), 1).toLocaleDateString("fr-CA", {
-      year: "numeric",
-      day: "numeric",
-      month: "numeric",
-    })
-  );
-  const [endDate, setEndDate] = useState<string>(
-    new Date(now.getFullYear(), now.getMonth() + 1, 0).toLocaleDateString(
-      "fr-CA",
-      {
-        year: "numeric",
-        day: "numeric",
-        month: "numeric",
-      }
-    )
-  );
+  const defaultStartDate = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    1
+  ).toLocaleDateString("fr-CA", {
+    year: "numeric",
+    day: "numeric",
+    month: "numeric",
+  });
+
+  const defaultEndDate = new Date(
+    now.getFullYear(),
+    now.getMonth() + 1,
+    0
+  ).toLocaleDateString("fr-CA", {
+    year: "numeric",
+    day: "numeric",
+    month: "numeric",
+  });
+
+  const [startDate, setStartDate] = useState<string>(defaultStartDate);
+  const [endDate, setEndDate] = useState<string>(defaultEndDate);
   const [filterWasUsed, setFilterWasUsed] = useState<boolean>(false);
 
   /* Expense and incomes */
@@ -148,63 +154,42 @@ function Dashboard() {
   }
 
   /* Event Handler */
-  const handleDateChange = (e: Date, field: string) => {
-    setFilterWasUsed(true);
-    switch (field) {
-      case "start": {
-        const date = new Date(e as Date).toLocaleDateString("fr-CA", {
-          year: "numeric",
-          day: "numeric",
-          month: "numeric",
-        });
-        const newStart = new Date(date).toISOString().split("T")[0];
-        if (new Date(newStart) > new Date(endDate)) {
-          toast.error("Start date should be before end date");
-          return;
-        }
-        setStartDate(date);
-        break;
-      }
-      case "end": {
-        const date = new Date(e as Date).toLocaleDateString("fr-CA", {
-          year: "numeric",
-          day: "numeric",
-          month: "numeric",
-        });
 
-        const newEnd = new Date(date).toISOString().split("T")[0];
-        if (new Date(newEnd) < new Date(startDate)) {
-          toast.error("End date should be after start date");
-          return;
-        }
-        setEndDate(date);
-        break;
-      }
-    }
+  // const resetFilter = () => {
+  //   setStartDate(
+  //     new Date(now.getFullYear(), now.getMonth(), 1).toLocaleDateString(
+  //       "fr-CA",
+  //       {
+  //         year: "numeric",
+  //         day: "numeric",
+  //         month: "numeric",
+  //       }
+  //     )
+  //   );
+  //   setEndDate(
+  //     new Date(now.getFullYear(), now.getMonth() + 1, 0).toLocaleDateString(
+  //       "fr-CA",
+  //       {
+  //         year: "numeric",
+  //         day: "numeric",
+  //         month: "numeric",
+  //       }
+  //     )
+  //   );
+  //   setFilterWasUsed(false);
+  // };
+
+  /* Event Handler */
+  const handleDateRangeChange = (newStartDate: string, newEndDate: string) => {
+    setFilterWasUsed(true);
+    setStartDate(newStartDate);
+    setEndDate(newEndDate);
   };
 
-  const resetFilter = () => {
-    setStartDate(
-      new Date(now.getFullYear(), now.getMonth(), 1).toLocaleDateString(
-        "fr-CA",
-        {
-          year: "numeric",
-          day: "numeric",
-          month: "numeric",
-        }
-      )
-    );
-    setEndDate(
-      new Date(now.getFullYear(), now.getMonth() + 1, 0).toLocaleDateString(
-        "fr-CA",
-        {
-          year: "numeric",
-          day: "numeric",
-          month: "numeric",
-        }
-      )
-    );
+  const handleDateRangeReset = () => {
     setFilterWasUsed(false);
+    setStartDate(defaultStartDate);
+    setEndDate(defaultEndDate);
   };
 
   return (
@@ -219,28 +204,14 @@ function Dashboard() {
       )}
       <div className="col-span-3 flex flex-col gap-5">
         {/* FILTER */}
-
-        <div className="flex items-center text-white justify-between">
-          <h1 className="text-4xl pl-10 font-semibold">Filters</h1>
+        <div className="flex items-center text-foreground justify-between">
           <div className="flex gap-5 items-center">
-            <GlassDatePicker
-              value={new Date(startDate)}
-              onChange={(e) => handleDateChange(e!, "start")}
-              label="Start Date"
-              size="small"
+            <DateRangeFilter
+              startDate={startDate}
+              endDate={endDate}
+              onChange={handleDateRangeChange}
+              onReset={handleDateRangeReset}
             />
-            <GlassDatePicker
-              value={new Date(endDate)}
-              onChange={(e) => handleDateChange(e!, "end")}
-              label="End Date"
-              size="small"
-            />
-            <button
-              className="flex items-center gap-2 px-4 py-2 h-fit rounded-sm bg-red-700 outline-none"
-              onClick={resetFilter}
-            >
-              <X /> Reset
-            </button>
           </div>
         </div>
         {/* CARD */}
