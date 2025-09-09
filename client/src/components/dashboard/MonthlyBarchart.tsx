@@ -13,9 +13,9 @@ import { CustomTooltip } from "./Tooltip";
 import { useTheme } from "../../contexts/ThemeContext";
 
 const COLORS = {
-  spending: "rgba(244, 63, 94, 0.65)",
-  income: "rgba(16, 185, 129, 0.65)",
-};
+  spending: "#FF8042",
+  income: "#00C49F",
+}
 
 interface MonthlyBarChartProps {
   data: { month: string; totalExpense: number; totalIncome: number }[];
@@ -31,7 +31,7 @@ const MonthlyBarChart: React.FC<MonthlyBarChartProps> = ({ data }) => {
     setVisibleBars((prev) => ({ ...prev, [bar]: !prev[bar] }));
   };
 
-  const {isDark} = useTheme();
+  const { isDark } = useTheme();
 
   const totals = useMemo(
     () => ({
@@ -89,7 +89,13 @@ const MonthlyBarChart: React.FC<MonthlyBarChartProps> = ({ data }) => {
           margin={{ top: 20, right: 30 }}
           barCategoryGap="30%"
         >
-          <CartesianGrid stroke={`${isDark ? "rgba(200, 200, 200, 0.5)" : "rgba(100,100,100,1)"}`} strokeDasharray="3 3" className="opacity-40" />
+          <CartesianGrid
+            stroke={`${
+              isDark ? "rgba(200, 200, 200, 0.5)" : "rgba(100,100,100,1)"
+            }`}
+            strokeDasharray="3 3"
+            className="opacity-40"
+          />
           <XAxis
             dataKey="month"
             tick={{ fill: "currentColor" }}
@@ -99,7 +105,14 @@ const MonthlyBarChart: React.FC<MonthlyBarChartProps> = ({ data }) => {
             tick={{ fill: "currentColor" }}
             className="text-gray-700 dark:text-gray-300"
           />
-          <Tooltip content={<CustomTooltip />} animationDuration={300} cursor={{ fill: "rgba(59, 130, 246, 0.09)", stroke: "rgba(59, 130, 246, 0.3)" }} />
+          <Tooltip
+            content={<CustomTooltip />}
+            animationDuration={300}
+            cursor={{
+              fill: "rgba(59, 130, 246, 0.09)",
+              stroke: "rgba(59, 130, 246, 0.3)",
+            }}
+          />
           {visibleBars.spending && (
             <Bar
               dataKey="totalExpense"

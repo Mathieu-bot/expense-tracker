@@ -22,18 +22,21 @@ export default function MiniStatCard({
   deltaPct,
   valueSuffix,
   filterWasUsed,
+  customBgColor = null,
 }: MiniStatItem) {
   const [isVisible, setIsVisible] = useState(false);
   const [animatedValue, setAnimatedValue] = useState(0);
   const cardRef = useRef<HTMLDivElement>(null);
 
   const isUp = typeof deltaPct === "number" ? deltaPct >= 0 : undefined;
+
+  // Theme-aware colors
   const deltaColor =
     isUp === undefined
-      ? "bg-slate-500/20 text-slate-300"
+      ? "bg-slate-300 dark:bg-slate-500/20 text-slate-600 dark:text-slate-300"
       : isUp
-      ? "bg-emerald-500/20 text-emerald-400"
-      : "bg-rose-500/20 text-rose-400";
+      ? "bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400"
+      : "bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-400";
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -74,37 +77,40 @@ export default function MiniStatCard({
     <div
       ref={cardRef}
       className={`
-        relative bg-gradient-to-br from-primary/20 to-gray-800/20 backdrop-blur-xl 
-        rounded-2xl py-4 px-5 border border-white/5 shadow-lg 
-        transition-all duration-500 flex flex-col gap-3 overflow-hidden
-        transform-gpu
-        hover:shadow-accent/10
+        relative bg-white/80 dark:bg-transparent dark:bg-gradient-to-br dark:from-primary/20 dark:to-gray-800/20 
+        backdrop-blur-xl rounded-2xl py-4 px-5 
+        shadow-lg transition-all duration-500 flex flex-col gap-3 overflow-hidden
+        transform-gpu hover:shadow-lg dark:hover:shadow-accent/10
         ${
           isVisible
             ? "opacity-100 translate-y-0 scale-100"
             : "opacity-0 translate-y-6 scale-95"
         }
+        ${customBgColor || ""}
       `}
     >
       {/* Header */}
       <div className="flex items-center gap-2 relative z-10">
         <span
           className={`
-            w-9 h-9 rounded-xl bg-white/10 text-white flex items-center justify-center
-            transition-all duration-500
-          `}
+              w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center
+              transition-all duration-500 group-hover:scale-110
+            `}
         >
-          <Icon className="w-5 h-5 transition-transform duration-500" />
+          <Icon className="w-6 h-6 text-accent dark:text-accent transition-transform duration-300" />
         </span>
-        <span className="text-base text-white/80 font-medium transition-all duration-300">
+        <span className="text-base text-gray-700 dark:text-white/80 font-medium transition-all duration-300">
           {label}
         </span>
       </div>
+
       {/* Value + Delta alignés */}
       <div className="flex items-center justify-between relative z-10">
         <div
           className={`text-2xl font-semibold tracking-tight transition-all duration-300 ${
-            value < 0 ? "text-red-500" : "text-white"
+            value < 0
+              ? "text-rose-600 dark:text-rose-400"
+              : "text-gray-800 dark:text-white"
           }`}
         >
           {valueStr}
@@ -131,15 +137,15 @@ export default function MiniStatCard({
               {deltaPct.toFixed(1)}%
             </span>
 
-            <div className="text-xs mt-2 font-light text-white/60 flex items-center gap-1">
-              <div className="w-2 h-px bg-white/30"></div>
+            <div className="text-xs mt-2 font-light text-gray-900 dark:text-white/60 flex items-center gap-1">
+              <div className="w-2 h-px bg-gray-400 dark:bg-white/30"></div>
               <span className="tracking-wide">vs previous month</span>
             </div>
           </div>
         )}
       </div>
 
-      <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-accent/60 to-transparent" />
+      <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-accent/80 to-transparent dark:from-accent/60 dark:to-transparent" />
     </div>
   );
 }
