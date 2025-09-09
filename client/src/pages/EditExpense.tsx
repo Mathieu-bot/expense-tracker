@@ -130,7 +130,7 @@ export const EditExpense = () => {
   };
 
   return (
-    <div className="p-6 max-w-2xl mx-auto pt-20 text-light">
+    <div className="p-6 max-w-2xl mx-auto pt-20 text-light mt-10">
       <div className="flex items-center mb-6">
         <Button
           onClick={handleCancel}
@@ -178,7 +178,7 @@ export const EditExpense = () => {
           />
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm mb-1">Type</label>
             <select

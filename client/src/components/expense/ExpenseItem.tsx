@@ -32,7 +32,7 @@ const ExpenseItem = ({ e, refetch }: ExpenseListProps) => {
     <>
       <li
         key={e.expense_id}
-        className="p-3 sm:p-4 grid grid-cols-1 sm:grid-cols-5 gap-3 sm:gap-4 items-center backdrop-blur-lg"
+        className="p-3 sm:p-4 grid grid-cols-1 sm:grid-cols-5 gap-3 sm:gap-4 items-center bg-white/5"
       >
         <div className="sm:col-span-2">
           <div className="font-medium text-sm sm:text-base truncate">
@@ -57,13 +57,13 @@ const ExpenseItem = ({ e, refetch }: ExpenseListProps) => {
           {formatCurrency(e.amount)}
         </div>
 
-        <div className="flex gap-2 justify-end">
+        <div className="flex gap-2 justify-end items-center">
           {e.receipt_url ? (
             <a
               href={e.receipt_url}
               target="_blank"
               rel="noreferrer"
-              className="flex items-center px-2 py-1 text-xs sm:text-sm rounded-md bg-white/10 hover:bg-white/15 border border-white/10"
+              className="aspect-square flex items-center px-2 py-1 text-xs sm:text-sm rounded-md bg-white/10 hover:bg-white/15 border border-white/10"
               title="View receipt"
             >
               <EyeIcon className="size-3" />
@@ -71,8 +71,9 @@ const ExpenseItem = ({ e, refetch }: ExpenseListProps) => {
           ) : null}
           <Button
             onClick={() => navigate(`/expenses/${e.expense_id}/edit`)}
-            className="px-2 py-1 text-xs sm:text-sm rounded-md bg-white/10 hover:bg-white/15 border border-white/10"
+            className="aspect-square px-2 py-1 text-xs sm:text-sm rounded-md bg-white/10 hover:bg-white/15 border border-white/10"
             aria-label="Edit expense"
+            size="small"
           >
             <Edit3 className="size-3" />
           </Button>
@@ -80,6 +81,7 @@ const ExpenseItem = ({ e, refetch }: ExpenseListProps) => {
             onClick={() => setDeleteOpen(true)}
             className="text-red-400 aspect-square px-2 py-1 text-xs sm:text-sm rounded-md bg-red-400/20 hover:bg-red-400/30 border border-red-400/30"
             aria-label="Delete expense"
+            size="small"
           >
             <Trash2 className="size-3" />
           </Button>

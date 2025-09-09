@@ -1,11 +1,12 @@
 import { useState } from "react";
 import type React from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, useToast, Select } from "../ui";
+import { Button, useToast } from "../ui";
 import { ExpenseService } from "../services/ExpenseService";
 import { useCategories } from "../hooks/useCategories";
 import type { CreateExpenseRequest, ExpenseType } from "../types/Expense";
 import { Loader2 } from "lucide-react";
+import GlassSelect from "../components/expense/GlassSelect";
 
 export const CreateExpense = () => {
   const navigate = useNavigate();
@@ -99,7 +100,7 @@ export const CreateExpense = () => {
   };
 
   return (
-    <div className="p-6 max-w-2xl mx-auto pt-20 text-light">
+    <div className="p-6 max-w-2xl mx-auto pt-20 text-light mt-10">
       <div className="flex items-center mb-6">
         <Button
           onClick={handleCancel}
@@ -127,10 +128,15 @@ export const CreateExpense = () => {
           </div>
           <div>
             <label className="block text-sm mb-1">Category</label>
-            <Select
+            <GlassSelect
               value={form.categoryId || null}
-              onChange={(v) => setForm((f) => ({ ...f, categoryId: String(v) }))}
-              options={categories.map((c) => ({ label: c.category_name, value: String(c.category_id) }))}
+              onChange={(v) =>
+                setForm((f) => ({ ...f, categoryId: String(v) }))
+              }
+              options={categories.map((c) => ({
+                label: c.category_name,
+                value: String(c.category_id),
+              }))}
               placeholder="Select a category"
               disabled={categoriesLoading}
             />
@@ -149,7 +155,7 @@ export const CreateExpense = () => {
           />
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm mb-1">Type</label>
             <select
