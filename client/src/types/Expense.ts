@@ -30,7 +30,7 @@ export type CreateExpenseRequest = {
   type?: ExpenseType;
   startDate?: string; // required if recurring
   endDate?: string;
-  receipt: File;
+  receipt?: File;
   receipt_url? : string | null
 };
 
