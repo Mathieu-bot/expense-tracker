@@ -9,6 +9,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { formatCurrency } from "../../utils/formatters";
+import { CustomTooltip } from "./Tooltip";
 
 const COLORS = {
   spending: "rgba(244, 63, 94, 0.65)",
@@ -117,16 +118,7 @@ const MonthlyBarChart: React.FC<MonthlyBarChartProps> = ({ data }) => {
             tick={{ fill: "currentColor" }}
             className="text-gray-700 dark:text-gray-300"
           />
-          <Tooltip
-            contentStyle={{
-              backgroundColor: "rgba(255, 255, 255, 0.8)",
-              borderRadius: "12px",
-              border: "none",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-            }}
-            itemStyle={{ color: "#111" }}
-            labelStyle={{ color: "#111", fontWeight: "bold" }}
-          />
+          <Tooltip content={<CustomTooltip />} animationDuration={300} />
           {visibleBars.spending && (
             <Bar
               dataKey="totalExpense"
