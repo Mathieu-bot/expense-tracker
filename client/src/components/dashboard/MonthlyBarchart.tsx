@@ -10,6 +10,7 @@ import {
 } from "recharts";
 import { formatCurrency } from "../../utils/formatters";
 import { CustomTooltip } from "./Tooltip";
+import { useTheme } from "../../contexts/ThemeContext";
 
 const COLORS = {
   spending: "rgba(244, 63, 94, 0.65)",
@@ -29,6 +30,8 @@ const MonthlyBarChart: React.FC<MonthlyBarChartProps> = ({ data }) => {
   const toggleBar = (bar: "spending" | "income") => {
     setVisibleBars((prev) => ({ ...prev, [bar]: !prev[bar] }));
   };
+
+  const {isDark} = useTheme();
 
   const totals = useMemo(
     () => ({
@@ -86,7 +89,7 @@ const MonthlyBarChart: React.FC<MonthlyBarChartProps> = ({ data }) => {
           margin={{ top: 20, right: 30 }}
           barCategoryGap="30%"
         >
-          <CartesianGrid strokeDasharray="3 3" className="opacity-40" />
+          <CartesianGrid stroke={`${isDark ? "rgba(200, 200, 200, 0.5)" : "rgba(100,100,100,1)"}`} strokeDasharray="3 3" className="opacity-40" />
           <XAxis
             dataKey="month"
             tick={{ fill: "currentColor" }}
