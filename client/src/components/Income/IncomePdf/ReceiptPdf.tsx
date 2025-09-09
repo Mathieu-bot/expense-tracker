@@ -17,7 +17,6 @@ export const ReceiptPdf = forwardRef<HTMLDivElement, ReceiptPdfProps>(
       <div
         ref={ref}
         style={{
-          padding: "40px 32px",
           backgroundColor: "#ffffff",
           color: "#010c19",
           fontFamily: "'Inter', 'Helvetica Neue', Arial, sans-serif",

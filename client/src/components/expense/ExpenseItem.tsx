@@ -29,72 +29,63 @@ const ExpenseItem = ({ e, refetch }: ExpenseListProps) => {
   };
 
   return (
-    <>
-      <li
-        key={e.expense_id}
-        className="p-3 sm:p-4 grid grid-cols-1 sm:grid-cols-5 gap-3 sm:gap-4 items-center bg-white/5 backdrop-blur-lg"
-      >
-        <div className="sm:col-span-2">
-          <div className="font-medium text-sm sm:text-base truncate">
-            {e.description || e.category?.category_name || "Expense"}
-          </div>
-          <div className="text-xs sm:text-sm text-light/70">
-            {e.type === "one-time" && e.date
-              ? fmt(e.date)
-              : e.type === "recurring"
-              ? `Recurring${e.startDate ? ` from ${fmt(e.startDate)}` : ""}${
-                  e.endDate ? ` to ${fmt(e.endDate)}` : ""
-                }`
-              : ""}
-          </div>
+    <li key={e.expense_id} className="p-4 grid grid-cols-5 gap-4 items-center">
+      <div className="col-span-2">
+        <div className="font-medium">
+          {e.description || e.category?.category_name || "Expense"}
         </div>
-
-        <div className="text-light/80 text-xs sm:text-sm">
-          {e.category?.category_name ?? `Category #${e.categoryId}`}
+        <div className="text-sm text-light/70">
+          {e.type === "one-time" && e.date
+            ? fmt(e.date)
+            : e.type === "recurring"
+            ? `Recurring${e.startDate ? ` from ${fmt(e.startDate)}` : ""}${
+                e.endDate ? ` to ${fmt(e.endDate)}` : ""
+              }`
+            : ""}
         </div>
-
-        <div className="text-right font-semibold text-sm sm:text-base">
-          {formatCurrency(e.amount)}
-        </div>
-
-        <div className="flex gap-2 justify-end ">
-          {e.receipt_upload ? (
-            <a
-              href={e.receipt_upload}
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center px-2 py-1 text-xs sm:text-sm rounded-md bg-white/10 hover:bg-white/15 border border-white/10"
-              title="View receipt"
-            >
-              <EyeIcon className="size-3" />
-            </a>
-          ) : null}
-          <Button
-            size="small"
-            onClick={() => navigate(`/expenses/${e.expense_id}/edit`)}
-            className="px-2 py-1 text-xs sm:text-sm rounded-md bg-white/10 hover:bg-white/15 border border-white/10"
-            aria-label="Edit expense"
+      </div>
+      <div className="text-light/80">
+        {e.category?.category_name ?? `Category #${e.categoryId}`}
+      </div>
+      <div className="text-right font-semibold">{formatCurrency(e.amount)}</div>
+      <div className="flex gap-2 justify-end">
+        {e.receipt_url ? (
+          <a
+            href={e.receipt_url}
+            target="_blank"
+            rel="noreferrer"
+            className="px-2 py-1 text-xs rounded-md bg-white/10 hover:bg-white/15 border border-white/10"
           >
-            <Edit3 className="size-3" />
-          </Button>
-          <Button
-            size="small"
-            onClick={() => setDeleteOpen(true)}
-            className=" text-red-400 px-2 py-1 text-xs sm:text-sm rounded-md bg-red-400/20 hover:bg-red-400/30 border border-red-400/30"
-            aria-label="Delete expense"
-          >
-            <Trash2 className="size-3" />
-          </Button>
-        </div>
-      </li>
-
-      <DeleteConfirmationModal
-        open={deleteOpen}
-        expense={e}
-        onClose={() => setDeleteOpen(false)}
-        onConfirm={handleConfirmDelete}
-      />
-    </>
+            View receipt
+          </a>
+        ) : null}
+        <button
+          onClick={() => navigate(`/expenses/${e.expense_id}/edit`)}
+          className="px-2 py-1 text-xs rounded-md bg-white/10 hover:bg-white/15 border border-white/10"
+        >
+          Edit
+        </button>
+        <button
+          onClick={async () => {
+            if (!confirm("Delete this expense?")) return;
+            try {
+              await (
+                await import("../../services/ExpenseService")
+              ).ExpenseService.deleteExpense(e.expense_id.toString());
+              await refetch();
+            } catch (err) {
+              console.error(err);
+              alert(
+                err instanceof Error ? err.message : "Failed to delete expense"
+              );
+            }
+          }}
+          className="px-2 py-1 text-xs rounded-md bg-red-400/20 hover:bg-red-400/30 border border-red-400/30"
+        >
+          Delete
+        </button>
+      </div>
+    </li>
   );
 };
 

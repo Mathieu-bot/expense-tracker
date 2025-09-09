@@ -5,6 +5,7 @@ import { Button, useToast, Select } from "../ui";
 import { ExpenseService } from "../services/ExpenseService";
 import { useCategories } from "../hooks/useCategories";
 import type { CreateExpenseRequest, ExpenseType } from "../types/Expense";
+import { Loader2 } from "lucide-react";
 
 export const CreateExpense = () => {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ export const CreateExpense = () => {
     categoryId: "",
     receipt: undefined,
   });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -29,20 +31,24 @@ export const CreateExpense = () => {
     setForm((f) => ({ ...f, [name]: value }));
   };
 
-  const onFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    // const buffer = await file?.arrayBuffer();
-    // const bytes = new Uint8Array(buffer!);
-
-    // const blob = new Blob([bytes], { type: file?.type });
-    // const fileBlob = new File([blob], "test", { type: blob?.type });
-
-    // const url = URL.createObjectURL(fileBlob);
-    // const a = document.createElement("a");
-    // a.href = url;
-    // a.download = file!.name;
-    // a.click();
-    setForm((f) => ({ ...f, receipt: file }));
+  const onFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    if (
+      !["image/jpeg", "image/jpg", "image/png", "application/pdf"].includes(
+        f.type
+      )
+    ) {
+      toast.error(`Unsupported file type: ${f.type}`);
+      e.currentTarget.value = "";
+      return;
+    }
+    if (f.size > 5 * 1024 * 1024) {
+      toast.error(`File too large: ${f.size / 1024 / 1024} > 5 Mo`);
+      e.currentTarget.value = "";
+      return;
+    }
+    setForm((prev) => ({ ...prev, receipt: f }));
   };
 
   const validate = (): string | null => {
@@ -64,6 +70,7 @@ export const CreateExpense = () => {
       return;
     }
     try {
+      setIsLoading(true);
       await ExpenseService.createExpense({
         amount: form.amount,
         description: form.description || undefined,
@@ -82,6 +89,8 @@ export const CreateExpense = () => {
       const message =
         error instanceof Error ? error.message : "Failed to create expense";
       toast.error(message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -200,7 +209,16 @@ export const CreateExpense = () => {
           <Button onClick={handleCancel} className="border border-gray-300">
             Cancel
           </Button>
-          <Button onClick={handleSave}>Save Expense</Button>
+          <Button onClick={handleSave}>
+            {isLoading ? (
+              <div className="flex items-center gap-3">
+                <Loader2 className="animate-spin" />
+                Saving your expense
+              </div>
+            ) : (
+              "Save Expense"
+            )}
+          </Button>
         </div>
       </div>
     </div>

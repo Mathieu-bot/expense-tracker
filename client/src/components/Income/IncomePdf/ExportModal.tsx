@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FileDown, Download } from "lucide-react";
+import { FileDown, Download, Eye } from "lucide-react";
 import type { Income } from "../../../types/Income";
 import { DatePicker } from "../../../ui";
 
@@ -7,6 +7,7 @@ interface ExportModalProps {
   open: boolean;
   onClose: () => void;
   onExport: (startDate?: string, endDate?: string) => Promise<boolean>;
+  onPreview: (startDate?: string, endDate?: string) => void;
   incomes: Income[];
 }
 
@@ -14,6 +15,7 @@ export const ExportModal = ({
   open,
   onClose,
   onExport,
+  onPreview,
   incomes,
 }: ExportModalProps) => {
   const [startDate, setStartDate] = useState<Date | null>(null);
@@ -65,6 +67,15 @@ export const ExportModal = ({
     } finally {
       setIsExporting(false);
     }
+  };
+
+  const handlePreview = () => {
+    if (filteredIncomes.length === 0) return;
+
+    onPreview(
+      startDate ? startDate.toISOString().split("T")[0] : undefined,
+      endDate ? endDate.toISOString().split("T")[0] : undefined
+    );
   };
 
   const handleClear = () => {
@@ -195,29 +206,41 @@ export const ExportModal = ({
             )}
           </div>
 
-          <div className="flex gap-3 justify-end pt-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex gap-3 justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
             <button
               type="button"
-              onClick={handleClear}
-              className="border border-gray-300 text-gray-700 bg-gray-100 hover:bg-gray-200 dark:border-gray-600 dark:text-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 px-4 py-2 rounded-lg transition-colors"
-              disabled={isExporting || (!startDate && !endDate)}
+              onClick={handlePreview}
+              className="border border-gray-300 text-gray-700 bg-gray-100 hover:bg-gray-200 dark:border-gray-600 dark:text-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 px-4 py-2 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={!hasIncomesToExport || !isDateRangeValid}
             >
-              Clear
+              <Eye className="w-4 h-4" />
+              Preview
             </button>
-            <button
-              type="submit"
-              className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white border-none px-4 py-2 rounded-lg transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={isExportDisabled}
-            >
-              {isExporting ? (
-                "Exporting..."
-              ) : (
-                <>
-                  <FileDown className="w-4 h-4 mr-2" />
-                  Export
-                </>
-              )}
-            </button>
+
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={handleClear}
+                className="border border-gray-300 text-gray-700 bg-gray-100 hover:bg-gray-200 dark:border-gray-600 dark:text-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 px-4 py-2 rounded-lg transition-colors"
+                disabled={isExporting || (!startDate && !endDate)}
+              >
+                Clear
+              </button>
+              <button
+                type="submit"
+                className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white border-none px-4 py-2 rounded-lg transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={isExportDisabled}
+              >
+                {isExporting ? (
+                  "Exporting..."
+                ) : (
+                  <>
+                    <FileDown className="w-4 h-4 mr-2" />
+                    Export
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </form>
       </div>

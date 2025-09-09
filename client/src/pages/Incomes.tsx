@@ -14,7 +14,7 @@ import {
 } from "../components/Income";
 import { IncomeList } from "../components/Income/IncomeList";
 import Receipt from "../components/Income/Receipt";
-import { Plus, Wallet } from "lucide-react";
+import { Plus, Wallet, X, Download } from "lucide-react";
 import { StatsCards } from "../components/Income/IncomeHeader/StatsCards";
 import type { Income } from "../types/Income";
 import { useState, useMemo, useRef } from "react";
@@ -24,7 +24,7 @@ import {
   Resolution,
   Margin,
 } from "../services/PdfExportService";
-
+import { ExportModal } from "../components/Income/IncomePdf/ExportModal";
 export const Incomes = () => {
   const navigate = useNavigate();
   const toast = useToast();
@@ -95,35 +95,74 @@ export const Incomes = () => {
     []
   );
   const [filteredTotalAmount, setFilteredTotalAmount] = useState(0);
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+
+  
+  const handleCloseExportModal = () => {
+    setIsExportModalOpen(false);
+  };
+
+  const handleClosePreviewModal = () => {
+    setIsPreviewModalOpen(false);
+  };
+
+  const filterIncomesByDate = (startDate?: string, endDate?: string) => {
+    let filteredIncomes = localIncomes;
+
+    if (startDate || endDate) {
+      filteredIncomes = localIncomes.filter((income) => {
+        const incomeDate = new Date(income.date);
+        const start = startDate ? new Date(startDate) : null;
+        const end = endDate ? new Date(endDate) : null;
+
+        if (start && end) {
+          return incomeDate >= start && incomeDate <= end;
+        } else if (start) {
+          return incomeDate >= start;
+        } else if (end) {
+          return incomeDate <= end;
+        }
+        return true;
+      });
+    }
+
+    const totalAmount = filteredIncomes.reduce(
+      (sum, income) => sum + income.amount,
+      0
+    );
+
+    setFilteredIncomesForPdf(filteredIncomes);
+    setFilteredTotalAmount(totalAmount);
+
+    return { filteredIncomes, totalAmount };
+  };
+
+  const handlePreviewPdf = (startDate?: string, endDate?: string) => {
+    const { filteredIncomes } = filterIncomesByDate(startDate, endDate);
+
+    if (filteredIncomes.length === 0) {
+      toast.error("No receipts found for the selected date range");
+      return;
+    }
+
+    setIsPreviewModalOpen(true);
+  };
 
   const handleExportPdf = async (startDate?: string, endDate?: string) => {
+    setIsExporting(true);
+
     try {
-      let filteredIncomes = localIncomes;
-
-      if (startDate || endDate) {
-        filteredIncomes = localIncomes.filter((income) => {
-          const incomeDate = new Date(income.date);
-          const start = startDate ? new Date(startDate) : null;
-          const end = endDate ? new Date(endDate) : null;
-
-          if (start && end) {
-            return incomeDate >= start && incomeDate <= end;
-          } else if (start) {
-            return incomeDate >= start;
-          } else if (end) {
-            return incomeDate <= end;
-          }
-          return true;
-        });
-      }
-
-      const totalAmount = filteredIncomes.reduce(
-        (sum, income) => sum + income.amount,
-        0
+      const { filteredIncomes } = filterIncomesByDate(
+        startDate,
+        endDate
       );
 
-      setFilteredIncomesForPdf(filteredIncomes);
-      setFilteredTotalAmount(totalAmount);
+      if (filteredIncomes.length === 0) {
+        toast.error("No receipts found for export");
+        return false;
+      }
 
       await new Promise((resolve) => setTimeout(resolve, 100));
 
@@ -134,13 +173,15 @@ export const Incomes = () => {
           margin: Margin.MEDIUM,
         });
         toast.success("PDF exported successfully!");
-        return true; //success
+        return true;
       }
     } catch (error) {
       toast.error("Failed to export PDF. Please try again.");
       console.error("PDF export error:", error);
+    } finally {
+      setIsExporting(false);
     }
-    return false; //filure
+    return false;
   };
 
   return (
@@ -151,6 +192,7 @@ export const Incomes = () => {
           onNewIncome={handleNewIncome}
           onExport={handleExportPdf}
           incomes={localIncomes}
+          onPreview={handlePreviewPdf}
         />
 
         <StatsCards
@@ -262,6 +304,64 @@ export const Incomes = () => {
           totalAmount={filteredTotalAmount}
         />
       </div>
+
+      {/* pdf preview */}
+      {isPreviewModalOpen && (
+        <div className="fixed inset-0 z-[1000] bg-black/70 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[70vh] overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b border-primary">
+              <h2 className="text-xl text-primary font-semibold">PDF Preview</h2>
+              <button
+                onClick={handleClosePreviewModal}
+                className="p-1 hover:bg-gray-100 rounded-full"
+              >
+                <X className="w-5 h-5 text-primary" />
+              </button>
+            </div>
+            <div className="overflow-auto p-4 max-h-[calc(90vh-80px)]">
+              <ReceiptPdf
+                incomes={filteredIncomesForPdf}
+                totalAmount={filteredTotalAmount}
+              />
+            </div>
+            <div className="p-4 border-t flex justify-end gap-3">
+              <button
+                onClick={handleClosePreviewModal}
+                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+              >
+                Close
+              </button>
+              <button
+                onClick={async () => {
+                  const success = await handleExportPdf();
+                  if (success) {
+                    handleClosePreviewModal();
+                  }
+                }}
+                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center gap-2"
+                disabled={isExporting}
+              >
+                {isExporting ? (
+                  "Exporting..."
+                ) : (
+                  <>
+                    <Download className="w-4 h-4" />
+                    Export PDF
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <ExportModal
+        open={isExportModalOpen}
+        onClose={handleCloseExportModal}
+        onExport={handleExportPdf}
+        onPreview={handlePreviewPdf}
+        incomes={localIncomes}
+      />
 
       <DeleteConfirmationModal
         open={deleteConfirmOpen}
