@@ -1,6 +1,7 @@
 import React, { useMemo, useState, type SetStateAction } from "react";
 import { useAIAdvice } from "../../hooks/useAiAdvice";
-import { Expand, Lightbulb, RefreshCcw, X } from "lucide-react";
+import { Expand, Lightbulb, RefreshCcw, Volume2, X } from "lucide-react";
+import { usePuterTTS } from "../../hooks/usePuterTTS";
 
 type AIAdviceProps = {
   open: boolean;
@@ -8,6 +9,7 @@ type AIAdviceProps = {
 };
 export default function AIAdvice({ open, setOpen }: AIAdviceProps) {
   const { data, loading, error, refetch } = useAIAdvice();
+  const { speak, ready } = usePuterTTS();
 
   const [minimized, setMinimized] = useState(false);
   const [showMore, setShowMore] = useState(false);
@@ -43,6 +45,21 @@ export default function AIAdvice({ open, setOpen }: AIAdviceProps) {
 
         {/* Actions */}
         <div className="flex items-center gap-1">
+          {!loading && (
+            <button
+              disabled={!ready}
+              onClick={async () => {
+                speak(data!, {
+                  voice: "Matthew",
+                  engine: "neural",
+                  language: "en-US",
+                });
+              }}
+            >
+              <Volume2 />
+            </button>
+          )}
+
           <button
             type="button"
             onClick={() => refetch()}
