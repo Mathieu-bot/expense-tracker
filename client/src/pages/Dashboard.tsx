@@ -83,9 +83,10 @@ function Dashboard() {
             lastMonthSummary?.totalIncome ?? 0,
             thisMonthSummary?.totalIncome ?? 0
           ) ?? 0,
+        href: "/incomes/new",
       },
       {
-        label: "Expenses",
+        label: "Expense",
         value: totalExpense,
         icon: ReceiptCent,
         deltaPct:
@@ -107,6 +108,7 @@ function Dashboard() {
           )! >= 0
             ? "bg-rose-500/20"
             : null,
+        href: "/expenses/new",
       },
     ],
     [
