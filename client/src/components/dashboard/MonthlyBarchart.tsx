@@ -11,8 +11,8 @@ import {
 import { formatCurrency } from "../../utils/formatters";
 
 const COLORS = {
-  spending: "#FF8042",
-  income: "#00C49F",
+  spending: "rgba(244, 63, 94, 0.65)",
+  income: "rgba(16, 185, 129, 0.65)",
 };
 
 interface MonthlyBarChartProps {
@@ -40,7 +40,7 @@ const MonthlyBarChart: React.FC<MonthlyBarChartProps> = ({ data }) => {
   return (
     <div className="bg-white/80 dark:bg-gradient-to-br dark:bg-transparent dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 w-full h-[380px] flex flex-col">
       <div className="relative mt-3 ml-3 flex mb-6">
-        <div className="flex bg-gray-100 dark:bg-gray-800 rounded-xl overflow-hidden shadow-inner">
+        <div className="flex border border-gray-400/30 dark:border-gray-700 rounded-xl overflow-hidden">
           <button
             onClick={() => toggleBar("spending")}
             style={{
@@ -49,7 +49,7 @@ const MonthlyBarChart: React.FC<MonthlyBarChartProps> = ({ data }) => {
                 : "transparent",
               color: visibleBars.spending ? "#fff" : "",
             }}
-            className={`px-6 py-2 font-medium transition-all duration-300 flex items-center gap-2 ${
+            className={`px-6 py-2 font-medium transition-all border-none duration-300 flex items-center gap-2 ${
               !visibleBars.spending && "text-gray-600 dark:text-gray-300"
             }`}
             onMouseEnter={(e) => {
@@ -78,7 +78,7 @@ const MonthlyBarChart: React.FC<MonthlyBarChartProps> = ({ data }) => {
                 : "transparent",
               color: visibleBars.income ? "#fff" : "",
             }}
-            className={`px-6 py-2 font-medium transition-all duration-300 flex items-center gap-2 ${
+            className={`px-6 py-2 font-medium transition-all border-none duration-300 flex items-center gap-2 ${
               !visibleBars.income && "text-gray-600 dark:text-gray-300"
             }`}
             onMouseEnter={(e) => {

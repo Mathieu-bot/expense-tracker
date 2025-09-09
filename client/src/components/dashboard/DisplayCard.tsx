@@ -22,8 +22,6 @@ export default function MiniStatCard({
   deltaPct,
   valueSuffix,
   filterWasUsed,
-  customDeltaColor,
-  customBgColor,
 }: MiniStatItem) {
   const [isVisible, setIsVisible] = useState(false);
   const [animatedValue, setAnimatedValue] = useState(0);
@@ -37,7 +35,6 @@ export default function MiniStatCard({
       ? "bg-emerald-500/20 text-emerald-400"
       : "bg-rose-500/20 text-rose-400";
 
-  // Intersection observer for fade-in animation
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -53,7 +50,6 @@ export default function MiniStatCard({
     return () => observer.disconnect();
   }, []);
 
-  // Animated counting effect
   useEffect(() => {
     if (isVisible && value !== 0) {
       const duration = 1500;
@@ -90,6 +86,7 @@ export default function MiniStatCard({
         }
       `}
     >
+      {/* Header */}
       <div className="flex items-center gap-2 relative z-10">
         <span
           className={`
@@ -103,7 +100,7 @@ export default function MiniStatCard({
           {label}
         </span>
       </div>
-
+      {/* Value + Delta alignés */}
       <div className="flex items-center justify-between relative z-10">
         <div
           className={`text-2xl font-semibold tracking-tight transition-all duration-300 ${
@@ -120,7 +117,7 @@ export default function MiniStatCard({
               className={`
                 text-sm font-semibold px-2.5 py-1 rounded-full 
                 inline-flex items-center gap-1 transition-all duration-500
-                ${deltaColor} ${customDeltaColor ?? ""} ${customBgColor ?? ""}
+                ${deltaColor}
                 ${isVisible ? "opacity-100 scale-100" : "opacity-0 scale-75"}
               `}
               style={{ transitionDelay: "200ms" }}
