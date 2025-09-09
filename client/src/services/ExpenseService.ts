@@ -8,10 +8,21 @@ import type {
 
 type ApiEnvelope<T> = { success: boolean; data: T };
 function hasData<T>(r: unknown): r is { data: T } {
-  return typeof r === "object" && r !== null && "data" in (r as Record<string, unknown>);
+  return (
+    typeof r === "object" &&
+    r !== null &&
+    "data" in (r as Record<string, unknown>)
+  );
 }
 function unwrap<T>(response: unknown): T {
-  return hasData<T>(response) ? (response as ApiEnvelope<T>).data : (response as T);
+  return hasData<T>(response)
+    ? (response as ApiEnvelope<T>).data
+    : (response as T);
+}
+function appendIf(fd: FormData, key: string, v: unknown) {
+  if (v === undefined || v === null || v === "") return;
+  if (v instanceof Blob) fd.append(key, v);
+  else fd.append(key, String(v));
 }
 
 export class ExpenseService {
@@ -53,62 +64,64 @@ export class ExpenseService {
 
   // POST expense (multipart)
   static async createExpense(expenseData: CreateExpenseRequest) {
-    try {
-      const payload = {
-        amount: Number(expenseData.amount),
-        date: expenseData.date as unknown as string,
-        categoryId: expenseData.categoryId,
-        description: expenseData.description,
-        type: expenseData.type,
-        startDate: expenseData.startDate,
-        endDate: expenseData.endDate,
-        receipt: expenseData.receipt as unknown as Blob | undefined,
-      };
-      const response = await DefaultService.postExpenses(payload);
-      useMascotStore.getState().setExpression("success");
-      return unwrap<Expense>(response);
-    } catch (error) {
-      useMascotStore.getState().setExpression("error");
-      console.error("Error creating expense:", error);
-      throw new Error("Failed to create expense");
+    const fd = new FormData();
+    appendIf(fd, "amount", Number(expenseData.amount));
+    appendIf(fd, "description", expenseData.description);
+    appendIf(fd, "type", expenseData.type);
+    appendIf(fd, "categoryId", expenseData.categoryId);
+    if (expenseData.type === "one-time") {
+      appendIf(fd, "date", expenseData.date);
+    } else {
+      appendIf(fd, "startDate", expenseData.startDate);
+      appendIf(fd, "endDate", expenseData.endDate);
     }
+    if (expenseData.receipt) fd.append("receipt", expenseData.receipt);
+
+    const res = await fetch("/api/expenses", {
+      method: "POST",
+      body: fd,
+      credentials: "include",
+    });
+    const json = await res.json();
+    useMascotStore.getState().setExpression(res.ok ? "success" : "error");
+    if (!res.ok) throw new Error(json?.error || "Failed to create expense");
+    return unwrap<Expense>(json);
   }
 
   // UPDATE expense (multipart)
   static async updateExpense(id: string, expenseData: UpdateExpenseRequest) {
-    try {
-      const payload = {
-        amount:
-          expenseData.amount !== undefined
-            ? Number(expenseData.amount)
-            : undefined,
-        date: expenseData.date as unknown as string | undefined,
-        categoryId: expenseData.categoryId,
-        description: expenseData.description,
-        type: expenseData.type,
-        startDate: expenseData.startDate,
-        endDate: expenseData.endDate,
-        receipt: expenseData.receipt as unknown as Blob | undefined,
-      };
-      const response = await DefaultService.putExpenses(id, payload);
-      useMascotStore.getState().setExpression("success");
-      return unwrap<Expense>(response);
-    } catch (error) {
-      useMascotStore.getState().setExpression("error");
-      console.error(`Error updating expense ${id}:`, error);
-      throw new Error("Failed to update expense");
-    }
+    const fd = new FormData();
+    if (expenseData.amount !== undefined)
+      appendIf(fd, "amount", Number(expenseData.amount));
+    appendIf(fd, "description", expenseData.description);
+    appendIf(fd, "type", expenseData.type);
+    appendIf(fd, "categoryId", expenseData.categoryId);
+    appendIf(fd, "date", expenseData.date);
+    appendIf(fd, "startDate", expenseData.startDate);
+    appendIf(fd, "endDate", expenseData.endDate);
+    if (expenseData.receipt) fd.append("receipt", expenseData.receipt);
+
+    const res = await fetch(`/api/expenses/${id}`, {
+      method: "PUT",
+      body: fd,
+      credentials: "include",
+    });
+    const json = await res.json();
+    useMascotStore.getState().setExpression(res.ok ? "success" : "error");
+    if (!res.ok) throw new Error(json?.error || "Failed to update expense");
+    return unwrap<Expense>(json);
   }
 
   // DELETE expense
   static async deleteExpense(id: string) {
-    try {
-      await DefaultService.deleteExpenses(id);
-      useMascotStore.getState().setExpression("success");
-    } catch (error) {
-      useMascotStore.getState().setExpression("error");
-      console.error(`Error deleting expense ${id}:`, error);
-      throw new Error("Failed to delete expense");
+    const res = await fetch(`/api/expenses/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    useMascotStore.getState().setExpression(res.ok ? "success" : "error");
+    if (!res.ok) {
+      const json = await res.json().catch(() => ({}));
+      throw new Error(json?.error || "Failed to delete expense");
     }
   }
 }

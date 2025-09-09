@@ -8,8 +8,6 @@ import {
   deleteExpenseController,
 } from "../controllers/expense.controller.js";
 import {
-  createExpenseValidator,
-  updateExpenseValidator,
   getExpenseValidator,
   deleteExpenseValidator,
   listExpensesValidator,
@@ -26,8 +24,7 @@ router.use(requireAuth);
 // @access  Private
 router.post(
   "/",
-  upload.single("receipt"), // Handle receipt file upload
-  createExpenseValidator,
+  upload.single("receipt"),
   createExpenseController
 );
 
@@ -46,8 +43,7 @@ router.get("/", listExpensesValidator, getAllExpensesController);
 // @access  Private
 router.put(
   "/:id",
-  upload.single("receipt"), // Handle receipt file upload
-  updateExpenseValidator,
+  upload.single("receipt"),
   updateExpenseController
 );
 

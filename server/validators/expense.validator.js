@@ -60,8 +60,6 @@ export const createExpenseValidator = [
     .withMessage("Category ID is required")
     .isInt({ min: 1 })
     .withMessage("Category ID must be a positive integer"),
-
-  body("receipt").optional(), // file upload handled by multer
 ];
 
 export const updateExpenseValidator = [
