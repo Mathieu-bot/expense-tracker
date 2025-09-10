@@ -17,7 +17,9 @@ import { CreateExpense } from "./pages/CreateExpense";
 import { EditExpense } from "./pages/EditExpense";
 import { CreateIncome } from "./pages/CreateIncome";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import ReceiptPreview from "./pages/ReceiptPreview";
 import Header from "./components/common/Header";
+
 
 function App() {
   const location = useLocation();
@@ -58,6 +60,7 @@ function App() {
               <Route path="/expenses" element={<Expenses />} />
               <Route path="/expenses/new" element={<CreateExpense />} />
               <Route path="/expenses/:id/edit" element={<EditExpense />} />
+              <Route path="/receipts/:expenseId" element={<ReceiptPreview />} />
               <Route path="/incomes" element={<Incomes />} />
               <Route path="/incomes/new" element={<CreateIncome />} />
               <Route path="/incomes/:id/edit" element={<EditIncome />} />
