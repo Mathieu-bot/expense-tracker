@@ -102,13 +102,6 @@ export const CreateExpense = () => {
   return (
     <div className="p-6 max-w-2xl mx-auto pt-20 text-light mt-10">
       <div className="flex items-center mb-6">
-        <Button
-          onClick={handleCancel}
-          className="mr-4 border border-gray-300"
-          size="small"
-        >
-          ← Back
-        </Button>
         <h1 className="text-2xl font-semibold">Create New Expense</h1>
       </div>
 
@@ -211,11 +204,12 @@ export const CreateExpense = () => {
           <input type="file" onChange={onFile} />
         </div>
 
-        <div className="flex gap-3 justify-end">
-          <Button onClick={handleCancel} className="border border-gray-300">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 justify-end">
+          <Button onClick={handleCancel} className="bg-white/15 hover:bg-white/10 border dark:bg-white/10 dark:hover:bg-white/15 dark:border-light/10 border-gray-300">
             Cancel
           </Button>
-          <Button onClick={handleSave}>
+          <Button onClick={handleSave}
+          className="border-accent/10 text-accent bg-white/80 bg-gradient-to-br from-accent/10 to-accent/20 hover:shadow-lg hover:bg-white/90 dark:bg-accent/10 dark:from-accent/10 dark:to-accent/10 dark:hover:bg-accent/15 dark:border-accent/10 font-semibold">
             {isLoading ? (
               <div className="flex items-center gap-3">
                 <Loader2 className="animate-spin" />
