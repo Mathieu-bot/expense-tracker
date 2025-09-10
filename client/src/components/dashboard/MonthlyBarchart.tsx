@@ -11,6 +11,7 @@ import {
 import { formatCurrency } from "../../utils/formatters";
 import { CustomTooltip } from "./Tooltip";
 import { useTheme } from "../../contexts/ThemeContext";
+import { motion } from "framer-motion";
 
 const COLORS = {
   spending: "#FF8042",
@@ -42,10 +43,24 @@ const MonthlyBarChart: React.FC<MonthlyBarChartProps> = ({ data }) => {
   );
 
   return (
-    <div className="bg-white/80 dark:bg-gradient-to-br dark:bg-transparent dark:from-primary/20 dark:to-primary-dark/10  backdrop-blur-xl rounded-2xl shadow-lg border border-gray-200/70 dark:border-white/5 p-6 w-full h-[380px] flex flex-col">
-      <div className="relative mt-3 ml-3 flex mb-6">
+    <motion.div
+      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, ease: "easeOut", delay: 0.3 }}
+      className="bg-white/80 dark:bg-gradient-to-br dark:bg-transparent dark:from-primary/20 dark:to-primary-dark/10  backdrop-blur-xl rounded-2xl shadow-lg border border-gray-200/70 dark:border-white/5 p-6 w-full h-[380px] flex flex-col"
+    >
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.4, delay: 0.1 }}
+        className="relative mt-3 ml-3 flex mb-6"
+      >
         <div className="flex border border-gray-400/30 dark:border-white/10 rounded-xl overflow-hidden">
-          <button
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => toggleBar("spending")}
             style={{
               backgroundColor: visibleBars.spending
@@ -61,9 +76,11 @@ const MonthlyBarChart: React.FC<MonthlyBarChartProps> = ({ data }) => {
             <span className="text-xs opacity-80">
               {formatCurrency(totals.spending)}
             </span>
-          </button>
+          </motion.button>
 
-          <button
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => toggleBar("income")}
             style={{
               backgroundColor: visibleBars.income
@@ -79,9 +96,9 @@ const MonthlyBarChart: React.FC<MonthlyBarChartProps> = ({ data }) => {
             <span className="text-xs opacity-80">
               {formatCurrency(totals.income)}
             </span>
-          </button>
+          </motion.button>
         </div>
-      </div>
+      </motion.div>
 
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
@@ -133,7 +150,7 @@ const MonthlyBarChart: React.FC<MonthlyBarChartProps> = ({ data }) => {
           )}
         </BarChart>
       </ResponsiveContainer>
-    </div>
+    </motion.div>
   );
 };
 

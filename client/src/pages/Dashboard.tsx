@@ -20,6 +20,7 @@ import MonthlyBarChart from "../components/dashboard/MonthlyBarchart";
 import DateRangeFilter from "../components/dashboard/DateRangeFilter";
 import ShowTipsButton from "../components/aiAdvice/ShowTipsButton";
 import AIAdvice from "../components/aiAdvice/AIAdvice";
+import { motion } from "framer-motion";
 
 function Dashboard() {
   const { data: summaryAlert } = useSummaryAlert();
@@ -201,7 +202,12 @@ function Dashboard() {
   };
 
   return (
-    <div className="min-w-screen max-h-screen pt-26 md:pl-30 md:pr-22 flex flex-col items-center gap-10 md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+    <motion.div
+      initial={{ opacity: 0,scale: 0.95 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+      className="min-w-screen max-h-screen pt-26 md:pl-30 md:pr-22 flex flex-col items-center gap-10 md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+    >
       {summaryAlert.alert && (
         <SummaryAlert
           alert={summaryAlert.alert}
@@ -215,7 +221,12 @@ function Dashboard() {
 
       <div className="col-span-3 flex flex-col w-full px-5 gap-5">
         {/* FILTER */}
-        <div className="flex items-center text-foreground justify-between">
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
+          className="flex items-center text-foreground justify-between"
+        >
           <div className="flex gap-5 items-center">
             <DateRangeFilter
               startDate={startDate}
@@ -224,9 +235,14 @@ function Dashboard() {
               onReset={handleDateRangeReset}
             />
           </div>
-        </div>
+        </motion.div>
         {/* CARD */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-4"
+        >
           {toDisplay.map((item, idx) => (
             <MiniStatCard key={idx} {...item} filterWasUsed={filterWasUsed} />
           ))}
@@ -235,22 +251,25 @@ function Dashboard() {
             {...soldToDisplay}
             filterWasUsed={filterWasUsed}
           />
-        </div>
+        </motion.div>
 
         {/* BARCHART */}
         <MonthlyBarChart data={lastSixthMonthSummary} />
       </div>
       {/* PIE */}
-      <div
+      <motion.div
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
         className="lg:col-span-1 flex flex-col md:h-full items-center gap-4 w-full 
             bg-white/80 
             dark:bg-transparent dark:bg-gradient-to-br dark:from-primary/20 dark:to-primary-dark/10
             backdrop-blur-xl
-            py-2 px-5 rounded-lg"
+            py-2 px-5 rounded-lg border border-gray-200/70 dark:border-white/5 shadow-lg"
       >
         <PieGraph title={"Expense Overview"} data={expenses} />
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 

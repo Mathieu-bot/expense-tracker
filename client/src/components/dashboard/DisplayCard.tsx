@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import { TrendingUp, TrendingDown, type LucideProps, Plus } from "lucide-react";
 import { formatCurrency } from "../../utils/formatters";
 import { Link } from "react-router-dom";
+import CountUp from "react-countup";
+import { motion } from "framer-motion";
 
 export type MiniStatItem = {
   label: string;
@@ -27,10 +29,6 @@ export default function MiniStatCard({
   customBgColor = null,
   href,
 }: MiniStatItem) {
-  const [isVisible, setIsVisible] = useState(false);
-  const [animatedValue, setAnimatedValue] = useState(0);
-  const cardRef = useRef<HTMLDivElement>(null);
-
   const isUp = typeof deltaPct === "number" ? deltaPct >= 0 : undefined;
 
   const deltaColor =
@@ -40,54 +38,17 @@ export default function MiniStatCard({
       ? "bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400"
       : "bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-400";
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.2 }
-    );
-
-    if (cardRef.current) observer.observe(cardRef.current);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (isVisible && value !== 0) {
-      const duration = 1500;
-      const startTime = Date.now();
-
-      const animate = () => {
-        const elapsed = Date.now() - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-        setAnimatedValue(Math.round(value * easeOutQuart));
-
-        if (progress < 1) requestAnimationFrame(animate);
-      };
-
-      requestAnimationFrame(animate);
-    }
-  }, [isVisible, value]);
-
-  const valueStr = formatCurrency(animatedValue);
-
   return (
-    <div
-      ref={cardRef}
-      className={`
+    <motion.div
+      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className={`dark:border dark:border-white/5
         relative bg-white/80 dark:bg-transparent dark:bg-gradient-to-br dark:from-primary/20 dark:to-primary-dark/10 
         backdrop-blur-xl rounded-2xl py-4 px-5 
         shadow-lg transition-all duration-500 flex flex-col gap-3 overflow-hidden
         transform-gpu hover:shadow-lg dark:hover:shadow-accent/10
-        ${
-          isVisible
-            ? "opacity-100 translate-y-0 scale-100"
-            : "opacity-0 translate-y-6 scale-95"
-        }
         ${customBgColor || ""}
       `}
     >
@@ -119,7 +80,7 @@ export default function MiniStatCard({
         )}
       </div>
 
-      {/* Value + Delta alignés */}
+      {/* Value + Delta aligned */}
       <div className="flex items-center justify-between relative z-10">
         <div
           className={`text-2xl font-semibold tracking-tight transition-all duration-300 ${
@@ -128,20 +89,29 @@ export default function MiniStatCard({
               : "text-gray-800 dark:text-light/90"
           }`}
         >
-          {valueStr}
+          <CountUp
+            end={value}
+            duration={1.5}
+            formattingFn={formatCurrency}
+            decimals={value % 1 !== 0 ? 2 : 0}
+          />
           {valueSuffix ?? ""}
         </div>
 
         {typeof deltaPct === "number" && !filterWasUsed && (
-          <div className="flex flex-col items-end">
+          <motion.div
+            className="flex flex-col items-end"
+            initial={{ opacity: 0, scale: 0.75 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
             <span
               className={`
                 text-sm font-semibold px-2.5 py-1 rounded-full 
                 inline-flex items-center gap-1 transition-all duration-500
                 ${deltaColor}
-                ${isVisible ? "opacity-100 scale-100" : "opacity-0 scale-75"}
               `}
-              style={{ transitionDelay: "200ms" }}
             >
               {isUp ? (
                 <TrendingUp className="w-3.5 h-3.5 transition-transform duration-300" />
@@ -156,11 +126,11 @@ export default function MiniStatCard({
               <div className="w-2 h-px bg-gray-400 dark:bg-white/30"></div>
               <span className="tracking-wide">vs previous month</span>
             </div>
-          </div>
+          </motion.div>
         )}
       </div>
 
       <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-accent/80 to-transparent dark:from-accent/60 dark:to-transparent" />
-    </div>
+    </motion.div>
   );
 }
