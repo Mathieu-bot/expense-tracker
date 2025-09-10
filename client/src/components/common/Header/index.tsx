@@ -10,13 +10,12 @@ import {
   LogOut,
   X,
   Menu,
+  FolderTree,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useUserStore } from "../../../stores/userStore";
 import LogoutButton from "../LogoutButton";
 import DateDropdown from "./DateDropdown";
-import SearchInput from "./SearchInput";
-import NotificationBell from "./NotificationBell";
 
 const DashboardHeader = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -31,6 +30,7 @@ const DashboardHeader = () => {
   const navItems = [
     { label: "Dashboard", icon: LayoutDashboard, href: "/" },
     { label: "Expenses", icon: CreditCard, href: "/expenses" },
+    { label: "Categories", icon: FolderTree, href: "/categories" },
     { label: "Incomes", icon: DollarSign, href: "/incomes" },
     { label: "Profile", icon: User, href: "/profile" },
   ];
@@ -51,13 +51,12 @@ const DashboardHeader = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      setIsScrolled(window.scrollY > 5);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
 
   const openMenu = () => {
     setIsMobileMenuOpen(true);
@@ -146,19 +145,10 @@ const DashboardHeader = () => {
 
         <div className="hidden xl:flex items-center gap-6">
           <DateDropdown shouldShowGlassmorphism={shouldShowGlassmorphism} />
-          <SearchInput
-            placeholder="Search transactions..."
-            shouldShowGlassmorphism={shouldShowGlassmorphism}
-          />
         </div>
 
         <div className="hidden lg:flex items-center gap-5">
           <ThemeToggle shouldShowGlassmorphism={shouldShowGlassmorphism} />
-          <NotificationBell
-            hasNotifications={true}
-            notifNumber={3}
-            shouldShowGlassmorphism={shouldShowGlassmorphism}
-          />
 
           <div
             className={`h-8 w-px ${
@@ -217,11 +207,6 @@ const DashboardHeader = () => {
 
         <div className="flex lg:hidden items-center gap-3">
           <ThemeToggle shouldShowGlassmorphism={shouldShowGlassmorphism} />
-          <NotificationBell
-            hasNotifications={true}
-            notifNumber={3}
-            shouldShowGlassmorphism={shouldShowGlassmorphism}
-          />
           <Link
             to={user ? "/profile" : "/login"}
             className="flex items-center gap-2"

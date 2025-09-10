@@ -50,7 +50,7 @@ export default function Expenses() {
   };
 
   return (
-    <div className="relative z-2 mb-10 mt-30 mx-auto text-light max-w-6xl px-6">
+    <div className="relative z-2 mb-10 mt-30 mx-auto text-light w-full pl-28 pr-10 px-6">
       <div className="flex items-center justify-between mb-6">
         <div className="flex flex-col gap-2">
           <h1 className="text-4xl font-bold">Expenses</h1>
@@ -138,8 +138,6 @@ export default function Expenses() {
         </div>
       )}
 
-
-
       <div className="p-5 border bg-light/20 border-light/10 dark:bg-transparent dark:border-white/5 rounded-xl dark:bg-gradient-to-br dark:from-primary-light/10 dark:to-primary/10 backdrop-blur-2xl">
         <div className="flex mb-5">
           <div className="flex gap-3 items-center">
@@ -153,7 +151,7 @@ export default function Expenses() {
               onClick={refetch}
               className="bg-white/80 hover:bg-white/90 hover:shadow-lg bg-gradient-to-br from-accent/10 to-accent/20 border-accent/20 dark:bg-accent/10 dark:hover:bg-accent/15 dark:border-accent/10 text-accent"
               startIcon={<RefreshCcw size={15} />}
-              >
+            >
               Refresh
             </Button>
           </div>
@@ -163,15 +161,15 @@ export default function Expenses() {
             <div className="size-8 animate-spin rounded-full border-4 border-accent border-t-transparent"></div>
           </div>
         )}
-  
+
         {error && (
           <div className="text-red-400 bg-red-400/10 border border-red-400/30 p-3 rounded-md">
             {error}
           </div>
         )}
-              {!loading && !error && expenses.length === 0 && (
-                <div className="text-light/70">No expenses found.</div>
-              )}
+        {!loading && !error && expenses.length === 0 && (
+          <div className="text-light/70">No expenses found.</div>
+        )}
         {!loading && !error && expenses.length > 0 && (
           <ul className="divide-y divide-gray-300 dark:divide-white/10 bg-gradient-to-br from-primary-light/10 to-primary-dark/10 backdrop-blur-xl rounded-2xl border border-white/5 shadow-lg overflow-hidden">
             {expenses.map((e) => (

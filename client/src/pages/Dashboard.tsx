@@ -203,10 +203,10 @@ function Dashboard() {
 
   return (
     <motion.div
-      initial={{ opacity: 0,scale: 0.95 }}
+      initial={{ opacity: 0, scale: 0.95 }}
       whileInView={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
-      className="min-w-screen max-h-screen pt-26 md:pl-30 md:pr-22 flex flex-col items-center gap-10 md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+      className="min-w-screen max-h-[95vh] pt-26 md:pl-28 md:pr-10 flex flex-col items-center gap-10 md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
     >
       {summaryAlert.alert && (
         <SummaryAlert
@@ -261,11 +261,11 @@ function Dashboard() {
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
-        className="lg:col-span-1 flex flex-col md:h-full items-center gap-4 w-full 
+        className="lg:col-span-1 flex flex-col md:h-[80%] items-center gap-4 w-full 
             bg-white/80 
             dark:bg-transparent dark:bg-gradient-to-br dark:from-primary/20 dark:to-primary-dark/10
             backdrop-blur-xl
-            py-2 px-5 rounded-lg border border-gray-200/70 dark:border-white/5 shadow-lg"
+            py-2 px-2 pr-5 rounded-lg border border-gray-200/70 dark:border-white/5 shadow-lg"
       >
         <PieGraph title={"Expense Overview"} data={expenses} />
       </motion.div>
