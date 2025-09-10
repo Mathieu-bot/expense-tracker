@@ -13,7 +13,7 @@ export const TotalIncome = ({ total }: TotalIncomeProps) => {
       initial={{ opacity: 0, y: 20}}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true}}
-      transition={{ duration: 0.5, ease: "easeOut" }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
       className="flex rounded-full items-center gap-3 bg-white/80 dark:bg-transparent dark:bg-gradient-to-r dark:from-primary-light/15 dark:to-primary-dark/15 backdrop-blur-lg px-6 py-3 border border-gray-200/70 dark:border-white/10 group hover:border-accent/30 transition-all duration-500 shadow-lg hover:shadow-accent/10 relative overflow-hidden transform-gpu"
     >
       <div className="absolute inset-0 bg-gradient-to-r from-accent/5 to-cyan-400/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>

@@ -3,6 +3,7 @@ import { X, Calendar } from "lucide-react";
 import { parseISO } from "date-fns";
 import DateRangeModal from "./DateRangeModal";
 import { formatDate } from "../../../utils/formatters";
+import { motion } from "framer-motion";
 
 interface DateRangeFilterProps {
   startDate?: string;
@@ -60,7 +61,11 @@ const DateRangeFilter = ({
   return (
     <div className={`relative ${className}`}>
       <div className="flex gap-2">
-        <button
+        <motion.button
+          initial={{ scale: 0.5, opacity: 0 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
           onClick={() => setIsModalOpen(true)}
           className={[
             "w-10 h-10 flex items-center justify-center",
@@ -73,7 +78,7 @@ const DateRangeFilter = ({
           ].join(" ")}
         >
           <Calendar className="w-4 h-4" />
-        </button>
+        </motion.button>
 
         {!isDefaultRange() && startDate && endDate && (
           <div

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Calendar, X } from "lucide-react";
 import { Button } from "../../../ui";
 import { GlassDatePicker } from "../GlassDatePicker";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface DateRangeFilterProps {
   dateRange: { start: Date | null; end: Date | null };
@@ -25,25 +26,51 @@ export const DateRangeFilter = ({
   }, [dateError]);
 
   return (
-    <div className="dark:bg-transparent bg-white/25 dark:bg-gradient-to-br dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl p-6 border border-white/5 mb-6 shadow-lg animate-in fade-in-50">
-      <h3 className="text-lg font-medium text-white dark:text-light/90 mb-4 flex items-center gap-2">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
+      className="dark:bg-transparent bg-white/25 dark:bg-gradient-to-br dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl p-6 border border-white/5 mb-6 shadow-lg"
+    >
+      <motion.h3
+        initial={{ opacity: 0, x: -10 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.4, delay: 0.1 }}
+        className="text-lg font-medium text-white dark:text-light/90 mb-4 flex items-center gap-2"
+      >
         <Calendar className="w-5 h-5 text-accent" />
         Filter Incomes
-      </h3>
+      </motion.h3>
 
-      {showError && dateError && (
-        <div className="mb-4 bg-gradient-to-r from-red-100 to-pink-100 dark:bg-rose-400/20 border border-red-200 dark:border-rose-400/30 text-red-700 dark:text-rose-400 px-4 py-3 rounded-xl backdrop-blur-sm flex items-center justify-between animate-in slide-in-from-top-5 duration-300">
-          <span className="flex-1">{dateError}</span>
-          <button
-            onClick={() => setShowError(false)}
-            className="ml-3 p-1 hover:bg-red-200/50 dark:hover:bg-rose-400/30 rounded transition-colors"
+      <AnimatePresence>
+        {showError && dateError && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+            className="mb-4 bg-gradient-to-r from-red-100 to-pink-100 dark:bg-rose-400/20 border border-red-200 dark:border-rose-400/30 text-red-700 dark:text-rose-400 px-4 py-3 rounded-xl backdrop-blur-sm flex items-center justify-between"
           >
-            <X className="w-4 h-4 text-red-600 dark:text-rose-400" />
-          </button>
-        </div>
-      )}
+            <span className="flex-1">{dateError}</span>
+            <button
+              onClick={() => setShowError(false)}
+              className="ml-3 p-1 hover:bg-red-200/50 dark:hover:bg-rose-400/30 rounded transition-colors"
+            >
+              <X className="w-4 h-4 text-red-600 dark:text-rose-400" />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"
+      >
         <GlassDatePicker
           value={dateRange.start}
           onChange={onStartDateChange}
@@ -56,9 +83,15 @@ export const DateRangeFilter = ({
           label="End Date"
           size="medium"
         />
-      </div>
+      </motion.div>
 
-      <div className="flex gap-3">
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+        className="flex gap-3"
+      >
         <Button
           onClick={onClear}
           className="bg-gradient-to-br from-accent/25 to-accent/20 bg-white/80
@@ -69,7 +102,7 @@ export const DateRangeFilter = ({
         >
           Clear
         </Button>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };

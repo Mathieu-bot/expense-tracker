@@ -2,6 +2,7 @@ import { Calendar, Mail, User, Lock, Palette } from "lucide-react";
 import { assets } from "../../assets/images";
 import type { UserProfile } from "../../types/UserProfile";
 import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 
 interface ProfileInfoProps {
   user: UserProfile;
@@ -33,7 +34,13 @@ const ProfileInfo = ({ user, activeTab, onTabChange }: ProfileInfoProps) => {
   }, [activeTab]);
 
   return (
-    <div className="relative">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
+      className="relative"
+    >
       <div
         className="bg-white/80 dark:bg-none dark:bg-gradient-to-br dark:bg-transparent dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl
                       rounded-3xl py-5 border border-gray-200/70 dark:border-white/15 shadow-2xl h-full 
@@ -46,7 +53,13 @@ const ProfileInfo = ({ user, activeTab, onTabChange }: ProfileInfoProps) => {
 
           {/*profile*/}
           <div className="flex flex-col items-center mb-8">
-            <div className="relative mb-2 group">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+              className="relative mb-2 group"
+            >
               <div className="relative w-32 h-32">
                 <img
                   src={assets.userPlaceholder}
@@ -54,21 +67,39 @@ const ProfileInfo = ({ user, activeTab, onTabChange }: ProfileInfoProps) => {
                   className="w-full h-full object-cover rounded-xl"
                 />
               </div>
-            </div>
+            </motion.div>
 
-            <h1 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">
+            <motion.h3
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+              className="text-2xl font-bold mb-2 text-gray-800 dark:text-white"
+            >
               {user.firstname} {user.lastname}
-            </h1>
-            <div className="dark:bg-gradient-to-r bg-cyan-100 dark:bg-transparent dark:from-purple-500/15 dark:to-blue-500/15 px-4 py-2 rounded-full border border-cyan-200/50 dark:border-purple-500/30">
+            </motion.h3>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: 0.3 }}
+              className="dark:bg-gradient-to-r bg-cyan-100 dark:bg-transparent dark:from-purple-500/15 dark:to-blue-500/15 px-4 py-2 rounded-full border border-cyan-200/50 dark:border-purple-500/30"
+            >
               <span className="text-cyan-700 dark:text-white font-semibold text-sm">
                 @{user.username}
               </span>
-            </div>
+            </motion.div>
           </div>
 
           {/* email  & member info*/}
           <div className="px-10">
-            <div className="py-4 border-b border-gray-400/20 dark:border-white/5">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: 0.4 }}
+              className="py-4 border-b border-gray-400/20 dark:border-white/5"
+            >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg dark:bg-blue-400/10 flex items-center justify-center">
                   <Mail className="w-5 h-5 text-cyan-600 dark:text-blue-400" />
@@ -82,9 +113,15 @@ const ProfileInfo = ({ user, activeTab, onTabChange }: ProfileInfoProps) => {
                   </p>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="py-4">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: 0.5 }}
+              className="py-4"
+            >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg dark:bg-purple-400/10 flex items-center justify-center">
                   <Calendar className="w-5 h-5 text-blue-600 dark:text-purple-400" />
@@ -102,12 +139,18 @@ const ProfileInfo = ({ user, activeTab, onTabChange }: ProfileInfoProps) => {
                   </p>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
 
         {/* right */}
-        <div className="absolute overflow-hidden z-[100] rounded-l-lg -right-1 top-1/2 -translate-y-1/2 border border-gray-400/20 dark:border-white/5 flex flex-col items-center justify-center ml-6 my-auto">
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+          className="absolute overflow-hidden z-[100] rounded-l-lg -right-1 top-1/2 -translate-y-1/2 border border-gray-400/20 dark:border-white/5 flex flex-col items-center justify-center ml-6 my-auto"
+        >
           {/*indicator */}
           <div
             className="absolute z-[200] right-[3px] w-1 bg-gradient-to-b from-cyan-500 to-blue-500 dark:from-purple-500 dark:to-blue-500 rounded-full transition-all duration-500 ease-in-out"
@@ -118,8 +161,12 @@ const ProfileInfo = ({ user, activeTab, onTabChange }: ProfileInfoProps) => {
           />
 
           {tabs.map(({ id, icon: Icon, label }, index) => (
-            <button
+            <motion.button
               key={id}
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.3, delay: 0.7 + index * 0.1 }}
               ref={(el) => {
                 tabRefs.current[index] = el;
               }}
@@ -138,11 +185,11 @@ const ProfileInfo = ({ user, activeTab, onTabChange }: ProfileInfoProps) => {
               >
                 {label}
               </span>
-            </button>
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
