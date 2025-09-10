@@ -2,6 +2,7 @@ import {
   LayoutDashboard,
   CreditCard,
   DollarSign,
+  FolderTree,
   User,
   LogOut,
 } from "lucide-react";
@@ -10,6 +11,7 @@ import LogoutButton from "./LogoutButton";
 const items = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/" },
   { label: "Expenses", icon: CreditCard, href: "/expenses" },
+  { label: "Categories", icon: FolderTree, href: "/categories" },
   { label: "Incomes", icon: DollarSign, href: "/incomes" },
   { label: "Profile", icon: User, href: "/profile" },
 ];
@@ -23,7 +25,7 @@ export default function Sidebar() {
             <nav className="h-full px-2 py-4">
               <div className="flex h-full flex-col justify-between">
                 <div className="flex flex-col gap-3">
-                  {items.slice(0, 3).map(({ label, icon: Icon, href }) => (
+                  {items.slice(0, 4).map(({ label, icon: Icon, href }) => (
                     <a
                       key={label}
                       href={href}
@@ -45,7 +47,7 @@ export default function Sidebar() {
                 </div>
 
                 <div className="flex flex-col gap-3">
-                  {items.slice(3).map(({ label, icon: Icon, href }) => (
+                  {items.slice(4).map(({ label, icon: Icon, href }) => (
                     <a
                       key={label}
                       href={href}
