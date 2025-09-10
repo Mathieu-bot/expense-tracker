@@ -20,7 +20,7 @@ export const CreateExpense = () => {
     startDate: "",
     endDate: "",
     categoryId: "",
-    receipt: undefined,
+    receipt: null,
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -129,10 +129,18 @@ export const CreateExpense = () => {
             <label className="block text-sm mb-1">Category</label>
             <Select
               value={form.categoryId || null}
-              onChange={(v) => setForm((f) => ({ ...f, categoryId: String(v) }))}
-              options={categories.map((c) => ({ label: c.category_name, value: String(c.category_id) }))}
+              onChange={(v) =>
+                setForm((f) => ({ ...f, categoryId: String(v) }))
+              }
+              options={categories.map((c) => ({
+                label: c.category_name,
+                value: String(c.category_id),
+              }))}
               placeholder="Select a category"
               disabled={categoriesLoading}
+              classes={{
+                option: "bg-white/10! border! border-white/10!",
+              }}
             />
           </div>
         </div>
