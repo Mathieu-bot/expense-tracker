@@ -34,9 +34,9 @@ const Day = ({
       className={`h-10 w-10 flex items-center justify-center rounded-full text-sm transition-all duration-200 relative
         ${isCurrentMonth ? "text-foreground" : "text-muted-foreground/50"}
         ${isSelected ? "bg-accent/20" : ""}
-        ${isStart ? "bg-accent text-white font-semibold rounded-r-none" : ""}
-        ${isEnd ? "bg-accent text-white font-semibold rounded-l-none" : ""}
-        ${isInRange ? "bg-accent/30 rounded-none" : ""}
+        ${isStart ? "bg-accent font-semibold" : ""}
+        ${isEnd ? "bg-accent font-semibold" : ""}
+        ${isInRange ? "bg-accent/30 rounded-full" : ""}
         ${isTodayDate && !isSelected ? "border border-accent" : ""}
         ${isCurrentMonth && !isSelected ? "hover:bg-accent/10" : ""}
         cursor-pointer`}
