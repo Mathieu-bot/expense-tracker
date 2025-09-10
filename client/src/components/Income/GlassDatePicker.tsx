@@ -9,14 +9,16 @@ export const GlassDatePicker = (
       classes={{
         calendar:
           "dark:bg-white/10 dark:backdrop-blur-xl rounded-2xl p-3 border border-white/10 shadow-lg",
-        day: "dark:text-light/80 hover:bg-white/10 rounded-lg transition-colors",
-        daySelected: "bg-accent dark:text-light font-medium",
+        day: "dark:text-light/80 hover:bg-white/10 hover:!border-accent/50 !ring-0 rounded-lg transition-colors",
+        daySelected:
+          "!bg-accent dark:!bg-accent/10 dark:text-light font-medium",
         dayDisabled: "dark:text-light/30 cursor-not-allowed",
-        nav: "flex justify-between items-center mb-2 dark:text-light/90",
+        nav: "",
         grid: "grid grid-cols-7 gap-1",
         input:
-          "bg-white/5 backdrop-blur-md border border-white/10 text-light placeholder-light/60 rounded-xl",
-        label: "rounded-full text-primary-dark peer-placeholder-shown:text-white/60", 
+          "bg-white/5 backdrop-blur-md border !border-white/5 !text-white placeholder-light/60 rounded-xl focus:!ring-0 focus:!border-accent dark:focus:!border-white/20 !ring-0",
+        label:
+          "rounded-full peer-placeholder-shown:text-white focus:!text-accent",
       }}
     />
   );
