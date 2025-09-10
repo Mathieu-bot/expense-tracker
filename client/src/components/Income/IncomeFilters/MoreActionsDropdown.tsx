@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { MoreHorizontal, FileDown } from "lucide-react";
 import { Button } from "../../../ui";
 import { useClickOutside } from "../../../hooks/useClickOutside";
-import { ExportModal } from "../IncomePdf/ExportModal";
+import { ExportModal } from "../ExportModal";
 import type { Income } from "../../../types/Income";
 
 interface MoreActionsDropdownProps {
@@ -14,7 +14,7 @@ interface MoreActionsDropdownProps {
 export const MoreActionsDropdown = ({
   onExport,
   incomes,
-  onPreview
+  onPreview,
 }: MoreActionsDropdownProps) => {
   const [showMoreActions, setShowMoreActions] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
@@ -61,7 +61,7 @@ export const MoreActionsDropdown = ({
         open={showExportModal}
         onClose={() => setShowExportModal(false)}
         onExport={onExport}
-        onPreview={onPreview} 
+        onPreview={onPreview}
         incomes={incomes}
       />
     </>

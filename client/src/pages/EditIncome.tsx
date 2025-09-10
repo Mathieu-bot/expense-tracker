@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { IncomeForm } from "../components/Income/IncomeForm";
+import { IncomeForm } from "../components/income/IncomeForm";
 import { useToast, Skeleton } from "../ui";
 import { IncomeService } from "../services/IncomeService";
 import type { Income, UpdateIncomeRequest } from "../types/Income";

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { FileDown, Download, Eye } from "lucide-react";
-import type { Income } from "../../../types/Income";
-import { DatePicker } from "../../../ui";
+import type { Income } from "../../types/Income";
+import { DatePicker } from "../../ui";
 
 interface ExportModalProps {
   open: boolean;

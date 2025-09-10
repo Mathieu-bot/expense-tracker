@@ -11,21 +11,21 @@ import {
   IncomeFilters,
   DeleteConfirmationModal,
   ReceiptModal,
-} from "../components/Income";
+} from "../components/income";
 import { motion } from "framer-motion";
-import { IncomeList } from "../components/Income/IncomeList";
-import Receipt from "../components/Income/Receipt";
+import { IncomeList } from "../components/income/IncomeList";
+import Receipt from "../components/income/Receipt";
 import { Plus, Wallet, X, Download } from "lucide-react";
-import { StatsCards } from "../components/Income/IncomeHeader/StatsCards";
+import { StatsCards } from "../components/income/IncomeHeader/StatsCards";
 import type { Income } from "../types/Income";
 import { useState, useMemo, useRef } from "react";
-import { ReceiptPdf } from "../components/Income/IncomePdf/ReceiptPdf";
+import { ReceiptPdf } from "../components/income/ReceiptPdf";
 import {
   PdfExportService,
   Resolution,
   Margin,
 } from "../services/PdfExportService";
-import { ExportModal } from "../components/Income/IncomePdf/ExportModal";
+import { ExportModal } from "../components/income/ExportModal";
 export const Incomes = () => {
   const navigate = useNavigate();
   const toast = useToast();

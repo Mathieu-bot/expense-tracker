@@ -1,7 +1,7 @@
 import { Plus } from "lucide-react";
 import { Button } from "../../../ui";
 import { MoreActionsDropdown } from "../IncomeFilters/MoreActionsDropdown";
-import { TotalIncome } from "../IncomeHeader/TotalIncome";
+import { TotalIncome } from "./TotalIncome";
 import type { Income } from "../../../types/Income";
 
 interface IncomeHeaderProps {
@@ -36,7 +36,11 @@ export const IncomeHeader = ({
       </div>
 
       <div className="flex items-center gap-3">
-        <MoreActionsDropdown onPreview={onPreview} onExport={onExport} incomes={incomes} />
+        <MoreActionsDropdown
+          onPreview={onPreview}
+          onExport={onExport}
+          incomes={incomes}
+        />
         <Button
           onClick={onNewIncome}
           size="large"
