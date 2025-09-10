@@ -157,7 +157,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
       <div className={navCls}>
         <button
           type="button"
-          className="px-2 py-1 rounded hover:bg-white/10"
+          className="px-2 py-1 rounded hover:bg-gray-200/50 dark:hover:bg-white/10 border-0"
           onClick={() =>
             setView(new Date(view.getFullYear(), view.getMonth() - 1, 1))
           }
@@ -170,7 +170,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
         </div>
         <button
           type="button"
-          className="px-2 py-1 rounded hover:bg-white/10"
+          className="px-2 py-1 rounded hover:bg-gray-200/50 dark:hover:bg-white/10 border-0"
           onClick={() =>
             setView(new Date(view.getFullYear(), view.getMonth() + 1, 1))
           }
