@@ -12,13 +12,15 @@ import SignupPage from "./pages/SignupPage";
 import AuthCallback from "./pages/AuthCallback";
 import { Profile } from "./pages/Profile";
 import PostAuthGate from "./components/auth/PostAuthGate";
-import DashboardHeader from "./components/common/Header/Header";
 import Expenses from "./pages/Expenses";
 import { CreateExpense } from "./pages/CreateExpense";
 import { EditExpense } from "./pages/EditExpense";
 import { CreateIncome } from "./pages/CreateIncome";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Categories from "./pages/Categories";
+import ReceiptPreview from "./pages/ReceiptPreview";
+import Header from "./components/common/Header";
+
 
 function App() {
   const location = useLocation();
@@ -35,7 +37,7 @@ function App() {
           location.pathname.includes("/signup") ? null : (
             <>
               <BackgroundImage />
-              <DashboardHeader />
+              <Header />
               <Sidebar />
             </>
           )}
@@ -60,6 +62,7 @@ function App() {
               <Route path="/expenses/new" element={<CreateExpense />} />
               <Route path="/expenses/:id/edit" element={<EditExpense />} />
               <Route path="/categories" element={<Categories />} />
+              <Route path="/receipts/:expenseId" element={<ReceiptPreview />} />
               <Route path="/incomes" element={<Incomes />} />
               <Route path="/incomes/new" element={<CreateIncome />} />
               <Route path="/incomes/:id/edit" element={<EditIncome />} />

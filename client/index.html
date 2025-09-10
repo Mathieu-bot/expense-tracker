@@ -9,6 +9,44 @@
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PennyPal</title>
+    <script defer>
+      (function () {
+        try {
+          let saved = localStorage.getItem("theme"); //dark, light, system or null
+          let systemPrefersDark = window.matchMedia(
+            "(prefers-color-scheme: dark)"
+          ).matches;
+          let appliedTheme;
+          if (saved === "dark" || saved === "light") {
+            appliedTheme = saved;
+          } else if (saved === "system") {
+            appliedTheme = systemPrefersDark ? "dark" : "light";
+          } else {
+            appliedTheme = systemPrefersDark ? "dark" : "light";
+          }
+
+          document.documentElement.setAttribute("data-theme", appliedTheme);
+          document.documentElement.classList.toggle(
+            "dark",
+            appliedTheme === "dark"
+          );
+
+          window.__INITIAL_THEME__ =
+            saved !== null ? saved : systemPrefersDark ? "dark" : "light";
+        } catch (e) {
+          console.error("Theme init error", e);
+          document.documentElement.setAttribute("data-theme", "light");
+          window.__INITIAL_THEME__ = "light";
+        }
+        document.documentElement.style.visibility = "visible";
+      })();
+    </script>
+    <style>
+      /*keep content hidden until the script runs*/
+      html {
+        visibility: hidden;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>

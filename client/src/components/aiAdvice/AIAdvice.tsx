@@ -25,7 +25,7 @@ export default function AIAdvice({ open, setOpen }: AIAdviceProps) {
     <section
       className={`${
         open
-          ? "fixed bottom-10 right-36 z-[9999] w-[min(90vw,28rem)] max-w-[28rem] rounded-2xl border border-gray-300/70 dark:border-white/10 shadow-lg bg-white/90 dark:bg-gray-900/80 backdrop-blur text-gray-800 dark:text-gray-100"
+          ? "fixed bottom-10 right-36 z-[9999] w-fit max-w-[28rem] rounded-2xl border border-gray-300/70 dark:border-white/10 shadow-lg bg-white/90 dark:bg-gray-900/80 backdrop-blur text-gray-800 dark:text-gray-100"
           : "hidden"
       }`}
       role={error ? "alert" : "status"}

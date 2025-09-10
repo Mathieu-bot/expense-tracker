@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, useToast } from "../../ui";
 import type { ChangePasswordRequest } from "../../types/UserProfile";
 import { Lock, Eye, EyeOff } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface PasswordFormProps {
   onChangePassword: (
@@ -90,8 +91,20 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
   };
 
   return (
-    <div className="dark:bg-gradient-to-br dark:bg-none bg-white/80 dark:bg-transparent dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-3xl p-8 border border-gray-200/70 dark:border-white/15 shadow-2xl transition-all duration-500">
-      <div className="flex items-center justify-between mb-8">
+    <motion.div
+      initial={{ opacity: 0}}
+      whileInView={{ opacity: 1}}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
+      className="dark:bg-gradient-to-br dark:bg-none bg-white/80 dark:bg-transparent dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-3xl p-8 border border-gray-200/70 dark:border-white/15 shadow-2xl transition-all duration-500"
+    >
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.4, delay: 0.1 }}
+        className="flex items-center justify-between mb-8"
+      >
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-cyan-100 dark:bg-cyan-400/15 flex items-center justify-center border border-cyan-200/50 dark:border-cyan-400/20">
             <Lock className="w-6 h-6 text-cyan-600 dark:text-cyan-400" />
@@ -105,10 +118,15 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
             </p>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
           <label className="block text-sm font-medium text-gray-700 dark:text-light/70 mb-3">
             Current Password
           </label>
@@ -137,9 +155,14 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
               {fieldErrors.currentPassword}
             </p>
           )}
-        </div>
+        </motion.div>
 
-        <div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
           <label className="block text-sm font-medium text-gray-700 dark:text-light/70 mb-3">
             New Password
           </label>
@@ -172,9 +195,14 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
               Must be at least 6 characters with 1 uppercase letter and 1 number
             </p>
           )}
-        </div>
+        </motion.div>
 
-        <div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
           <label className="block text-sm font-medium text-gray-700 dark:text-light/70 mb-3">
             Confirm New Password
           </label>
@@ -203,15 +231,26 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
               {fieldErrors.confirmPassword}
             </p>
           )}
-        </div>
+        </motion.div>
 
         {formError && (
-          <div className="p-4 bg-red-100/70 dark:bg-red-400/15 border border-red-200/70 dark:border-red-400/30 text-red-700 dark:text-red-400 rounded-2xl backdrop-blur-lg">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="p-4 bg-red-100/70 dark:bg-red-400/15 border border-red-200/70 dark:border-red-400/30 text-red-700 dark:text-red-400 rounded-2xl backdrop-blur-lg"
+          >
             {formError}
-          </div>
+          </motion.div>
         )}
 
-        <div className="flex justify-end">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          className="flex justify-end"
+        >
           <Button
             type="submit"
             loading={loading}
@@ -219,8 +258,8 @@ export const PasswordForm: React.FC<PasswordFormProps> = ({
           >
             Change Password
           </Button>
-        </div>
+        </motion.div>
       </form>
-    </div>
+    </motion.div>
   );
 };

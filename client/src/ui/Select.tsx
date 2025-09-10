@@ -112,7 +112,7 @@ const Select = <T extends string | number = string>({
 
   const optionBase = [
     'flex cursor-pointer select-none items-center gap-2 rounded-md px-2 py-1.5 text-sm',
-    'text-gray-800 hover:bg-gray-100 aria-selected:bg-gray-100 aria-disabled:opacity-50',
+    'text-gray-800 aria-disabled:opacity-50',
     classes?.option,
   ].filter(Boolean).join(' ');
 

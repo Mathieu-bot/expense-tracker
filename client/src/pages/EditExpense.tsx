@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import type React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button, useToast, Skeleton, Select } from "../ui";
+import { Button, useToast, Skeleton } from "../ui";
 import { ExpenseService } from "../services/ExpenseService";
 import { Loader2 } from "lucide-react";
 import { useCategories } from "../hooks/useCategories";
 import type { Expense, UpdateExpenseRequest, ExpenseType } from "../types/Expense";
+import GlassSelect from "../components/expense/GlassSelect";
 
 
 export const EditExpense = () => {
@@ -130,19 +131,12 @@ export const EditExpense = () => {
   };
 
   return (
-    <div className="p-6 max-w-2xl mx-auto pt-20 text-light">
+    <div className="p-6 max-w-2xl mx-auto pt-20 text-light mt-10">
       <div className="flex items-center mb-6">
-        <Button
-          onClick={handleCancel}
-          className="mr-4 border border-gray-300"
-          size="small"
-        >
-          ← Back
-        </Button>
         <h1 className="text-2xl font-semibold">Edit Expense</h1>
       </div>
 
-      <div className="bg-white/5 backdrop-blur rounded-lg border border-white/10 p-6 space-y-4">
+      <div className="dark:bg-white/10 bg-primary-dark/10 backdrop-blur rounded-lg border border-white/10 p-6 space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm mb-1">Amount</label>
@@ -157,7 +151,7 @@ export const EditExpense = () => {
           </div>
           <div>
             <label className="block text-sm mb-1">Category</label>
-            <Select
+            <GlassSelect
               value={local.categoryId ? String(local.categoryId) : null}
               onChange={(v) => setLocal((f) => ({ ...f, categoryId: String(v) }))}
               options={categories.map((c) => ({ label: c.category_name, value: String(c.category_id) }))}
@@ -178,7 +172,7 @@ export const EditExpense = () => {
           />
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm mb-1">Type</label>
             <select
@@ -197,7 +191,7 @@ export const EditExpense = () => {
               <input
                 name="date"
                 type="date"
-                value={local.date || ""}
+                value={local.date?.slice(0, 10) || ""}
                 onChange={onChange}
                 required
                 className="w-full rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
@@ -211,7 +205,7 @@ export const EditExpense = () => {
                 <input
                   name="startDate"
                   type="date"
-                  value={local.startDate || ""}
+                  value={local.startDate?.slice(0, 10) || ""}
                   onChange={onChange}
                   required
                   className="w-full rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
@@ -222,7 +216,7 @@ export const EditExpense = () => {
                 <input
                   name="endDate"
                   type="date"
-                  value={local.endDate || ""}
+                  value={local.endDate?.slice(0, 10) || ""}
                   onChange={onChange}
                   className="w-full rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
                 />
@@ -233,7 +227,7 @@ export const EditExpense = () => {
 
         {local.receipt_url ? (
           <div>
-            <label className="block text-xl text-red-600 font-bold mb-1">
+            <label className="block text-xl text-accent font-bold mb-1">
               A receipt is already attached
             </label>
             <input
@@ -250,18 +244,21 @@ export const EditExpense = () => {
           <input type="file" onChange={onFile} />
         </div>
 
-        <div className="flex gap-3 justify-end">
-          <Button onClick={handleCancel} className="border border-gray-300">
+
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 justify-end">
+          <Button onClick={handleCancel} className="bg-white/15 hover:bg-white/10 border dark:bg-white/10 dark:hover:bg-white/15 dark:border-light/10 border-light/10 hover:border-light/50 hover:shadow-lg">
             Cancel
           </Button>
-          <Button onClick={onSubmit}>
+          <Button onClick={onSubmit}
+          className="border-accent/10 text-accent bg-white/80 bg-gradient-to-br from-accent/10 to-accent/20 hover:shadow-lg hover:bg-white/90 dark:bg-accent/10 dark:from-accent/10 dark:to-accent/10 dark:hover:bg-accent/15 dark:border-accent/10 font-semibold">
             {updateLoading ? (
               <div className="flex items-center gap-3">
                 <Loader2 className="animate-spin" />
-                Saving your changes
+                Saving your expense
               </div>
             ) : (
-              "Save Changes"
+              "Save Expense"
             )}
           </Button>
         </div>

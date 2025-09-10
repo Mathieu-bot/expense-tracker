@@ -279,7 +279,7 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
                 className={`px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 border-none ${
                   saving || (!hasChanges && !!income)
                     ? "bg-gray-400/50 text-gray-200 cursor-not-allowed"
-                    : "bg-gradient-to-br from-green-400/25 to-green-400/20 bg-white/80 text-green-700/80 dark:bg-none dark:bg-primary-light dark:text-white hover:shadow-green-400/20 font-semibold"
+                    : "bg-gradient-to-br from-green-400/25 to-green-400/20 bg-white/80 text-green-700/80 dark:bg-none dark:bg-primary-light dark:text-white font-semibold"
                 }`}
               >
                 {saving
