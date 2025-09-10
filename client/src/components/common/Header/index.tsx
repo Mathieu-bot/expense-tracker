@@ -18,7 +18,7 @@ import DateDropdown from "./DateDropdown";
 import SearchInput from "./SearchInput";
 import NotificationBell from "./NotificationBell";
 
-const Header = () => {
+const DashboardHeader = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -58,33 +58,6 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        isMobileMenuOpen &&
-        menuRef.current &&
-        !menuRef.current.contains(event.target as Node) &&
-        buttonRef.current &&
-        !buttonRef.current.contains(event.target as Node)
-      ) {
-        closeMenu();
-      }
-    };
-
-    document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
-  }, [isMobileMenuOpen]);
-
-  useEffect(() => {
-    const handleEscapeKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && isMobileMenuOpen) {
-        closeMenu();
-      }
-    };
-
-    document.addEventListener("keydown", handleEscapeKey);
-    return () => document.removeEventListener("keydown", handleEscapeKey);
-  }, [isMobileMenuOpen]);
 
   const openMenu = () => {
     setIsMobileMenuOpen(true);
@@ -341,4 +314,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default DashboardHeader;
