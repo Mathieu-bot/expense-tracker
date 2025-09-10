@@ -1,7 +1,8 @@
 import { useExpenses } from "../hooks/useExpenses";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useCategories } from "../hooks/useCategories";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import ExpenseItem from "../components/expense/ExpenseItem";
 import { Button } from "../ui";
 import { GlassDatePicker } from "../components/Income";
@@ -31,6 +32,16 @@ export default function Expenses() {
   );
   const { categories, loading: categoriesLoading } = useCategories();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    // prefill category from query param if present
+    const qp = searchParams.get("category");
+    if (qp && qp !== category) {
+      setCategory(qp);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   const clearFilters = () => {
     setStart(null);
