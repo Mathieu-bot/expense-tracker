@@ -44,7 +44,7 @@ export default function Expenses() {
       <div className="flex items-center justify-between mb-6">
         <div className="flex flex-col gap-2">
           <h1 className="text-4xl font-bold">Expenses</h1>
-          <p className="text-light/60">
+          <p className="text-light/90 dark:text-light/60">
             Track your expenses and manage your budget
           </p>
         </div>
@@ -55,7 +55,7 @@ export default function Expenses() {
         <Button
           size="large"
           startIcon={<Calendar size={15} />}
-          className="px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/5 h-full "
+          className="px-3 py-2 bg-light/20 border-light/20 hover:bg-light/15 dark:bg-white/5 dark:hover:bg-white/10 border dark:border-white/5 h-full "
           onClick={() => setShowFilter(!showFilter)}
         >
           Filters
@@ -63,7 +63,7 @@ export default function Expenses() {
         <Button
           onClick={() => navigate("/expenses/new")}
           size="large"
-          className="px-3 py-2 rounded-md bg-accent/10 hover:bg-accent/15 border border-accent/10 h-full text-accent text-2xl font-semibold"
+          className="px-3 py-2 rounded-md text-accent bg-white/80 bg-gradient-to-br from-accent/20 to-accent/25 dark:bg-accent/10 dark:hover:bg-accent/15 border border-accent/10 dark:border-accent/10 h-full dark:text-accent text-2xl font-semibold hover:shadow-lg hover:bg-white/90"
           startIcon={<Plus size={15} />}
         >
           New Expense
@@ -71,12 +71,12 @@ export default function Expenses() {
       </div>
 
       {showFilter && (
-        <div className="p-5 backdrop-blur-xl border bg-gradient-to-br from-primary-light/10 to-primary-dark/10 border-white/5 rounded-xl mb-5">
+        <div className="p-5 bg-light/20 border-light/10 backdrop-blur-xl border dark:bg-transparent dark:bg-gradient-to-br dark:from-primary-light/10 dark:to-primary-dark/10 dark:border-white/5 rounded-xl mb-5">
           <div className="flex gap-3 mb-5 items-center">
             <div className="text-accent bg-accent/10 flex justify-center items-center p-3 rounded-lg">
               <Calendar size={20}></Calendar>
             </div>
-            <h2 className="text-xl font-semibold">Filters</h2>
+            <h2 className="text-xl font-semibold ">Filters</h2>
           </div>
           <div className="grid grid-col-1 md:grid-cols-5 gap-3">
             <GlassDatePicker
@@ -118,8 +118,9 @@ export default function Expenses() {
             />
             <Button
               onClick={clearFilters}
-              className="px-3 py-2 rounded-md bg-red-500/20 hover:bg-red-500/25 border border-red-400 h-full text-red-400 active:hover:bg-red-600 active:text-white active:border-red-600"
+              className="px-3 py-2 rounded-md bg-red-800 border-red-500/20 text-red-400 dark:bg-red-500/20 dark:hover:bg-red-500/25 border dark:border-red-400 h-full dark:text-red-400 dark:active:hover:bg-red-600 dark:active:text-white dark:active:border-red-600"
               startIcon={<X size={15} />}
+              size="large"
             >
               Clear Filters
             </Button>
@@ -143,7 +144,7 @@ export default function Expenses() {
         <div className="text-light/70">No expenses found.</div>
       )}
 
-      <div className="p-5 border border-white/5 rounded-xl bg-gradient-to-br from-primary-light/10 to-primary/10 backdrop-blur-2xl">
+      <div className="p-5 border bg-light/20 border-light/10 dark:bg-transparent dark:border-white/5 rounded-xl dark:bg-gradient-to-br dark:from-primary-light/10 dark:to-primary/10 backdrop-blur-2xl">
         <div className="flex mb-5">
           <div className="flex gap-3 items-center">
             <div className="text-green-500 bg-green-500/10 p-3 rounded-lg">
@@ -154,7 +155,7 @@ export default function Expenses() {
           <div className="flex justify-end w-full">
             <Button
               onClick={refetch}
-              className="bg-accent/10 hover:bg-accent/15 border-accent/10 text-accent"
+              className="bg-white/80 hover:bg-white/90 hover:shadow-lg bg-gradient-to-br from-accent/10 to-accent/20 border-accent/20 dark:bg-accent/10 dark:hover:bg-accent/15 dark:border-accent/10 text-accent"
               startIcon={<RefreshCcw size={15} />}
             >
               Refresh
@@ -162,7 +163,7 @@ export default function Expenses() {
           </div>
         </div>
         {!loading && !error && expenses.length > 0 && (
-          <ul className="divide-y divide-white/10 bg-gradient-to-br from-primary-light/10 to-primary-dark/10 backdrop-blur-xl rounded-2xl border border-white/5 shadow-lg overflow-hidden">
+          <ul className="divide-y divide-gray-400 dark:divide-white/10 bg-gradient-to-br from-primary-light/10 to-primary-dark/10 backdrop-blur-xl rounded-2xl border border-white/5 shadow-lg overflow-hidden">
             {expenses.map((e) => (
               <ExpenseItem e={e} refetch={refetch} key={e.expense_id} />
             ))}

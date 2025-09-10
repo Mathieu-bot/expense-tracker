@@ -46,35 +46,35 @@ export const DeleteConfirmationModal: React.FC<
       <div className="fixed inset-0" onClick={onClose} />
 
       <div
-        className="bg-primary/60 border border-gray-700 rounded-xl shadow-2xl w-full max-w-[95vw] sm:max-w-md md:max-w-lg z-[10000]"
+        className="bg-light dark:bg-primary/60 border border-gray-300 dark:border-gray-700 rounded-xl shadow-2xl w-full max-w-[95vw] sm:max-w-md md:max-w-lg z-[10000]"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-start justify-between p-4 sm:p-5 border-b border-gray-700">
+        <div className="flex items-start justify-between p-4 sm:p-5 border-b border-gray-400 dark:border-gray-700">
           <h3 className="text-red-600 font-bold text-lg sm:text-xl">
             Confirm Delete
           </h3>
         </div>
 
-        <div className="p-4 sm:p-5 text-gray-200">
+        <div className="p-4 sm:p-5 dark:text-gray-200">
           <p className="mb-2 text-sm">
             Are you sure you want to delete this expense ?
           </p>
-          <p className="mb-3 text-sm text-gray-300">
+          <p className="mb-3 text-sm text-black/80 dark:text-gray-300">
             This action cannot be undone.
           </p>
           {expense && (
-            <div className="mt-2 p-3 sm:p-4 bg-gray-950/40 border border-gray-700 rounded-lg">
+            <div className="mt-2 p-3 sm:p-4 bg-light dark:bg-gray-950/40 border border-gray-400 dark:border-gray-700 rounded-lg">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <p className="text-gray-400 text-xs sm:text-sm">Amount</p>
+                  <p className="dark:text-gray-400 text-xs sm:text-sm">Amount</p>
                   <p className="text-red-600 font-medium text-sm sm:text-base">
                     {formatCurrency(expense.amount)}
                   </p>
                 </div>
 
                 <div>
-                  <p className="text-gray-400 text-xs sm:text-sm">Date</p>
-                  <p className="text-gray-200 text-sm">
+                  <p className="dark:text-gray-400 text-xs sm:text-sm">Date</p>
+                  <p className="text-gray-600 dark:text-gray-200 text-sm">
                     {expense.type === "one-time"
                       ? expense.date
                         ? fmt(expense.date)
@@ -90,18 +90,18 @@ export const DeleteConfirmationModal: React.FC<
                 </div>
 
                 <div className="col-span-1 sm:col-span-2">
-                  <p className="text-gray-400 text-xs sm:text-sm">Category</p>
-                  <p className="text-gray-200 text-sm truncate">
+                  <p className="dark:text-gray-400 text-xs sm:text-sm">Category</p>
+                  <p className="text-gray-600 dark:text-gray-200 text-sm truncate">
                     {expense.category?.category_name ??
                       `Category #${expense.categoryId}`}
                   </p>
                 </div>
 
                 <div className="col-span-1 sm:col-span-2">
-                  <p className="text-gray-400 text-xs sm:text-sm">
+                  <p className="dark:text-gray-400 text-xs sm:text-sm">
                     Description
                   </p>
-                  <p className="text-gray-200 text-sm">
+                  <p className="text-gray-600 dark:text-gray-200 text-sm">
                     {expense.description?.length
                       ? expense.description
                       : "No description"}
@@ -112,7 +112,7 @@ export const DeleteConfirmationModal: React.FC<
           )}
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-end p-4 sm:p-5 border-t border-gray-700 pt-3">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-end p-4 sm:p-5 border-t border-gray-400 dark:border-gray-700 pt-3">
           <button
             onClick={onClose}
             className="w-full sm:w-auto border border-gray-600 text-gray-300 bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-lg transition-colors"

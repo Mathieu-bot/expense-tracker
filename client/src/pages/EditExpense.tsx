@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import type React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button, useToast, Skeleton, Select } from "../ui";
+import { Button, useToast, Skeleton } from "../ui";
 import { ExpenseService } from "../services/ExpenseService";
 import { Loader2 } from "lucide-react";
 import { useCategories } from "../hooks/useCategories";
 import type { Expense, UpdateExpenseRequest, ExpenseType } from "../types/Expense";
+import GlassSelect from "../components/expense/GlassSelect";
 
 
 export const EditExpense = () => {
@@ -157,7 +158,7 @@ export const EditExpense = () => {
           </div>
           <div>
             <label className="block text-sm mb-1">Category</label>
-            <Select
+            <GlassSelect
               value={local.categoryId ? String(local.categoryId) : null}
               onChange={(v) => setLocal((f) => ({ ...f, categoryId: String(v) }))}
               options={categories.map((c) => ({ label: c.category_name, value: String(c.category_id) }))}

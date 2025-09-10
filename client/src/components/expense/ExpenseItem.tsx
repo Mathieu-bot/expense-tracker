@@ -32,13 +32,13 @@ const ExpenseItem = ({ e, refetch }: ExpenseListProps) => {
     <>
       <li
         key={e.expense_id}
-        className="p-3 sm:p-4 grid grid-cols-1 sm:grid-cols-5 gap-3 sm:gap-4 items-center bg-white/5"
+        className="p-3 sm:p-4 grid grid-cols-1 sm:grid-cols-5 gap-3 sm:gap-4 items-center bg-light dark:bg-white/5"
       >
         <div className="sm:col-span-2">
-          <div className="font-medium text-sm sm:text-base truncate">
+          <div className="font-medium text-sm sm:text-base truncate text-black dark:text-light">
             {e.description || e.category?.category_name || "Expense"}
           </div>
-          <div className="text-xs sm:text-sm text-light/70">
+          <div className="text-xs sm:text-sm text-black/70 dark:text-light/70">
             {e.type === "one-time" && e.date
               ? fmt(e.date)
               : e.type === "recurring"
@@ -49,11 +49,11 @@ const ExpenseItem = ({ e, refetch }: ExpenseListProps) => {
           </div>
         </div>
 
-        <div className="text-light/80 text-xs sm:text-sm">
+        <div className="text-black/80 dark:text-light/80 text-xs sm:text-sm">
           {e.category?.category_name ?? `Category #${e.categoryId}`}
         </div>
 
-        <div className="text-right font-semibold text-sm sm:text-base">
+        <div className="text-black dark:text-light text-right font-semibold text-sm sm:text-base">
           {formatCurrency(e.amount)}
         </div>
 
@@ -71,7 +71,7 @@ const ExpenseItem = ({ e, refetch }: ExpenseListProps) => {
           ) : null}
           <Button
             onClick={() => navigate(`/expenses/${e.expense_id}/edit`)}
-            className="aspect-square px-2 py-1 text-xs sm:text-sm rounded-md bg-white/10 hover:bg-white/15 border border-white/10"
+            className=" bg-primary/10 text-primary border-primary/15 hover:bg-primary/15 aspect-square px-2 py-1 text-xs sm:text-sm rounded-md dark:bg-white/10 dark:hover:bg-white/15 border dark:border-white/10 dark:text-light"
             aria-label="Edit expense"
             size="small"
           >
