@@ -17,7 +17,7 @@ export const SIZE_PADDING_MAP: Record<InputSize, string> = {
 export const LABEL_BASE = (
   `pointer-events-none absolute z-10 transition-all duration-150
     -top-1 translate-y-0 text-xs text-gray-700 font-medium px-1
-    peer-focus:-top-1 peer-focus:text-xs peer-focus:text-sky-700 peer-focus:translate-y-0 peer-focus:px-1
+    peer-focus:-top-1 peer-focus:text-xs peer-focus:text-accent dark:peer-focus:text-primary peer-focus:translate-y-0 peer-focus:px-1
     peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-base
     peer-placeholder-shown:text-gray-500 peer-placeholder-shown:font-normal peer-placeholder-shown:px-0`
 ).trim().replace(/\s+/g, ' ');
