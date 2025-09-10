@@ -27,7 +27,7 @@ export const ChartTooltip = ({
     const data = payload[0].payload;
 
     return (
-      <div className="bg-white/95 dark:bg-primary-dark/95 backdrop-blur-xl rounded-lg p-3 border border-gray-200 dark:border-white/10 shadow-xl min-w-48">
+      <div className="bg-white/80 dark:bg-primary-dark/95 backdrop-blur-xl rounded-lg p-3 border border-gray-200 dark:border-white/10 shadow-xl min-w-48">
         <p className="text-gray-600 dark:text-light/60 text-sm mb-2">
           {data?.fullDate ? formatDate(data.fullDate) : label}
         </p>
