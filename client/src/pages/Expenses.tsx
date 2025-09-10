@@ -1,6 +1,6 @@
 import { useExpenses } from "../hooks/useExpenses";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import ExpenseItem from "../components/expense/ExpenseItem";
 
 export default function Expenses() {
@@ -16,6 +16,16 @@ export default function Expenses() {
     type
   );
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    // prefill category from query param if present
+    const qp = searchParams.get("category");
+    if (qp && qp !== category) {
+      setCategory(qp);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   return (
     <div className="relative z-2 mb-10 mt-30 mx-auto text-light max-w-6xl px-6">
