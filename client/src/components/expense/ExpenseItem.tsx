@@ -32,7 +32,7 @@ const ExpenseItem = ({ e, refetch }: ExpenseListProps) => {
     <>
       <li
         key={e.expense_id}
-        className="p-3 sm:p-4 grid grid-cols-1 sm:grid-cols-5 gap-3 sm:gap-4 items-center bg-light/90 dark:bg-white/5"
+        className="p-3 sm:p-4 grid grid-cols-1 sm:grid-cols-5 gap-3 sm:gap-4 items-center bg-white/80 dark:bg-white/5"
       >
         <div className="sm:col-span-2">
           <div className="font-medium text-sm sm:text-base truncate text-black dark:text-light">
