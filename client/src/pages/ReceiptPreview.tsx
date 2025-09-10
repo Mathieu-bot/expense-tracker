@@ -127,9 +127,9 @@ export default function ReceiptPreviewMock() {
             <div className="relative">
               <iframe
                 src={`${data!
-                  .receipt_url!}#zoom=page-width&toolbar=0&navpanes=0`}
-                title="Aperçu PDF"
-                className="h-[78vh] w-full rounded-xl border border-black/5 dark:border-white/10"
+                  .receipt_url!}#zoom=page-width&toolbar=1&navpanes=0`}
+                title="PDF preview"
+                className="h-screen w-full rounded-xl border border-black/5 dark:border-white/10"
                 loading="lazy"
               />
               <div className="pointer-events-none absolute left-3 top-3 flex items-center gap-2 rounded-md bg-black/30 px-2 py-1 text-xs text-white backdrop-blur-md">
