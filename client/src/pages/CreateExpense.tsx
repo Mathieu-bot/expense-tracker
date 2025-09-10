@@ -105,7 +105,7 @@ export const CreateExpense = () => {
         <h1 className="text-2xl font-semibold">Create New Expense</h1>
       </div>
 
-      <div className="bg-white/5 backdrop-blur rounded-lg border border-white/10 p-6 space-y-4">
+      <div className="dark:bg-white/10 bg-primary-dark/10 backdrop-blur rounded-lg border border-white/10 p-6 space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm mb-1">Amount</label>
@@ -205,7 +205,7 @@ export const CreateExpense = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 justify-end">
-          <Button onClick={handleCancel} className="bg-white/15 hover:bg-white/10 border dark:bg-white/10 dark:hover:bg-white/15 dark:border-light/10 border-gray-300">
+          <Button onClick={handleCancel} className="bg-white/15 hover:bg-white/10 border dark:bg-white/10 dark:hover:bg-white/15 dark:border-light/10 border-light/10 hover:border-light/50 hover:shadow-lg">
             Cancel
           </Button>
           <Button onClick={handleSave}
