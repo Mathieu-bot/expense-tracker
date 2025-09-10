@@ -14,7 +14,10 @@ export function usePersistedState<T>(key: string, initial: T) {
   useEffect(() => {
     try {
       localStorage.setItem(key, JSON.stringify(state));
-    } catch {}
+    } catch (err) {
+      // Best-effort persistence only; ignore quota or serialization errors
+      console.warn("usePersistedState: failed to persist", err);
+    }
   }, [key, state]);
 
   return [state, setState] as const;

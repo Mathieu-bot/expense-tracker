@@ -1,6 +1,7 @@
 import type { Category } from "../types/Auth";
 import { DefaultService } from "../api/services/DefaultService";
 import { useMascotStore } from "../stores/mascotStore";
+import { parseError, chooseMessage } from "./ServiceError";
 
 export type ServiceResult<T> = { data: T | null; error?: string };
 
@@ -34,9 +35,11 @@ export const CategoryService = {
       const data = await this.listAll();
       useMascotStore.getState().setExpression("success");
       return { data };
-    } catch (e: any) {
+    } catch (e: unknown) {
       useMascotStore.getState().setExpression("error");
-      return { data: null, error: e?.message ?? "Failed to load categories" };
+      const ctx = parseError(e);
+      const msg = chooseMessage("Failed to load categories", ctx);
+      return { data: null, error: msg };
     }
   },
 
@@ -45,20 +48,13 @@ export const CategoryService = {
       const data = await this.create(input);
       useMascotStore.getState().setExpression("success");
       return { data };
-    } catch (e: any) {
+    } catch (e: unknown) {
       useMascotStore.getState().setExpression("error");
-      const raw = String(e?.message ?? "");
-      const serverMsg: string | undefined = e?.body?.error ?? (typeof e?.body === 'string' ? e.body : undefined);
-      let msg = "Failed to create category";
-      if (e?.status === 409 || /already exists/i.test(raw) || /already exists/i.test(serverMsg ?? "")) {
-        msg = "Category name already exists. Please choose a different name.";
-      } else if (/validation/i.test(raw)) {
-        msg = serverMsg || "Category name is invalid. Please check and try again.";
-      } else if (serverMsg) {
-        msg = serverMsg;
-      } else if (raw) {
-        msg = raw;
-      }
+      const ctx = parseError(e);
+      const msg = chooseMessage("Failed to create category", ctx, {
+        alreadyExistsMsg: "Category name already exists. Please choose a different name.",
+        validationMsg: "Category name is invalid. Please check and try again.",
+      });
       return { data: null, error: msg };
     }
   },
@@ -68,20 +64,13 @@ export const CategoryService = {
       const data = await this.update(id, input);
       useMascotStore.getState().setExpression("success");
       return { data };
-    } catch (e: any) {
+    } catch (e: unknown) {
       useMascotStore.getState().setExpression("error");
-      const raw = String(e?.message ?? "");
-      const serverMsg: string | undefined = e?.body?.error ?? (typeof e?.body === 'string' ? e.body : undefined);
-      let msg = "Failed to update category";
-      if (e?.status === 409 || /already exists/i.test(raw) || /already exists/i.test(serverMsg ?? "")) {
-        msg = "Category name already exists. Please choose a different name.";
-      } else if (/validation/i.test(raw)) {
-        msg = serverMsg || "Category name is invalid. Please check and try again.";
-      } else if (serverMsg) {
-        msg = serverMsg;
-      } else if (raw) {
-        msg = raw;
-      }
+      const ctx = parseError(e);
+      const msg = chooseMessage("Failed to update category", ctx, {
+        alreadyExistsMsg: "Category name already exists. Please choose a different name.",
+        validationMsg: "Category name is invalid. Please check and try again.",
+      });
       return { data: null, error: msg };
     }
   },
@@ -91,16 +80,12 @@ export const CategoryService = {
       await this.remove(id);
       useMascotStore.getState().setExpression("success");
       return { data: null };
-    } catch (e: any) {
+    } catch (e: unknown) {
       useMascotStore.getState().setExpression("error");
-      const raw = String(e?.message ?? "");
-      const serverMsg: string | undefined = e?.body?.error ?? (typeof e?.body === 'string' ? e.body : undefined);
-      let msg = "Failed to delete category.";
-      if (raw.includes("Cannot delete category") || e?.status === 409) {
-        msg = serverMsg || "Cannot delete: the category is used by expenses.";
-      } else if (serverMsg) {
-        msg = serverMsg;
-      }
+      const ctx = parseError(e);
+      const msg = chooseMessage("Failed to delete category.", ctx, {
+        cannotDeleteMsg: "Cannot delete: the category is used by expenses.",
+      });
       return { data: null, error: msg };
     }
   },

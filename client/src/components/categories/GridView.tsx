@@ -3,6 +3,7 @@ import { Check, X, Edit3, Trash2, Tag } from "lucide-react";
 import { formatDate, formatTime, formatCurrencyFull } from "../../utils/formatters";
 import { highlightMatch } from "../../utils/highlight";
 import type { GridViewProps } from "../../types/Category";
+import type { MouseEvent } from "react";
 
 const GridView = ({
   categories,
@@ -24,19 +25,19 @@ const GridView = ({
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {categories.map((c) => {
-        const selected = !!(selectedIds as any)?.includes?.(c.category_id);
+        const selected = !!selectedIds?.includes(c.category_id);
         return (
           <div
             key={c.category_id}
             role={bulkMode ? "button" : undefined}
             aria-pressed={bulkMode ? selected : undefined}
-            onClick={(e) => {
+            onClick={(e: MouseEvent<HTMLDivElement>) => {
               const t = e.target as HTMLElement;
               if (t.closest("button, a, input, textarea")) return;
               if (bulkMode) {
-                (onToggleSelect as any)?.(c.category_id);
+                onToggleSelect?.(c.category_id);
               } else {
-                (onOpenDetails as any)?.(c);
+                onOpenDetails?.(c);
               }
             }}
             className={[
@@ -92,7 +93,7 @@ const GridView = ({
             </div>
             <div className="flex items-center justify-start">
               <span className="px-2 py-0.5 rounded-full bg-accent/15 text-white border border-accent/25 text-xs">
-                Total this month: {formatCurrencyFull((totalsThisMonth as any)?.[c.category_id] ?? 0)}
+                Total this month: {formatCurrencyFull(totalsThisMonth?.[c.category_id] ?? 0)}
               </span>
             </div>
             <div className="flex items-center justify-end gap-2">
@@ -105,7 +106,7 @@ const GridView = ({
                 <>
                   <Button
                     size="small"
-                    onClick={(e) => { e.stopPropagation(); onStartEdit(c); }}
+                    onClick={(e: MouseEvent<HTMLButtonElement>) => { e.stopPropagation(); onStartEdit(c); }}
                     aria-label="Edit category"
                     disabled={bulkMode || saving}
                     className="!py-1 bg-cyan-100 hover:bg-cyan-200 dark:bg-white/10 dark:hover:bg-white/20 border border-cyan-200 dark:border-white/15 text-cyan-700 dark:text-light/90 p-2"
@@ -114,7 +115,7 @@ const GridView = ({
                   </Button>
                   <Button
                     size="small"
-                    onClick={(e) => { e.stopPropagation(); onRemove(c.category_id); }}
+                    onClick={(e: MouseEvent<HTMLButtonElement>) => { e.stopPropagation(); onRemove(c.category_id); }}
                     disabled={bulkMode || saving}
                     aria-label="Delete category"
                     className="!py-1 bg-gradient-to-r from-red-100 to-pink-100 hover:from-red-200 hover:to-pink-200 dark:bg-none dark:bg-red-400/15 dark:hover:bg-red-400/25 border border-red-200 dark:border-red-400/20 text-red-600 dark:text-red-400 p-2"

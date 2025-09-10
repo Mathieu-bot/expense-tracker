@@ -11,8 +11,10 @@ export function applyCategoryFilterSort(
     ? categories
     : categories.filter((c) => c.category_name.toLowerCase().includes(q));
 
-  const getDate = (c: Category) =>
-    new Date((c as any).updated_at ?? (c as any).created_at ?? 0).getTime();
+  const getDate = (c: Category) => {
+    const ts = c.updated_at ?? c.created_at;
+    return ts ? new Date(ts).getTime() : 0;
+  };
 
   if (sortOrder === "name_asc")
     arr = [...arr].sort((a, b) => a.category_name.localeCompare(b.category_name));

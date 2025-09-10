@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useExpenses } from "../hooks/useExpenses";
+import type { Expense } from "../types/Expense";
 
 export function useCategoryMonthlyTotals() {
   const fmtLocal = useCallback((d: Date) => {
@@ -39,10 +40,10 @@ export function useCategoryMonthlyTotals() {
 
   const totalsThisMonth = useMemo(() => {
     const map: Record<number, number> = {};
-    for (const e of expenses) {
-      const cid = (e as any).categoryId as number | undefined;
+    for (const e of expenses as Expense[]) {
+      const cid = e.categoryId as number | undefined;
       if (cid == null) continue;
-      const amt = Number((e as any).amount ?? 0);
+      const amt = Number(e.amount ?? 0);
       map[cid] = (map[cid] ?? 0) + (isFinite(amt) ? amt : 0);
     }
     return map;

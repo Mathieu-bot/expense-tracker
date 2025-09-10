@@ -5,6 +5,7 @@ import { formatCurrency, formatCurrencyFull, formatDate } from "../../../utils/f
 import { useExpenses } from "../../../hooks/useExpenses";
 import { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom"; 
+import type { Expense } from "../../../types/Expense";
 
 type Props = {
   open: boolean;
@@ -16,8 +17,7 @@ type Props = {
 };
 
 const CategoryDetailsModal = ({ open, onClose, category, totalThisMonth, onEdit, onDelete }: Props) => {
-  if (!open || !category) return null;
-
+  // hooks must be called unconditionally
   const navigate = useNavigate();
 
   const now = new Date();
@@ -38,19 +38,20 @@ const CategoryDetailsModal = ({ open, onClose, category, totalThisMonth, onEdit,
   };
 
   // fetch data
-  const { expenses: catAll, loading: loadingCatAll, refetch: refetchCatAll } = useExpenses(undefined, undefined, category.category_name);
+  const { expenses: catAll, loading: loadingCatAll, refetch: refetchCatAll } = useExpenses(undefined, undefined, category?.category_name);
   const { expenses: allThisMonth, loading: loadingAllThis, refetch: refetchAllThis } = useExpenses(fmtLocal(monthStart), fmtLocal(monthEnd));
-  const { expenses: catPrevMonth, loading: loadingPrev, refetch: refetchCatPrev } = useExpenses(fmtLocal(prevStart), fmtLocal(prevEnd), category.category_name);
+  const { expenses: catPrevMonth, loading: loadingPrev, refetch: refetchCatPrev } = useExpenses(fmtLocal(prevStart), fmtLocal(prevEnd), category?.category_name);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open || !category) return;
     void refetchCatAll();
     void refetchAllThis();
     void refetchCatPrev();
-  }, [open, category.category_name]);
+    // intentionally rely on the refetch functions from hooks
+  }, [open, category, refetchAllThis, refetchCatAll, refetchCatPrev]);
 
   const totals = useMemo(() => {
-    const sum = (arr: any[]) => arr.reduce((acc, e) => acc + Number(e.amount || 0), 0);
+    const sum = (arr: Expense[]) => arr.reduce((acc, e) => acc + Number(e.amount || 0), 0);
     const tAllThis = sum(allThisMonth);
     const tCatThis = Number(totalThisMonth) || 0;
     const tCatPrev = sum(catPrevMonth);
@@ -63,6 +64,8 @@ const CategoryDetailsModal = ({ open, onClose, category, totalThisMonth, onEdit,
   }, [allThisMonth, totalThisMonth, catPrevMonth, catAll]);
 
   const isLoading = loadingCatAll || loadingAllThis || loadingPrev;
+
+  if (!open || !category) return null;
 
   return (
     <Dialog
@@ -175,7 +178,7 @@ const CategoryDetailsModal = ({ open, onClose, category, totalThisMonth, onEdit,
             <div className="text-sm text-gray-500 dark:text-light/60">No expenses yet for this category.</div>
           ) : (
             <ul className="divide-y divide-gray-200/70 dark:divide-white/10">
-              {totals.lastFive.map((e: any) => (
+              {totals.lastFive.map((e: Expense) => (
                 <li key={e.expense_id} className="py-2 flex items-center justify-between text-sm">
                   <div className="min-w-0 mr-2 truncate text-gray-700 dark:text-light/85">{e.description || "(No description)"}</div>
                   <div className="flex items-center gap-3 whitespace-nowrap text-right">
