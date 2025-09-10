@@ -156,7 +156,7 @@ export default function ReceiptPreviewMock() {
           {!isPdf && !isImage && (
             <div className="grid h-[40vh] place-items-center rounded-xl border border-dashed border-black/20 p-6 text-center text-sm text-gray-600 dark:border-white/20 dark:text-white/70">
               <div>
-                <p className="mb-2 font-medium">Aperçu non pris en charge</p>
+                <p className="mb-2 font-medium">Error trying to preview your receipt</p>
                 <p className="mb-4 break-all">
                   {filenameFromUrl(data!.receipt_url!)}
                 </p>
@@ -166,7 +166,7 @@ export default function ReceiptPreviewMock() {
                   rel="noreferrer"
                   className="rounded-lg border px-3 py-2 text-sm hover:bg-gray-100 dark:border-white/20 dark:hover:bg-white/10"
                 >
-                  Ouvrir dans un onglet
+                  Open in a new tab
                 </a>
               </div>
             </div>
