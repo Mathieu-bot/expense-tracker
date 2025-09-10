@@ -8,14 +8,13 @@ import React, {
   type ReactNode,
 } from "react";
 
-type Theme = "light" | "dark" | "system";
+type Theme = "light" | "dark";
 
 interface ThemeContextType {
   theme: Theme;
   isDark: boolean;
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
-  prefersDark: boolean;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -30,10 +29,10 @@ export const useTheme = (): ThemeContextType => {
 };
 
 const getInitialTheme = (): Theme => {
-  if (typeof window === "undefined") return "system";
+  if (typeof window === "undefined") return "light";
 
   const saved = localStorage.getItem("theme") as Theme | null;
-  if (saved === "light" || saved === "dark" || saved === "system") {
+  if (saved === "light" || saved === "dark") {
     return saved;
   }
 
@@ -44,7 +43,7 @@ const getInitialTheme = (): Theme => {
     return initialFromHead;
   }
 
-  return "system";
+  return "light";
 };
 
 export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
@@ -52,21 +51,12 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [theme, setThemeState] = useState<Theme>(getInitialTheme);
 
-  const [prefersDark, setPrefersDark] = useState<boolean>(() => {
-    if (typeof window === "undefined") return false;
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
-  });
-
-  const isDark = theme === "dark" || (theme === "system" && prefersDark);
+  const isDark = theme === "dark";
 
   const applyToDocument = useCallback((t: Theme) => {
     if (typeof window === "undefined") return;
 
-    const systemDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    const shouldBeDark = t === "dark" || (t === "system" && systemDark);
-
+    const shouldBeDark = t === "dark";
     document.documentElement.setAttribute(
       "data-theme",
       shouldBeDark ? "dark" : "light"
@@ -83,32 +73,6 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
     applyToDocument(theme);
   }, [theme, applyToDocument]);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const mql = window.matchMedia("(prefers-color-scheme: dark)");
-
-    const handler = (e: MediaQueryListEvent) => {
-      setPrefersDark(e.matches);
-    };
-
-    if (mql.addEventListener) {
-      mql.addEventListener("change", handler);
-    } else {
-      mql.addListener(handler);
-    }
-
-    setPrefersDark(mql.matches);
-
-    return () => {
-      if (mql.removeEventListener) {
-        mql.removeEventListener("change", handler);
-      } else {
-        mql.removeListener(handler);
-      }
-    };
-  }, []);
-
   const setTheme = useCallback(
     (newTheme: Theme) => {
       try {
@@ -124,9 +88,7 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
 
   const toggleTheme = useCallback(() => {
     setThemeState((prev) => {
-      const next: Theme =
-        prev === "system" ? "dark" : prev === "dark" ? "light" : "system";
-
+      const next: Theme = prev === "dark" ? "light" : "dark";
       try {
         localStorage.setItem("theme", next);
       } catch {
@@ -138,8 +100,8 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
   }, [applyToDocument]);
 
   const value = useMemo(
-    () => ({ theme, isDark, setTheme, toggleTheme, prefersDark }),
-    [theme, isDark, setTheme, toggleTheme, prefersDark]
+    () => ({ theme, isDark, setTheme, toggleTheme }),
+    [theme, isDark, setTheme, toggleTheme]
   );
 
   return (
