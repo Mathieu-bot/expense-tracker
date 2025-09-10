@@ -59,7 +59,7 @@ export default function CategoriesOnboardingModal({ open, onClose, onDone }: Pro
         : defaultCategories; 
       for (const cat of toUse) {
         try {
-          await DefaultService.postCategories({ name: cat.category_name, icon_url: cat.icon_url ?? undefined });
+          await DefaultService.postCategories({ name: cat.category_name });
         } catch {
           /* ignore */
         }

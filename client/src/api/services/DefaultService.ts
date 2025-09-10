@@ -281,7 +281,6 @@ export class DefaultService {
     public static postCategories(
         requestBody?: {
             name: string;
-            icon_url?: string | null;
         },
     ): CancelablePromise<any> {
         return __request(OpenAPI, {

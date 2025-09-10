@@ -18,15 +18,15 @@ export const listUserCategories = asyncHandler(async (req, res) => {
 });
 
 export const createCategory = asyncHandler(async (req, res) => {
-  const { name, icon_url } = req.body;
-  const created = await createExpenseCategory(req.user.user_id, { category_name: name, icon_url });
+  const { name } = req.body;
+  const created = await createExpenseCategory(req.user.user_id, { category_name: name });
   res.status(201).json(created);
 });
 
 export const updateCategory = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { name, icon_url } = req.body;
-  const updated = await updateExpenseCategory(id, req.user.user_id, { category_name: name, icon_url });
+  const { name } = req.body;
+  const updated = await updateExpenseCategory(id, req.user.user_id, { category_name: name });
   res.json(updated);
 });
 

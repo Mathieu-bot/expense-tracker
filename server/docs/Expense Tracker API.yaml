@@ -236,9 +236,6 @@ paths:
               properties:
                 name:
                   type: string
-                icon_url:
-                  type: string
-                  nullable: true
       responses:
         "201":
           description: Category created
