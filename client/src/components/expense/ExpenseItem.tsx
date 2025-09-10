@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import type { Expense } from "../../types/Expense";
 import { fmt, formatCurrency } from "../../utils/formatters";
 
@@ -31,14 +31,12 @@ const ExpenseItem = ({ e, refetch }: ExpenseListProps) => {
       <div className="text-right font-semibold">{formatCurrency(e.amount)}</div>
       <div className="flex gap-2 justify-end">
         {e.receipt_url ? (
-          <a
-            href={e.receipt_url}
-            target="_blank"
-            rel="noreferrer"
+          <Link
+            to={`/receipts/${e.expense_id}`}
             className="px-2 py-1 text-xs rounded-md bg-white/10 hover:bg-white/15 border border-white/10"
           >
             View receipt
-          </a>
+          </Link>
         ) : null}
         <button
           onClick={() => navigate(`/expenses/${e.expense_id}/edit`)}
