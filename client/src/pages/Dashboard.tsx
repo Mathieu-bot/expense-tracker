@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { MonthlyBarChart } from "../components/dashboard/MonthlyBarchart";
-import { Percent, ReceiptCent, Wallet, X } from "lucide-react";
+import { Percent, ReceiptCent, Wallet } from "lucide-react";
 import PieGraph from "../components/dashboard/PieGraph";
 import { useIncomes } from "../hooks/useIncomes";
 import { computeValueTotal } from "../utils/computeValueTotal";
@@ -13,13 +12,15 @@ import {
 } from "../hooks/useSummary";
 import SummaryAlert from "../components/dashboard/SummaryAlert";
 import { useExpenses } from "../hooks/useExpenses";
-import { GlassDatePicker } from "../components/Income";
 import {
   computeEvolutionBetweenValues,
   computeSoldRatio,
 } from "../utils/evolutionBetweenValues";
-import AiAdvice from "../components/aiAdvice/AIAdvice";
+import MonthlyBarChart from "../components/dashboard/MonthlyBarchart";
+import DateRangeFilter from "../components/dashboard/DateRangeFilter";
 import ShowTipsButton from "../components/aiAdvice/ShowTipsButton";
+import AIAdvice from "../components/aiAdvice/AIAdvice";
+import { motion } from "framer-motion";
 
 function Dashboard() {
   const { data: summaryAlert } = useSummaryAlert();
@@ -28,23 +29,28 @@ function Dashboard() {
   const now = new Date();
   const [showTips, setShowTips] = useState<boolean>(false);
 
-  const [startDate, setStartDate] = useState<string>(
-    new Date(now.getFullYear(), now.getMonth(), 1).toLocaleDateString("fr-CA", {
-      year: "numeric",
-      day: "numeric",
-      month: "numeric",
-    })
-  );
-  const [endDate, setEndDate] = useState<string>(
-    new Date(now.getFullYear(), now.getMonth() + 1, 0).toLocaleDateString(
-      "fr-CA",
-      {
-        year: "numeric",
-        day: "numeric",
-        month: "numeric",
-      }
-    )
-  );
+  const defaultStartDate = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    1
+  ).toLocaleDateString("fr-CA", {
+    year: "numeric",
+    day: "numeric",
+    month: "numeric",
+  });
+
+  const defaultEndDate = new Date(
+    now.getFullYear(),
+    now.getMonth() + 1,
+    0
+  ).toLocaleDateString("fr-CA", {
+    year: "numeric",
+    day: "numeric",
+    month: "numeric",
+  });
+
+  const [startDate, setStartDate] = useState<string>(defaultStartDate);
+  const [endDate, setEndDate] = useState<string>(defaultEndDate);
   const [filterWasUsed, setFilterWasUsed] = useState<boolean>(false);
 
   /* Expense and incomes */
@@ -154,67 +160,54 @@ function Dashboard() {
   }
 
   /* Event Handler */
-  const handleDateChange = (e: Date, field: string) => {
-    setFilterWasUsed(true);
-    switch (field) {
-      case "start": {
-        const date = new Date(e as Date).toLocaleDateString("fr-CA", {
-          year: "numeric",
-          day: "numeric",
-          month: "numeric",
-        });
-        const newStart = new Date(date).toISOString().split("T")[0];
-        if (new Date(newStart) > new Date(endDate)) {
-          toast.error("Start date should be before end date");
-          return;
-        }
-        setStartDate(date);
-        break;
-      }
-      case "end": {
-        const date = new Date(e as Date).toLocaleDateString("fr-CA", {
-          year: "numeric",
-          day: "numeric",
-          month: "numeric",
-        });
 
-        const newEnd = new Date(date).toISOString().split("T")[0];
-        if (new Date(newEnd) < new Date(startDate)) {
-          toast.error("End date should be after start date");
-          return;
-        }
-        setEndDate(date);
-        break;
-      }
-    }
+  // const resetFilter = () => {
+  //   setStartDate(
+  //     new Date(now.getFullYear(), now.getMonth(), 1).toLocaleDateString(
+  //       "fr-CA",
+  //       {
+  //         year: "numeric",
+  //         day: "numeric",
+  //         month: "numeric",
+  //       }
+  //     )
+  //   );
+  //   setEndDate(
+  //     new Date(now.getFullYear(), now.getMonth() + 1, 0).toLocaleDateString(
+  //       "fr-CA",
+  //       {
+  //         year: "numeric",
+  //         day: "numeric",
+  //         month: "numeric",
+  //       }
+  //     )
+  //   );
+  //   setFilterWasUsed(false);
+  // };
+
+  /* Event Handler */
+  const handleDateRangeChange = (newStartDate: string, newEndDate: string) => {
+    const isDefault =
+      newStartDate === defaultStartDate && newEndDate === defaultEndDate;
+
+    setFilterWasUsed(!isDefault); //false if default, true otherwise
+    setStartDate(newStartDate);
+    setEndDate(newEndDate);
   };
 
-  const resetFilter = () => {
-    setStartDate(
-      new Date(now.getFullYear(), now.getMonth(), 1).toLocaleDateString(
-        "fr-CA",
-        {
-          year: "numeric",
-          day: "numeric",
-          month: "numeric",
-        }
-      )
-    );
-    setEndDate(
-      new Date(now.getFullYear(), now.getMonth() + 1, 0).toLocaleDateString(
-        "fr-CA",
-        {
-          year: "numeric",
-          day: "numeric",
-          month: "numeric",
-        }
-      )
-    );
+  const handleDateRangeReset = () => {
     setFilterWasUsed(false);
+    setStartDate(defaultStartDate);
+    setEndDate(defaultEndDate);
   };
 
   return (
-    <div className="min-w-screen max-h-screen pt-26 md:pl-30 md:pr-22 flex flex-col items-center gap-10 md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 px-10">
+    <motion.div
+      initial={{ opacity: 0,scale: 0.95 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+      className="min-w-screen max-h-screen pt-26 md:pl-30 md:pr-22 flex flex-col items-center gap-10 md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+    >
       {summaryAlert.alert && (
         <SummaryAlert
           alert={summaryAlert.alert}
@@ -224,36 +217,32 @@ function Dashboard() {
         />
       )}
       <ShowTipsButton open={showTips} setOpen={setShowTips} />
-      <AiAdvice open={showTips} setOpen={setShowTips} />
+      <AIAdvice open={showTips} setOpen={setShowTips} />
 
-      <div className="col-span-3 flex flex-col gap-5">
+      <div className="col-span-3 flex flex-col w-full px-5 gap-5">
         {/* FILTER */}
-
-        <div className="flex items-center text-white justify-between">
-          <h1 className="text-4xl pl-10 font-semibold">Filters</h1>
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
+          className="flex items-center text-foreground justify-between"
+        >
           <div className="flex gap-5 items-center">
-            <GlassDatePicker
-              value={new Date(startDate)}
-              onChange={(e) => handleDateChange(e!, "start")}
-              label="Start Date"
-              size="small"
+            <DateRangeFilter
+              startDate={startDate}
+              endDate={endDate}
+              onChange={handleDateRangeChange}
+              onReset={handleDateRangeReset}
             />
-            <GlassDatePicker
-              value={new Date(endDate)}
-              onChange={(e) => handleDateChange(e!, "end")}
-              label="End Date"
-              size="small"
-            />
-            <button
-              className="flex items-center gap-2 px-4 py-2 h-fit rounded-sm bg-red-700 outline-none"
-              onClick={resetFilter}
-            >
-              <X /> Reset
-            </button>
           </div>
-        </div>
+        </motion.div>
         {/* CARD */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-4"
+        >
           {toDisplay.map((item, idx) => (
             <MiniStatCard key={idx} {...item} filterWasUsed={filterWasUsed} />
           ))}
@@ -262,16 +251,25 @@ function Dashboard() {
             {...soldToDisplay}
             filterWasUsed={filterWasUsed}
           />
-        </div>
+        </motion.div>
 
         {/* BARCHART */}
         <MonthlyBarChart data={lastSixthMonthSummary} />
       </div>
       {/* PIE */}
-      <div className="lg:col-span-1 flex flex-col md:h-full items-center gap-4 w-full md:bg-white/5 backdrop-blur-2xl py-2 px-5 rounded-lg">
+      <motion.div
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+        className="lg:col-span-1 flex flex-col md:h-full items-center gap-4 w-full 
+            bg-white/80 
+            dark:bg-transparent dark:bg-gradient-to-br dark:from-primary/20 dark:to-primary-dark/10
+            backdrop-blur-xl
+            py-2 px-5 rounded-lg border border-gray-200/70 dark:border-white/5 shadow-lg"
+      >
         <PieGraph title={"Expense Overview"} data={expenses} />
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 

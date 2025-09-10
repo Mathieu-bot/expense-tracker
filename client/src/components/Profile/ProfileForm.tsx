@@ -5,6 +5,7 @@ import type {
 } from "../../types/UserProfile";
 import { Button, useToast } from "../../ui";
 import { User, Mail } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface ProfileFormProps {
   profile: UserProfile;
@@ -73,8 +74,20 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
     };
 
   return (
-    <div className="dark:bg-gradient-to-br bg-white/80 dark:bg-none dark:bg-transparent dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-3xl p-8 border border-gray-200/70 dark:border-white/15 shadow-2xl transition-all duration-500 hover:shadow-2xl">
-      <div className="flex items-center justify-between mb-8">
+    <motion.div
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
+      className="dark:bg-gradient-to-br bg-white/80 dark:bg-none dark:bg-transparent dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-3xl p-8 border border-gray-200/70 dark:border-white/15 shadow-2xl transition-all duration-500 hover:shadow-2xl"
+    >
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.4, delay: 0.1 }}
+        className="flex items-center justify-between mb-8"
+      >
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-accent/15 flex items-center justify-center border border-accent/20">
             <User className="w-6 h-6 text-accent" />
@@ -88,10 +101,16 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
             </p>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+        >
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-light/70 mb-3">
               First Name
@@ -117,9 +136,14 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
               placeholder="Enter your last name"
             />
           </div>
-        </div>
+        </motion.div>
 
-        <div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
           <label className="block text-sm font-medium text-gray-700 dark:text-light/70 mb-3">
             Username
           </label>
@@ -139,9 +163,15 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
               {fieldErrors.username}
             </p>
           )}
-        </div>
+        </motion.div>
 
-        <div className="pt-6 border-t border-gray-200/70 dark:border-white/10">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="pt-6 border-t border-gray-200/70 dark:border-white/10"
+        >
           <div className="flex items-center gap-3 mb-3">
             <Mail className="w-5 h-5 text-blue-500 dark:text-blue-400" />
             <label className="block text-sm font-medium text-gray-700 dark:text-light/70">
@@ -154,15 +184,26 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
           <p className="text-xs text-gray-500 dark:text-light/50 mt-2">
             Email address cannot be changed
           </p>
-        </div>
+        </motion.div>
 
         {formError && (
-          <div className="p-4 bg-red-100/70 dark:bg-red-400/15 border border-red-200/70 dark:border-red-400/30 text-red-700 dark:text-red-400 rounded-2xl backdrop-blur-lg">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="p-4 bg-red-100/70 dark:bg-red-400/15 border border-red-200/70 dark:border-red-400/30 text-red-700 dark:text-red-400 rounded-2xl backdrop-blur-lg"
+          >
             {formError}
-          </div>
+          </motion.div>
         )}
 
-        <div className="flex justify-end">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          className="flex justify-end"
+        >
           <Button
             type="submit"
             loading={loading}
@@ -175,8 +216,8 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
           >
             Update Profile
           </Button>
-        </div>
+        </motion.div>
       </form>
-    </div>
+    </motion.div>
   );
 };

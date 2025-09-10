@@ -1,5 +1,5 @@
 import { Clock, Calendar } from "lucide-react";
-import { formatDate, formatTime } from "../../../../utils/formatters";
+import { formatDate, formatTime } from "../../../utils/formatters";
 
 const DateDropdown = ({
   shouldShowGlassmorphism,

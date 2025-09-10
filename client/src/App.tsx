@@ -12,13 +12,14 @@ import SignupPage from "./pages/SignupPage";
 import AuthCallback from "./pages/AuthCallback";
 import { Profile } from "./pages/Profile";
 import PostAuthGate from "./components/auth/PostAuthGate";
-import DashboardHeader from "./components/common/Header/Header";
 import Expenses from "./pages/Expenses";
 import { CreateExpense } from "./pages/CreateExpense";
 import { EditExpense } from "./pages/EditExpense";
 import { CreateIncome } from "./pages/CreateIncome";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import ReceiptPreview from "./pages/ReceiptPreview";
+import Header from "./components/common/Header";
+
 
 function App() {
   const location = useLocation();
@@ -35,7 +36,7 @@ function App() {
           location.pathname.includes("/signup") ? null : (
             <>
               <BackgroundImage />
-              <DashboardHeader />
+              <Header />
               <Sidebar />
             </>
           )}
