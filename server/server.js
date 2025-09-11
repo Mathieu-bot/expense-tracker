@@ -30,15 +30,16 @@ const app = express();
 app.set("trust proxy", 1);
 const PORT = process.env.PORT || 4000;
 
-app.use((req, res, next) => {
-  const isProd = process.env.NODE_ENV === "production";
-  if (isProd && !req.secure) {
-    const host = req.get("host");
-    const url = `https://${host}${req.originalUrl}`;
-    return res.redirect(301, url);
-  }
-  next();
-});
+// app.set("trust proxy", 1);
+// app.use((req, res, next) => {
+//   const isProd = process.env.NODE_ENV === "production";
+//   if (isProd && !req.secure) {
+//     const host = req.get("host");
+//     const url = `https://${host}${req.originalUrl}`;
+//     return res.redirect(301, url);
+//   }
+//   next();
+// });
 
 app.use(
   helmet({
