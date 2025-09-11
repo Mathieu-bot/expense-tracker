@@ -34,7 +34,6 @@ export default function Categories() {
   const [searchQuery, setSearchQuery] = usePersistedState<string>("categories:search", "");
   const debouncedQuery = useDebouncedValue(searchQuery, 300);
   const [sortOrder, setSortOrder] = usePersistedState<SortOrder>("categories:sortOrder", "name_asc");
-  
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editName, setEditName] = useState("");
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -185,7 +184,6 @@ export default function Categories() {
         <div className="relative overflow-hidden rounded-2xl bg-white/25 dark:bg-gradient-to-br dark:bg-transparent dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl border border-gray-200/70 dark:border-white/5 shadow-lg p-4 md:p-6">
           <div className="absolute top-0 right-0 w-32 h-32 rounded-full -translate-y-16 translate-x-16 bg-accent/10 dark:bg-accent/5"></div>
           <div className="absolute bottom-0 left-0 w-24 h-24 rounded-full translate-y-12 -translate-x-12 bg-cyan-400/10 dark:bg-cyan-400/5"></div>
-
           <DataHeader
             viewMode={viewMode}
             onToggleView={() => setViewMode((v) => (v === "list" ? "grid" : "list"))}
@@ -262,6 +260,7 @@ export default function Categories() {
         loading={saving}
         categoryName={pendingDeleteName}
       />
+
       <BulkDeleteModal
         open={bulkOpen}
         onClose={() => setBulkOpen(false)}

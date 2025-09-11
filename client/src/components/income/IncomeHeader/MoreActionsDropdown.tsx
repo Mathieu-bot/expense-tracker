@@ -2,8 +2,8 @@ import { useRef, useState } from "react";
 import { MoreHorizontal, FileDown } from "lucide-react";
 import { Button } from "../../../ui";
 import { useClickOutside } from "../../../hooks/useClickOutside";
-import { ExportModal } from "../IncomePdf/ExportModal";
 import type { Income } from "../../../types/Income";
+import { ExportModal } from "..";
 
 interface MoreActionsDropdownProps {
   onExport: (startDate?: string, endDate?: string) => Promise<boolean>;
@@ -14,7 +14,7 @@ interface MoreActionsDropdownProps {
 export const MoreActionsDropdown = ({
   onExport,
   incomes,
-  onPreview
+  onPreview,
 }: MoreActionsDropdownProps) => {
   const [showMoreActions, setShowMoreActions] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
@@ -34,14 +34,14 @@ export const MoreActionsDropdown = ({
       <div className="relative" ref={moreActionsRef}>
         <Button
           onClick={() => setShowMoreActions(!showMoreActions)}
-          className="bg-white/5 hover:bg-white/10 border border-gray-300 dark:border-white/10 text-light/90 transition-all duration-300 hover:shadow-lg"
+          className="bg-white/80 dark:bg-transparent dark:hover:bg-white/5 hover:bg-gray-100 border border-gray-300 dark:border-white/10 text-gray-800 dark:text-light/90 transition-all duration-300 hover:shadow-lg shadow-sm"
           startIcon={<MoreHorizontal className="w-4 h-4" />}
         >
           More
         </Button>
 
         {showMoreActions && (
-          <div className="absolute top-full right-0 mt-2 overflow-hidden w-48 bg-white/95 dark:bg-primary-dark/95 backdrop-blur-xl rounded-xl border border-gray-200 dark:border-white/10 z-50 shadow-2xl animate-in fade-in-80">
+          <div className="absolute top-full right-0 mt-2 overflow-hidden w-48 bg-white dark:bg-primary-dark/95 backdrop-blur-xl rounded-xl border border-gray-200 dark:border-white/10 z-50 shadow-2xl animate-in fade-in-80">
             <button
               onClick={handleExportClick}
               className="w-full px-4 py-3 border-none hover:bg-gray-100 dark:hover:bg-white/5 transition-all duration-200 flex items-center gap-3 text-left group"
@@ -61,7 +61,7 @@ export const MoreActionsDropdown = ({
         open={showExportModal}
         onClose={() => setShowExportModal(false)}
         onExport={onExport}
-        onPreview={onPreview} 
+        onPreview={onPreview}
         incomes={incomes}
       />
     </>

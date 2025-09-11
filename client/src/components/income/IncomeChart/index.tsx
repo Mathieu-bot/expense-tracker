@@ -1,6 +1,6 @@
 import { BarChart3, TrendingUp } from "lucide-react";
-import { LineChart, type LineChartData } from "./LineChart";
 import { useTheme } from "../../../contexts/ThemeContext";
+import { LineChart, type LineChartData } from "./LineChart";
 
 interface IncomeChartProps {
   lineChartData: LineChartData[];

@@ -31,9 +31,9 @@ export default function Sidebar() {
                       href={href}
                       className="
                         flex items-center gap-3 rounded-xl px-3 py-3
-                        hover:bg-gray-900/5 focus:outline-none focus:ring-2 ring-primary/30
-                        transition-colors text-gray-700
-                        dark:text-white dark:hover:bg-white/15 dark:focus:ring-white/30
+                        hover:bg-gray-900/3 focus:outline-none focus:ring-2 ring-primary/30
+                        transition-colors text-gray-800
+                        dark:text-white dark:hover:bg-white/5 dark:focus:ring-white/30
                       "
                       title={label}
                       aria-label={label}

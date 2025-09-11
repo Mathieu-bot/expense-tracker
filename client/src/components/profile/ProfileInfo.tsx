@@ -16,7 +16,7 @@ const tabs = [
   { id: "appearance", icon: Palette, label: "Appearance" },
 ];
 
-const ProfileInfo = ({ user, activeTab, onTabChange }: ProfileInfoProps) => {
+export const ProfileInfo = ({ user, activeTab, onTabChange }: ProfileInfoProps) => {
   const [indicatorStyle, setIndicatorStyle] = useState({ top: 0, height: 0 });
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
@@ -101,7 +101,7 @@ const ProfileInfo = ({ user, activeTab, onTabChange }: ProfileInfoProps) => {
               className="py-4 border-b border-gray-400/20 dark:border-white/5"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg dark:bg-blue-400/10 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-blue-400/10 flex items-center justify-center">
                   <Mail className="w-5 h-5 text-cyan-600 dark:text-blue-400" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -123,7 +123,7 @@ const ProfileInfo = ({ user, activeTab, onTabChange }: ProfileInfoProps) => {
               className="py-4"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg dark:bg-purple-400/10 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-blue-600/10 dark:bg-purple-400/10 flex items-center justify-center">
                   <Calendar className="w-5 h-5 text-blue-600 dark:text-purple-400" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -193,4 +193,3 @@ const ProfileInfo = ({ user, activeTab, onTabChange }: ProfileInfoProps) => {
   );
 };
 
-export default ProfileInfo;

@@ -8,8 +8,8 @@ import {
   ResponsiveContainer,
   Dot,
 } from "recharts";
-import { ChartTooltip } from "./ChartTooltip";
 import { useTheme } from "../../../contexts/ThemeContext";
+import { ChartTooltip } from "./ChartTooltip";
 
 export interface LineChartData {
   date: string;

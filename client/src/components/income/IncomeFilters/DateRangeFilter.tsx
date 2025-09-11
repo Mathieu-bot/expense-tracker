@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Calendar, X } from "lucide-react";
 import { Button } from "../../../ui";
-import { GlassDatePicker } from "../GlassDatePicker";
+import { GlassDatePicker } from "../../common/GlassDatePicker";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface DateRangeFilterProps {
@@ -31,14 +31,14 @@ export const DateRangeFilter = ({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
-      className="dark:bg-transparent bg-white/25 dark:bg-gradient-to-br dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl p-6 border border-white/5 mb-6 shadow-lg"
+      className="dark:bg-transparent bg-white/20 dark:bg-gradient-to-br dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl p-6 border border-white/5 mb-6 shadow-lg"
     >
       <motion.h3
         initial={{ opacity: 0, x: -10 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.4, delay: 0.1 }}
-        className="text-lg font-medium text-white dark:text-light/90 mb-4 flex items-center gap-2"
+        className="text-lg font-medium text-gray-800 dark:text-light/90 mb-4 flex items-center gap-2"
       >
         <Calendar className="w-5 h-5 text-accent" />
         Filter Incomes

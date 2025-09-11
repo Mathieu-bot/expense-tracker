@@ -7,7 +7,7 @@ const GlassSelect = (props: React.ComponentProps<typeof Select>) => {
       classes={{
         root: "flex",
         trigger:
-          "!w-full bg-white/20 dark:bg-white/5 !text-white rounded-xl px-3 !ring-0 border-white/5 h-full",
+          "!w-full bg-white/20 dark:bg-white/5 text-gray-800 dark:text-white rounded-xl px-3 !ring-0 border-white/5 h-full",
         list: "dark:!bg-white/5 backdrop-blur-2xl !border-none",
         icon: "text-white/50",
         option:

@@ -1,16 +1,18 @@
 import React, { useState } from "react";
-import { ProfileForm } from "../components/Profile/ProfileForm";
-import { PasswordForm } from "../components/Profile/PasswordForm";
-import { LoadingState } from "../components/Profile/LoadingState";
-import { ErrorState } from "../components/Profile/ErrorState";
-import { LoginPrompt } from "../components/Profile/LoginPrompt";
-import ProfileInfo from "../components/Profile/ProfileInfo";
 import { useUserStore } from "../stores/userStore";
 import type {
   ChangePasswordRequest,
   UpdateProfileRequest,
 } from "../types/UserProfile";
-import { AppearanceTab } from "../components/Profile/Appearance";
+import {
+  AppearanceTab,
+  ErrorState,
+  LoadingState,
+  LoginPrompt,
+  PasswordForm,
+  ProfileForm,
+  ProfileInfo,
+} from "../components/profile";
 
 export const Profile: React.FC = () => {
   const { user, loading, error, fetchProfile, updateProfile, changePassword } =
@@ -73,9 +75,7 @@ export const Profile: React.FC = () => {
                   loading={changingPassword}
                 />
               )}
-              {activeTab === "appearance" && (
-                <AppearanceTab/>
-              )}
+              {activeTab === "appearance" && <AppearanceTab />}
             </div>
           </div>
         </div>

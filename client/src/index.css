@@ -11,8 +11,8 @@
   --color-accent: #cc7a00;
 }
 
-.dark{
-   --color-accent: #ffdd33;
+.dark {
+  --color-accent: #ffdd33;
 }
 
 @layer base {
@@ -131,7 +131,14 @@
   --color-light: #f6faff;
 }
 
-
 .dark .scrollbar::-webkit-scrollbar-thumb {
   background-color: rgba(255, 221, 51, 0.4);
 }
+
+.recharts-legend-wrapper {
+  width: 100% !important;
+}
+
+/* .recharts-wrapper {
+  width: 100% !important;
+} */

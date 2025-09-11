@@ -5,13 +5,17 @@ import { fmt, formatCurrency } from "../../utils/formatters";
 import DeleteConfirmationModal from "./ExpenseModals/DeleteConfirmationModal";
 import { Edit3, EyeIcon, Trash2 } from "lucide-react";
 import { Button } from "../../ui";
+import {motion} from "framer-motion"
+
+import type { Variants } from 'framer-motion';
 
 type ExpenseListProps = {
   e: Expense;
   refetch: () => Promise<void>;
+  variants: Variants;
 };
 
-const ExpenseItem = ({ e, refetch }: ExpenseListProps) => {
+const ExpenseItem = ({ e, refetch, variants }: ExpenseListProps) => {
   const navigate = useNavigate();
   const [deleteOpen, setDeleteOpen] = useState(false);
 
@@ -30,8 +34,9 @@ const ExpenseItem = ({ e, refetch }: ExpenseListProps) => {
 
   return (
     <>
-      <li
+      <motion.li
         key={e.expense_id}
+        variants={variants}
         className="p-3 sm:p-4 grid grid-cols-1 sm:grid-cols-5 gap-3 sm:gap-4 items-center bg-white/80 dark:bg-white/5"
       >
         <div className="sm:col-span-2">
@@ -59,19 +64,17 @@ const ExpenseItem = ({ e, refetch }: ExpenseListProps) => {
 
         <div className="flex gap-2 justify-end items-center">
           {e.receipt_url ? (
-            <a
-              href={e.receipt_url}
-              target="_blank"
-              rel="noreferrer"
+            <Link
+              to={`/receipts/${e.expense_id}`}
               className="text-accent bg-accent/5 aspect-square flex items-center px-2 py-1 text-xs sm:text-sm rounded-md hover:bg-accent/15 border border-accent/10"
               title="View receipt"
             >
               <EyeIcon className="size-3" />
-            </a>
+            </Link>
           ) : null}
           <Button
             onClick={() => navigate(`/expenses/${e.expense_id}/edit`)}
-            className="bg-primary/10 text-primary border-primary/15 hover:bg-primary/15 aspect-square px-2 py-1 text-xs sm:text-sm rounded-md dark:bg-white/10 dark:hover:bg-white/15 border dark:border-white/10 dark:text-light"
+            className="bg-cyan-100 text-cyan-700 border-cyan-200 hover:bg-cyan-200 aspect-square px-2 py-1 text-xs sm:text-sm rounded-md dark:bg-white/10 dark:hover:bg-white/15 border dark:border-white/10 dark:text-light"
             aria-label="Edit expense"
             size="small"
           >
@@ -86,7 +89,7 @@ const ExpenseItem = ({ e, refetch }: ExpenseListProps) => {
             <Trash2 className="size-3" />
           </Button>
         </div>
-      </li>
+      </motion.li>
 
       <DeleteConfirmationModal
         open={deleteOpen}

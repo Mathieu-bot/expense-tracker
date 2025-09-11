@@ -53,7 +53,7 @@ export const AppearanceTab = () => {
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="bg-purple-100/80 dark:bg-white/5 backdrop-blur-lg rounded-2xl p-8 border border-gray-200/50 dark:border-white/10"
+        className="bg-purple-100/40 dark:bg-white/5 backdrop-blur-lg rounded-2xl p-8 border border-gray-200/50 dark:border-white/10"
       >
         <div className="text-center mb-8">
           <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-2">

@@ -12,17 +12,13 @@
     <script defer>
       (function () {
         try {
-          let saved = localStorage.getItem("theme"); //dark, light, system or null
-          let systemPrefersDark = window.matchMedia(
-            "(prefers-color-scheme: dark)"
-          ).matches;
+          let saved = localStorage.getItem("theme"); // dark, light or null
           let appliedTheme;
+
           if (saved === "dark" || saved === "light") {
             appliedTheme = saved;
-          } else if (saved === "system") {
-            appliedTheme = systemPrefersDark ? "dark" : "light";
           } else {
-            appliedTheme = systemPrefersDark ? "dark" : "light";
+            appliedTheme = "light"; // Default to light theme
           }
 
           document.documentElement.setAttribute("data-theme", appliedTheme);
@@ -31,8 +27,7 @@
             appliedTheme === "dark"
           );
 
-          window.__INITIAL_THEME__ =
-            saved !== null ? saved : systemPrefersDark ? "dark" : "light";
+          window.__INITIAL_THEME__ = saved !== null ? saved : "light";
         } catch (e) {
           console.error("Theme init error", e);
           document.documentElement.setAttribute("data-theme", "light");
@@ -51,6 +46,5 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <script src="https://js.puter.com/v2/"></script>
   </body>
 </html>

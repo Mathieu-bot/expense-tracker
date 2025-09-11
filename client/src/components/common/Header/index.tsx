@@ -10,6 +10,7 @@ import {
   LogOut,
   X,
   Menu,
+  FolderTree,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useUserStore } from "../../../stores/userStore";
@@ -31,6 +32,7 @@ const DashboardHeader = () => {
   const navItems = [
     { label: "Dashboard", icon: LayoutDashboard, href: "/" },
     { label: "Expenses", icon: CreditCard, href: "/expenses" },
+    { label: "Categories", icon: FolderTree, href: "/categories" },
     { label: "Incomes", icon: DollarSign, href: "/incomes" },
     { label: "Profile", icon: User, href: "/profile" },
   ];
@@ -51,13 +53,12 @@ const DashboardHeader = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      setIsScrolled(window.scrollY > 5);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
 
   const openMenu = () => {
     setIsMobileMenuOpen(true);
@@ -120,45 +121,28 @@ const DashboardHeader = () => {
           </div>
 
           <div className="hidden lg:flex lg:flex-col">
-            <h1 className="text-2xl font-bold">
+            <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
               {getWelcomeMessage()}
               {user && (
-                <span
-                  className={`bg-clip-text text-transparent ${
-                    shouldShowGlassmorphism ? "bg-accent " : "bg-[#ffdd33]"
-                  }`}
-                >
+                <span className="bg-clip-text text-transparent bg-accent">
                   {getUserDisplayName().split(" ")[0]}
                 </span>
               )}
             </h1>
-            <p
-              className={`font-light text-sm ${
-                shouldShowGlassmorphism
-                  ? "text-gray-900 dark:text-indigo-100/90"
-                  : "text-light/90"
-              }`}
-            >
+            <p className="font-light text-sm text-gray-900 dark:text-indigo-100/90">
               Track all your transactions with PennyPal
             </p>
           </div>
         </div>
 
         <div className="hidden xl:flex items-center gap-6">
-          <DateDropdown shouldShowGlassmorphism={shouldShowGlassmorphism} />
-          <SearchInput
-            placeholder="Search transactions..."
-            shouldShowGlassmorphism={shouldShowGlassmorphism}
-          />
+          <DateDropdown />
+          <SearchInput placeholder="Search transactions..." />
         </div>
 
         <div className="hidden lg:flex items-center gap-5">
-          <ThemeToggle shouldShowGlassmorphism={shouldShowGlassmorphism} />
-          <NotificationBell
-            hasNotifications={true}
-            notifNumber={3}
-            shouldShowGlassmorphism={shouldShowGlassmorphism}
-          />
+          <ThemeToggle />
+          <NotificationBell hasNotifications={true} notifNumber={3} />
 
           <div
             className={`h-8 w-px ${
@@ -184,44 +168,24 @@ const DashboardHeader = () => {
             </div>
 
             <div className="hidden lg:flex flex-col">
-              <span
-                className={`text-sm font-semibold group-hover:text-primary transition-colors duration-300 ${
-                  shouldShowGlassmorphism
-                    ? "text-gray-800 dark:text-white dark:group-hover:text-amber-100"
-                    : "text-white group-hover:text-amber-100 dark:text-white dark:group-hover:text-amber-100"
-                }`}
-              >
+              <span className="text-sm font-semibold text-gray-800 dark:text-white group-hover:text-accent/80 dark:group-hover:text-amber-100 transition-colors duration-300">
                 {getUserDisplayName()}
               </span>
-              <span
-                className={`text-xs group-hover:text-primary/80 transition-colors duration-300 ${
-                  shouldShowGlassmorphism
-                    ? "text-gray-600 dark:text-white/70 dark:group-hover:text-amber-100/80"
-                    : "text-white/70 group-hover:text-amber-100/80 dark:text-lgiht/90 dark:group-hover:text-amber-100/80"
-                }`}
-              >
+              <span className="text-xs text-gray-600 dark:text-white/70 group-hover:text-accent/80 dark:group-hover:text-amber-100/80 transition-colors duration-300">
                 @{getUsername()}
               </span>
             </div>
 
             <ChevronDown
-              className={`hidden lg:block group-hover:text-gray-700 transition-colors duration-200 ${
-                shouldShowGlassmorphism
-                  ? "text-gray-500 dark:text-white/70 dark:group-hover:text-white"
-                  : "text-white/70 group-hover:text-white"
-              }`}
+              className="hidden lg:block text-gray-500 dark:text-white/70 group-hover:text-accent/50 dark:group-hover:text-white transition-colors duration-200"
               size={16}
             />
           </Link>
         </div>
 
         <div className="flex lg:hidden items-center gap-3">
-          <ThemeToggle shouldShowGlassmorphism={shouldShowGlassmorphism} />
-          <NotificationBell
-            hasNotifications={true}
-            notifNumber={3}
-            shouldShowGlassmorphism={shouldShowGlassmorphism}
-          />
+          <ThemeToggle/>
+          <NotificationBell hasNotifications={true} notifNumber={3} />
           <Link
             to={user ? "/profile" : "/login"}
             className="flex items-center gap-2"

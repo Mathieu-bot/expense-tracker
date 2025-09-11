@@ -143,7 +143,7 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
   if (!open) return null;
 
   return (
-    <div className="min-h-screen md:pt-8 pt-30 lg:pt-5 inset-0 z-[1000] bg-black/40 backdrop-blur-[10px] flex items-center justify-center">
+    <div className="min-h-screen md:pt-8 pt-30 lg:pt-5 inset-0 flex items-center justify-center">
       <div className="grid grid-cols-1 md:grid-cols-2 max-w-3xl w-full">
         <div className="relative flex items-center justify-center">
           <svg
@@ -169,7 +169,7 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
                 Q 0,0 10,0
               "
               fill={`${
-                isDark ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.2)"
+                isDark ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.8)"
               }`}
               stroke="rgba(255,255,255,0.15)"
               strokeWidth={0.8}
@@ -186,7 +186,7 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
                   classes={{
                     root: "w-full",
                     input:
-                      "!bg-transparent !border-none !outline-none !ring-0 focus:!ring-0 !shadow-none text-white dark:text-light/50 !font-semibold text-[5px] font-light w-full !p-0",
+                      "!bg-transparent !border-none !outline-none !ring-0 focus:!ring-0 !shadow-none text-gray-800 dark:text-light/50 !font-semibold text-[5px] font-light w-full !p-0",
                     label: "hidden",
                     calendar:
                       "dark:bg-white/10 dark:backdrop-blur-xl rounded-2xl p-3 border border-white/10 shadow-lg",
@@ -202,23 +202,23 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
                   type="text"
                   value={formData.source}
                   onChange={(e) => handleChange("source", e.target.value)}
-                  className="font-semibold mt-1 text-white dark:text-light/90 text-[10px] leading-tight truncate border-none outline-none w-full"
+                  className="font-semibold mt-1 text-gray-800 placeholder:text-gray-800 dark:placeholder:text-gray-300/40 dark:text-light/90 text-[10px] leading-tight truncate border-none outline-none w-full"
                   placeholder="Source"
                 />
 
                 <textarea
                   value={formData.description}
                   onChange={(e) => handleChange("description", e.target.value)}
-                  className="flex-1 text-white dark:text-light/70 text-[4.5px] leading-snug mb-2 bg-transparent mt-1 outline-none resize-none"
+                  className="flex-1 text-gray-800 dark:text-light/70 text-[4.5px] leading-snug mb-2 bg-transparent mt-1 outline-none resize-none"
                   placeholder="Add description (Optional)"
                 />
 
-                <div className="flex mb-1 justify-end border-t border-light/10">
+                <div className="flex mb-1 justify-end border-t dark:border-light/10 border-gray-800/8">
                   <input
                     type="text"
                     value={formData.amount.toString()}
                     onChange={(e) => handleChange("amount", e.target.value)}
-                    className="text-[#ffdd33] py-2 font-bold text-[11px] leading-none tracking-tight border-none outline-none w-full text-right"
+                    className="text-accent py-2 font-bold text-[11px] leading-none tracking-tight border-none outline-none w-full text-right"
                     placeholder="Amount"
                   />
                 </div>
@@ -234,39 +234,39 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
         <div className="w-full flex items-center justify-center">
           <div className="flex flex-col w-fit justify-center items-start p-6">
             <div className="mb-8">
-              <h2 className="text-4xl font-bold text-gray-100 mb-2">
+              <h2 className="text-4xl font-bold text-gray-800 dark:text-light/90 mb-2">
                 {income ? "Edit Income" : "New Income"}
               </h2>
-              <p className="text-gray-100">
+              <p className="text-gray-800 dark:text-light/90">
                 Fill out your income details on the receipt
               </p>
             </div>
 
             <div className="space-y-4 w-full max-w-xs">
               <div>
-                <label className="text-sm text-gray-100">Source</label>
-                <p className="text-[#ffdd33] dark:text-gray-500 font-medium">
+                <label className="text-sm text-gray-800 dark:text-light/90">Source</label>
+                <p className="text-accent dark:text-gray-500 font-medium">
                   {formData.source || "-"}
                 </p>
               </div>
 
               <div>
-                <label className="text-sm text-gray-100">Amount</label>
-                <p className="font-medium text-[#ffdd33] dark:text-gray-500">
+                <label className="text-sm text-gray-800 dark:text-light/90">Amount</label>
+                <p className="font-medium text-accent dark:text-gray-500">
                   ${formData.amount}
                 </p>
               </div>
 
               <div>
-                <label className="text-sm text-gray-100">Date</label>
-                <p className="text-[#ffdd33] dark:text-gray-500 font-medium">
+                <label className="text-sm text-gray-800 dark:text-light/90">Date</label>
+                <p className="text-accent dark:text-gray-500 font-medium">
                   {formData.date}
                 </p>
               </div>
 
               <div>
-                <label className="text-sm text-gray-100">Description</label>
-                <p className="text-[#ffdd33] dark:text-gray-500 font-medium">
+                <label className="text-sm text-gray-800 dark:text-light/90">Description</label>
+                <p className="text-accent dark:text-gray-500 font-medium">
                   {formData.description || "-"}
                 </p>
               </div>
@@ -279,7 +279,7 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
                 className={`px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 border-none ${
                   saving || (!hasChanges && !!income)
                     ? "bg-gray-400/50 text-gray-200 cursor-not-allowed"
-                    : "bg-gradient-to-br from-green-400/25 to-green-400/20 bg-white/80 text-green-700/80 dark:bg-none dark:bg-primary-light dark:text-white font-semibold"
+                    : " bg-primary-light text-white font-semibold"
                 }`}
               >
                 {saving
