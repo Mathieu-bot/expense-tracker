@@ -1,4 +1,5 @@
 import { Button, TextField } from "../../ui";
+import { motion } from "framer-motion";
 import { Check, X, Edit3, Trash2, Tag } from "lucide-react";
 import { formatDate, formatTime, formatCurrencyFull } from "../../utils/formatters";
 import { highlightMatch } from "../../utils/highlight";
@@ -23,11 +24,17 @@ const GridView = ({
   onOpenDetails,
 }: GridViewProps) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <motion.div
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+      initial="hidden"
+      animate="show"
+      variants={{ hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.05 } } }}
+      layout
+    >
       {categories.map((c) => {
         const selected = !!selectedIds?.includes(c.category_id);
         return (
-          <div
+          <motion.div
             key={c.category_id}
             role={bulkMode ? "button" : undefined}
             aria-pressed={bulkMode ? selected : undefined}
@@ -44,10 +51,15 @@ const GridView = ({
               "relative overflow-hidden backdrop-blur-xl rounded-2xl border shadow-lg p-4 flex flex-col gap-3 transition-all duration-300",
               selected
                 ? "border-accent/50 ring-1 ring-accent/40 bg-accent/10"
-                : "dark:bg-gradient-to-br dark:from-primary-light/10 dark:to-primary-dark/10 border-white/5 dark:bg-transparent bg-white/80",
-              "hover:ring-1 hover:ring-accent/30 hover:bg-accent/5",
+                : "bg-gradient-to-br from-white/20 to-white/60 dark:from-primary-light/10 dark:to-primary-dark/10 border-white/5",
+              "hover:ring-1 hover:ring-accent/50",
               "cursor-pointer",
             ].join(" ")}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            layout
           >
             <div className="pointer-events-none absolute bottom-0 left-0 w-8 h-8 rounded-full bg-accent/10 translate-y-4 translate-x-14 dark:bg-accent/5" />
             <div className="pointer-events-none absolute top-0 left-0 w-12 h-12 rounded-full -translate-y-6 -translate-x-6 bg-cyan-400/10 dark:bg-cyan-400/5" />
@@ -62,7 +74,7 @@ const GridView = ({
                     variant="filled"
                     classes={{
                       input:
-                        "!bg-white/10 dark:!bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-xl focus:!ring focus:!ring-primary-light focus:!border-primary-light",
+                        "!bg-black/20 dark:!bg-white/5 backdrop-blur-md border border-white/10 !text-primary-dark dark:!text-white rounded-xl focus:!ring focus:!ring-accent",
                       label: "hidden",
                     }}
                   />
@@ -71,10 +83,10 @@ const GridView = ({
                     <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-cyan-100 border border-cyan-200 text-cyan-700 dark:bg-white/10 dark:border-white/15 dark:text-light/90">
                       <Tag className="w-3.5 h-3.5" />
                     </span>
-                    <span className="truncate">
+                    <span className="truncate text-primary-dark dark:text-white">
                       {highlightMatch(c.category_name, highlightQuery)}
                       {bulkMode && selected ? (
-                        <span className="ml-2 px-1.5 py-0.5 text-[10px] rounded bg-accent/20 text-white border border-accent/30">
+                        <span className="ml-2 px-1.5 py-0.5 text-[10px] rounded bg-accent/20 text-primary-dark dark:text-white border border-accent/30">
                           Selected
                         </span>
                       ) : null}
@@ -82,7 +94,7 @@ const GridView = ({
                   </div>
                 )}
               </div>
-              <div className="text-xs dark:text-light/90 text-gray-800 whitespace-nowrap">
+              <div className="text-xs text-primary-dark dark:text-light/70 whitespace-nowrap">
                 {(() => {
                   const ts = c.updated_at ?? c.created_at;
                   if (!ts) return "";
@@ -92,15 +104,30 @@ const GridView = ({
               </div>
             </div>
             <div className="flex items-center justify-start">
-              <span className="px-2 py-0.5 rounded-full bg-accent/15 dark:text-white text-accent border border-accent/25 text-xs">
+              <span className="px-2 py-0.5 rounded-full bg-accent/15 text-primary-dark dark:text-white border border-accent/25 text-xs">
                 Total this month: {formatCurrencyFull(totalsThisMonth?.[c.category_id] ?? 0)}
               </span>
             </div>
             <div className="flex items-center justify-end gap-2">
               {editingId === c.category_id ? (
                 <>
-                  <Button size="small" className="!px-2" onClick={() => onSaveEdit(c.category_id)} disabled={saving} startIcon={<Check className="w-4 h-4" />}>Save</Button>
-                  <Button size="small" className="!px-2 bg-gray-200/10 hover:bg-gray-200/20" onClick={onCancelEdit} startIcon={<X className="w-4 h-4" />}>Cancel</Button>
+                  <Button
+                    size="small"
+                    className="!px-2 bg-cyan-100 hover:bg-cyan-200 dark:bg-white/10 dark:hover:bg-white/20 border border-cyan-200 dark:border-white/15 text-cyan-700 dark:text-light/90"
+                    onClick={() => onSaveEdit(c.category_id)}
+                    disabled={saving}
+                    startIcon={<Check className="w-4 h-4" />}
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    size="small"
+                    className="!px-2 text-black bg-black/10 dark:text-white dark:bg-gray-200/10 dark:hover:bg-gray-200/20 border border-white/10"
+                    onClick={onCancelEdit}
+                    startIcon={<X className="w-4 h-4" />}
+                  >
+                    Cancel
+                  </Button>
                 </>
               ) : (
                 <>
@@ -125,10 +152,10 @@ const GridView = ({
                 </>
               )}
             </div>
-          </div>
+          </motion.div>
         );
       })}
-    </div>
+    </motion.div>
   );
 };
 
