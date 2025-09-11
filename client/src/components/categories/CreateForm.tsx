@@ -13,7 +13,7 @@ const CreateForm = ({ name, saving, onNameChange, onCreate, searchQuery, onSearc
           onChange={(e) => onSearchChange(e.target.value)}
           startAdornment={<Search className="w-4 h-4 text-primary-dark dark:text-white" />}
           endAdornment={
-            !!searchQuery.trim() ? (
+            searchQuery.trim() ? (
               <button
                 type="button"
                 onClick={() => onSearchChange("")}
