@@ -1,9 +1,11 @@
 {
-    "version": 2,
-    "routes": [
-      { "handle": "filesystem" },
-      { "src": "/api/(.*)", "dest": "https://pennypal-backend-ya7b.onrender.com/api/$1" },
-      { "src": "/.*", "dest": "/index.html" }
-    ]
-  }
-  
+  "version": 2,
+
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://pennypal-ya7b.onrender.com/api/:path*"
+    },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
