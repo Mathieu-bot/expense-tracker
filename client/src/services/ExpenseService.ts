@@ -6,6 +6,7 @@ import type {
   UpdateExpenseRequest,
 } from "../types/Expense";
 
+const API_URL = import.meta.env.VITE_API_BASE || "http://localhost:8080";
 type ApiEnvelope<T> = { success: boolean; data: T };
 function hasData<T>(r: unknown): r is { data: T } {
   return (
@@ -77,7 +78,7 @@ export class ExpenseService {
     }
     if (expenseData.receipt) fd.append("receipt", expenseData.receipt);
 
-    const res = await fetch("/api/expenses", {
+    const res = await fetch(`${API_URL}/expenses`, {
       method: "POST",
       body: fd,
       credentials: "include",
@@ -101,7 +102,7 @@ export class ExpenseService {
     appendIf(fd, "endDate", expenseData.endDate);
     if (expenseData.receipt) fd.append("receipt", expenseData.receipt);
 
-    const res = await fetch(`/api/expenses/${id}`, {
+    const res = await fetch(`${API_URL}/expenses/${id}`, {
       method: "PUT",
       body: fd,
       credentials: "include",

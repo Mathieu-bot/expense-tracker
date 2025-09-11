@@ -16,8 +16,6 @@ import { useState, useEffect, useRef } from "react";
 import { useUserStore } from "../../../stores/userStore";
 import LogoutButton from "../LogoutButton";
 import DateDropdown from "./DateDropdown";
-import SearchInput from "./SearchInput";
-import NotificationBell from "./NotificationBell";
 
 const DashboardHeader = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -137,12 +135,10 @@ const DashboardHeader = () => {
 
         <div className="hidden xl:flex items-center gap-6">
           <DateDropdown />
-          <SearchInput placeholder="Search transactions..." />
         </div>
 
         <div className="hidden lg:flex items-center gap-5">
           <ThemeToggle />
-          <NotificationBell hasNotifications={true} notifNumber={3} />
 
           <div
             className={`h-8 w-px ${
@@ -185,7 +181,6 @@ const DashboardHeader = () => {
 
         <div className="flex lg:hidden items-center gap-3">
           <ThemeToggle/>
-          <NotificationBell hasNotifications={true} notifNumber={3} />
           <Link
             to={user ? "/profile" : "/login"}
             className="flex items-center gap-2"

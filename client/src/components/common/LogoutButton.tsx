@@ -15,6 +15,7 @@ const LogoutButton = ({ children = "Logout", ...btnProps }: Props) => {
 
   async function onLogout() {
     try {
+      
       await logout();
       toast.success("Logged out. See you soon!");
       navigate("/login", { replace: true });

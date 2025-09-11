@@ -2,7 +2,10 @@ import type { HeaderProps } from "../../types/Category";
 import { Button, Tooltip } from "../../ui";
 import { MousePointerClick as ClickIcon, Hand } from "lucide-react";
 
-export const CategoriesHeader = ({ bulkMode, onToggleBulkMode }: HeaderProps) => {
+export const CategoriesHeader = ({
+  bulkMode,
+  onToggleBulkMode,
+}: HeaderProps) => {
   return (
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-6">
       <div className="flex flex-col gap-2 w-full md:w-auto">

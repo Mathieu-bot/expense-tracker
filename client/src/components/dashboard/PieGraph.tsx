@@ -29,7 +29,7 @@ export default function PieGraph({
     [data]
   );
 
-  const chartData = useMemo(() => {
+  let chartData = useMemo(() => {
     const map = new Map<string, number>();
     for (const exp of data) {
       const label = exp.category?.category_name ?? "Autres";
@@ -41,6 +41,8 @@ export default function PieGraph({
     }));
   }, [data]);
 
+  if (!chartData || chartData.length == 0)
+    chartData = [{ name: "No data", value: 100 }];
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -88,7 +90,7 @@ export default function PieGraph({
                   whileInView={{ opacity: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: 0.2 }}
-                  className="grid grid-cols-2 gap-x-4 gap-y-2 m-0 p-0 list-none mt-10"
+                  className="grid grid-cols-2 gap-x-4 gap-y-2 m-0 p-0 list-none mt-10 items-center"
                 >
                   {(payload ?? []).map(
                     (p, index) =>
