@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "dev": "npm run prisma:generate && npm run prisma:migrate && npm run prisma:seed && nodemon ./server.js",
+    "dev": "npm run prisma:deploy && npm run prisma:seed && nodemon ./server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
