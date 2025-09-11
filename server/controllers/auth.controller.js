@@ -100,11 +100,8 @@ const oauthCookieOpts = () => {
   };
 };
 
-export const googleAuth = asyncHandler(async (req, res) => {
-  const redirectUri = `${req.protocol}://${req.get(
-    "host"
-  )}/api/auth/google/callback`;
-  const { url, state } = buildGoogleAuthUrl({ redirectUri });
+export const googleAuth = asyncHandler(async (_req, res) => {
+  const { url, state } = buildGoogleAuthUrl({ redirectUri: REDIRECT_URI });
   res.cookie("g_state", state, oauthCookieOpts());
   return res.redirect(url);
 });
@@ -112,15 +109,18 @@ export const googleAuth = asyncHandler(async (req, res) => {
 export const googleCallback = asyncHandler(async (req, res) => {
   const { code, state } = req.query;
   const savedState = req.cookies?.g_state;
+
   if (!code || !state || !savedState || state !== savedState) {
     throw new BadRequestError("Invalid OAuth state");
   }
-  res.clearCookie("g_state", { path: "/" });
 
-  const redirectUri = `${req.protocol}://${req.get(
-    "host"
-  )}/api/auth/google/callback`;
-  const profile = await exchangeGoogleCodeForProfile({ code, redirectUri });
+  res.clearCookie("g_state", { ...oauthCookieOpts(), maxAge: undefined });
+
+  const profile = await exchangeGoogleCodeForProfile({
+    code: String(code),
+    redirectUri: REDIRECT_URI,
+  });
+
   const email = profile?.email;
   if (!email) throw new BadRequestError("Email not available from Google");
 
@@ -132,6 +132,7 @@ export const googleCallback = asyncHandler(async (req, res) => {
   });
 
   setAuthCookie(res, { user_id: publicUser.user_id, email: publicUser.email });
-  const frontend = getFrontendBase();
+
+  const frontend = getFrontendBase(); // pointera sur FRONTEND_URL défini plus haut
   return res.redirect(302, `${frontend.replace(/\/$/, "")}/auth/callback`);
 });
