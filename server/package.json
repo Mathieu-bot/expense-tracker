@@ -5,7 +5,7 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "node server.js",
+    "start": "prisma migrate deploy && node server.js",
     "dev": "npm run prisma:deploy && npm run prisma:seed && nodemon ./server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prisma:generate": "prisma generate",
