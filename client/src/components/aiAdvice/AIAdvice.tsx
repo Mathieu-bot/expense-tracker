@@ -1,7 +1,7 @@
 import React, { useMemo, useState, type SetStateAction } from "react";
 import { useAIAdvice } from "../../hooks/useAiAdvice";
-import { Expand, Lightbulb, RefreshCcw, Volume2, X } from "lucide-react";
-import { usePuterTTS } from "../../hooks/usePuterTTS";
+import { Expand, Lightbulb, RefreshCcw, X } from "lucide-react";
+// import { usePuterTTS } from "../../hooks/usePuterTTS";
 
 type AIAdviceProps = {
   open: boolean;
