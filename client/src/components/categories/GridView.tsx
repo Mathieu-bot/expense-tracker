@@ -44,7 +44,7 @@ const GridView = ({
               "relative overflow-hidden backdrop-blur-xl rounded-2xl border shadow-lg p-4 flex flex-col gap-3 transition-all duration-300",
               selected
                 ? "border-accent/50 ring-1 ring-accent/40 bg-accent/10"
-                : "bg-gradient-to-br from-primary-light/10 to-primary-dark/10 border-white/5",
+                : "dark:bg-gradient-to-br dark:from-primary-light/10 dark:to-primary-dark/10 border-white/5 dark:bg-transparent bg-white/80",
               "hover:ring-1 hover:ring-accent/30 hover:bg-accent/5",
               "cursor-pointer",
             ].join(" ")}
@@ -82,7 +82,7 @@ const GridView = ({
                   </div>
                 )}
               </div>
-              <div className="text-xs text-light/70 whitespace-nowrap">
+              <div className="text-xs dark:text-light/90 text-gray-800 whitespace-nowrap">
                 {(() => {
                   const ts = c.updated_at ?? c.created_at;
                   if (!ts) return "";
@@ -92,7 +92,7 @@ const GridView = ({
               </div>
             </div>
             <div className="flex items-center justify-start">
-              <span className="px-2 py-0.5 rounded-full bg-accent/15 text-white border border-accent/25 text-xs">
+              <span className="px-2 py-0.5 rounded-full bg-accent/15 dark:text-white text-accent border border-accent/25 text-xs">
                 Total this month: {formatCurrencyFull(totalsThisMonth?.[c.category_id] ?? 0)}
               </span>
             </div>

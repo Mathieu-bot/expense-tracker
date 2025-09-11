@@ -224,15 +224,12 @@ export const Incomes = () => {
               ) : localIncomes.length === 0 ? (
                 <div
                   onClick={handleNewIncome}
-                  className="bg-gradient-to-br w-36 from-green-400/25 to-green-400/20 dark:from-accent/8 dark:to-amber-400/8 backdrop-blur-md rounded-xl p-4 border border-dashed border-green-700/70 hover:border-green-700/80 dark:border-accent/20 dark:hover:border-accent/30 transition-all duration-300 cursor-pointer flex items-center justify-center flex-col gap-2 group"
+                  className="bg-gradient-to-br w-36 from-green-400/10 to-green-400/10 dark:from-accent/8 dark:to-amber-400/8 backdrop-blur-md rounded-xl p-4 border border-dashed border-green-700/50 hover:border-green-700/80 dark:border-accent/20 dark:hover:border-accent/30 transition-all duration-300 cursor-pointer flex items-center justify-center flex-col gap-2 group"
                 >
                   <div className="w-10 h-10 rounded-full bg-green-800/10 group-hover:bg-green-800/15 dark:bg-accent/15 flex items-center justify-center dark:group-hover:bg-accent/20 transition-colors">
-                    <Plus
-                      onClick={handleNewIncome}
-                      className="dark:text-accent text-green-700/70 w-5 h-5 group-hover:scale-110 transition-transform"
-                    />
+                    <Plus className="dark:text-accent text-green-700/50 w-5 h-5 group-hover:scale-110 transition-transform" />
                   </div>
-                  <span className="dark:text-accent/80 text-green-700/80 text-xs font-medium">
+                  <span className="dark:text-accent/80 text-green-700/50 text-xs font-medium">
                     Add Income
                   </span>
                 </div>
@@ -240,12 +237,12 @@ export const Incomes = () => {
                 <>
                   <div
                     onClick={handleNewIncome}
-                    className="bg-gradient-to-br w-36 from-green-400/25 to-green-400/20 dark:from-accent/8 dark:to-amber-400/8 backdrop-blur-md rounded-xl p-4 border border-dashed border-green-700/70 hover:border-green-700/80 dark:border-accent/20 dark:hover:border-accent/30 transition-all duration-300 cursor-pointer flex items-center justify-center flex-col gap-2 group"
+                    className="bg-gradient-to-br w-36 from-green-400/10 to-green-400/10 dark:from-accent/8 dark:to-amber-400/8 backdrop-blur-md rounded-xl p-4 border border-dashed border-green-700/50 hover:border-green-700/80 dark:border-accent/20 dark:hover:border-accent/30 transition-all duration-300 cursor-pointer flex items-center justify-center flex-col gap-2 group"
                   >
                     <div className="w-10 h-10 rounded-full bg-green-800/10 group-hover:bg-green-800/15 dark:bg-accent/15 flex items-center justify-center dark:group-hover:bg-accent/20 transition-colors">
-                      <Plus className="dark:text-accent text-green-700/70 w-5 h-5 group-hover:scale-110 transition-transform" />
+                      <Plus className="dark:text-accent text-green-700/50 w-5 h-5 group-hover:scale-110 transition-transform" />
                     </div>
-                    <span className="dark:text-accent/80 text-green-700/80 text-xs font-medium">
+                    <span className="dark:text-accent/80 text-green-700/50 text-xs font-medium">
                       Add Income
                     </span>
                   </div>
@@ -295,7 +292,7 @@ export const Incomes = () => {
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="bg-white/25 dark:bg-gradient-to-br dark:bg-transparent dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl p-6 border border-gray-200/70 dark:border-white/5 shadow-lg relative overflow-hidden"
+          className="bg-white/30 dark:bg-gradient-to-br dark:bg-transparent dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-xl rounded-2xl p-6 border border-gray-200/70 dark:border-white/5 shadow-lg relative overflow-hidden"
         >
           <div className="absolute top-0 right-0 w-32 h-32 rounded-full -translate-y-16 translate-x-16 bg-cyan-400/10 dark:bg-cyan-400/5"></div>
           <div className="absolute bottom-0 left-0 w-24 h-24 bg-accent/10 dark:bg-accent/5 rounded-full translate-y-12 -translate-x-12"></div>

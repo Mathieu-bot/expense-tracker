@@ -10,11 +10,11 @@ const CreateForm = ({ name, saving, onNameChange, onCreate, searchQuery, onSearc
           placeholder="Search categories..."
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          startAdornment={<Search className="w-4 h-4 text-white" />}
+          startAdornment={<Search className="w-4 h-4 text-gray-800 dark:text-white" />}
           variant="filled"
           size="medium"
           classes={{
-            input: "!bg-white/10 dark:!bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-xl focus:!ring focus:!ring-primary-light focus:!border-primary-light placeholder-white/60",
+            input: "!bg-transparent dark:!bg-white/5 backdrop-blur-md border border-white/10 text-gray-800 dark:text-white rounded-xl focus:!ring focus:!ring-primary-light focus:!border-primary-light placeholder-white/60",
             label: "hidden",
             startAdornment: "z-10",
           }}
@@ -40,7 +40,7 @@ const CreateForm = ({ name, saving, onNameChange, onCreate, searchQuery, onSearc
                 type="button"
                 onClick={onCreate}
                 disabled={saving || !name.trim()}
-                className="p-1.5 rounded-md bg-accent/20 hover:bg-accent/30 border border-accent/30 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                className="p-1.5 rounded-md bg-accent/40 hover:bg-accent/30 border border-accent/30 text-white disabled:opacity-50 disabled:cursor-not-allowed"
                 aria-label="Create category"
                 title="Create category"
               >
@@ -49,7 +49,7 @@ const CreateForm = ({ name, saving, onNameChange, onCreate, searchQuery, onSearc
             }
             classes={{
               input:
-                "!bg-white/10 dark:!bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-xl focus:!ring focus:!ring-primary-light focus:!border-primary-light placeholder-white/60",
+                "!bg-transparent dark:!bg-white/5 backdrop-blur-md border border-white/10 text-gray-800 dark:text-white rounded-xl focus:!ring focus:!ring-primary-light focus:!border-primary-light placeholder-white/60",
               label: "hidden",
             }}
           />

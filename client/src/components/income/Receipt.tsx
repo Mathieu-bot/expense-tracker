@@ -51,7 +51,7 @@ export const Receipt = ({ items, onViewReceipt }: ReceiptProps) => {
                 <div className="mb-2">
                   <h3
                     className={`font-semibold text-[10px] leading-tight tracking-wider mb-1 truncate ${
-                      isDark ? "text-light/90" : "text-purple-900/80"
+                      isDark ? "text-light/90" : "text-purple-900/60"
                     }`}
                   >
                     {item.source}
@@ -77,7 +77,7 @@ export const Receipt = ({ items, onViewReceipt }: ReceiptProps) => {
 
                 <div
                   className={`flex justify-end items-end pt-2 border-t ${
-                    isDark ? "border-light/10" : "text-purple-900/50"
+                    isDark ? "border-light/10" : "text-purple-900/20"
                   }`}
                 >
                   <span className="text-accent font-bold text-[11px] leading-none tracking-tight">

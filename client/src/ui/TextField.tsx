@@ -80,15 +80,16 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(({
 
   const variantCls = variant === 'outlined' ? outlinedStyles : variant === 'filled' ? filledStyles : standardStyles;
 
-  const inputCls = [
-    baseInteractive,
-    sizePadding,
-    variantCls,
-    disabled ? 'opacity-60 cursor-not-allowed' : '',
-    startAdornment ? 'pl-12' : '',
-    endAdornment ? 'pr-12' : '',
-    classes?.input,
-  ].filter(Boolean).join(' ');
+const inputCls = [
+  baseInteractive,
+  sizePadding,
+  variantCls,
+  disabled ? 'opacity-60 cursor-not-allowed' : '',
+  startAdornment ? 'pl-12' : '',
+  endAdornment ? 'pr-12' : '',
+  'placeholder-gray-500 dark:placeholder-white/60',
+  classes?.input,
+].filter(Boolean).join(' ');
 
   const labelBase = useMemo(() => LABEL_BASE.replace('peer-focus:px-1', 'peer-focus:px-1 peer-focus:font-medium'), []);
 

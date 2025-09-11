@@ -32,7 +32,7 @@ export const IncomeFilters = ({
   return (
     <>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-        <h2 className="text-xl font-semibold  text-white dark:text-light/90 flex items-center gap-2">
+        <h2 className="text-xl font-semibold  dark:text-light/90  text-gray-800 flex items-center gap-2">
           <Wallet className="w-5 h-5 text-accent" />
           All Incomes
         </h2>
@@ -45,9 +45,9 @@ export const IncomeFilters = ({
               onChange={(e) => onSearchChange(e.target.value)}
               classes={{
                 input:
-                  "bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-xl",
+                  "bg-white/5 backdrop-blur-md border border-gray-900/50 dark:border-white/10 text-white rounded-xl shadow",
                 label:
-                  "rounded-lg peer-placeholder-shown:text-white/60",
+                  "rounded-lg peer-placeholder-shown:text-gray-800/60 dark:peer-placeholder-shown:text-white/60",
               }}
             />
           </div>
@@ -56,7 +56,7 @@ export const IncomeFilters = ({
 
           <Button
             onClick={() => setShowAdvancedSearch(!showAdvancedSearch)}
-            className="bg-white/10 dark:bg-white/5 border-white/20 hover:bg-white/20 hover:border-white/30 dark:hover:bg-white/10 border dark:border-white/10 text-white dark:text-light/90 hover:shadow-md transition-all"
+            className="bg-white/80 dark:bg-transparent dark:hover:bg-white/5 hover:bg-gray-100 border border-gray-300 dark:border-white/10 text-gray-800 dark:text-light/90 transition-all duration-300 hover:shadow-lg shadow-sm"
             startIcon={<Calendar className="w-4 h-4" />}
           >
             Filter
