@@ -185,13 +185,13 @@ flowchart TD
   U[User Browser] --> Client[Client (React + Vite + Tailwind)]
 
   subgraph Frontend
-    Client --> UI[Reusable UI Components (src/ui)]
-    Client --> Hooks[Hooks & Stores (auth, expenses, incomes, categories)]
-    Client --> SDK[OpenAPI SDK (src/api)]
-    Client --> Svc[Domain Services (IncomeService, CategoryService, PdfExportService)]
+    Client --> UI[Reusable UI Components]
+    Client --> Hooks[Hooks and Stores]
+    Client --> SDK[OpenAPI SDK]
+    Client --> Svc[Domain Services]
     Client --> Guard[RequireAuth]
     Client --> Gate[PostAuthGate]
-    Client -.-> AI[Gemini AI (VITE_GEMINI_API_KEY)]
+    Client -.-> AI[Gemini AI]
   end
 
   SDK --> API[Backend API api]
