@@ -2,7 +2,6 @@ import { useExpenses } from "../hooks/useExpenses";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useCategories } from "../hooks/useCategories";
-import { useState } from "react";
 import ExpenseItem from "../components/expense/ExpenseItem";
 import { Button } from "../ui";
 import { GlassDatePicker } from "../components/Income";
