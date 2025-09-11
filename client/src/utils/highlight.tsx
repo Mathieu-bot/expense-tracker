@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 export function highlightMatch(
   text: string,
   query?: string,
-  highlightClass = "bg-accent/20 text-white px-0.5 rounded"
+  highlightClass = "bg-green-300 dark:bg-accent/20 text-primary-dark dark:text-white px-0.5 rounded"
 ): ReactNode {
   const q = (query ?? "").trim();
   if (!q) return text;
