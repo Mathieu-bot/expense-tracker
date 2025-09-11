@@ -8,7 +8,7 @@ interface ReceiptProps {
   emptyMessage?: string;
 }
 
-const Receipt = ({ items, onViewReceipt }: ReceiptProps) => {
+export const Receipt = ({ items, onViewReceipt }: ReceiptProps) => {
   const { isDark } = useTheme();
 
   return (
@@ -93,4 +93,3 @@ const Receipt = ({ items, onViewReceipt }: ReceiptProps) => {
   );
 };
 
-export default Receipt;

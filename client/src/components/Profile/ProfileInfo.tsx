@@ -16,7 +16,7 @@ const tabs = [
   { id: "appearance", icon: Palette, label: "Appearance" },
 ];
 
-const ProfileInfo = ({ user, activeTab, onTabChange }: ProfileInfoProps) => {
+export const ProfileInfo = ({ user, activeTab, onTabChange }: ProfileInfoProps) => {
   const [indicatorStyle, setIndicatorStyle] = useState({ top: 0, height: 0 });
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
@@ -193,4 +193,3 @@ const ProfileInfo = ({ user, activeTab, onTabChange }: ProfileInfoProps) => {
   );
 };
 
-export default ProfileInfo;
