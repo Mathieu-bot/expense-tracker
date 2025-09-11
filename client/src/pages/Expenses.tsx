@@ -99,14 +99,14 @@ export default function Expenses() {
               placeholder="End date"
             />
             <GlassSelect
-              value={category ?? ""}
-              onChange={(v) => setCategory(v === "" ? undefined : String(v))}
+              value={category || ""}
+              onChange={(v: string | number) => setCategory(v ? String(v) : undefined)}
               options={[
                 { label: "All categories", value: "" },
-                ...(categories ?? []).map((c) => ({
+                ...(categories?.map((c) => ({
                   label: c.category_name,
-                  value: String(c.category_id),
-                })),
+                  value: c.category_name,
+                })) || []),
               ]}
               placeholder="Select a category"
               disabled={categoriesLoading}
