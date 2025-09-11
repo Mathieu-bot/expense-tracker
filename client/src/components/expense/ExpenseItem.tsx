@@ -5,13 +5,17 @@ import { fmt, formatCurrency } from "../../utils/formatters";
 import DeleteConfirmationModal from "./ExpenseModals/DeleteConfirmationModal";
 import { Edit3, EyeIcon, Trash2 } from "lucide-react";
 import { Button } from "../../ui";
+import {motion} from "framer-motion"
+
+import type { Variants } from 'framer-motion';
 
 type ExpenseListProps = {
   e: Expense;
   refetch: () => Promise<void>;
+  variants: Variants;
 };
 
-const ExpenseItem = ({ e, refetch }: ExpenseListProps) => {
+const ExpenseItem = ({ e, refetch, variants }: ExpenseListProps) => {
   const navigate = useNavigate();
   const [deleteOpen, setDeleteOpen] = useState(false);
 
@@ -30,8 +34,9 @@ const ExpenseItem = ({ e, refetch }: ExpenseListProps) => {
 
   return (
     <>
-      <li
+      <motion.li
         key={e.expense_id}
+        variants={variants}
         className="p-3 sm:p-4 grid grid-cols-1 sm:grid-cols-5 gap-3 sm:gap-4 items-center bg-white/80 dark:bg-white/5"
       >
         <div className="sm:col-span-2">
@@ -84,7 +89,7 @@ const ExpenseItem = ({ e, refetch }: ExpenseListProps) => {
             <Trash2 className="size-3" />
           </Button>
         </div>
-      </li>
+      </motion.li>
 
       <DeleteConfirmationModal
         open={deleteOpen}
