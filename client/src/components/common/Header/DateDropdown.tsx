@@ -1,12 +1,18 @@
 import { Clock, Calendar } from "lucide-react";
 import { formatDate, formatTime } from "../../../utils/formatters";
+import { useEffect, useState } from "react";
 
 const DateDropdown = ({
   shouldShowGlassmorphism,
 }: {
   shouldShowGlassmorphism: boolean;
 }) => {
-  const currentDate = new Date();
+  const [date, setDate] = useState<Date>(new Date());
+
+  useEffect(() => {
+    const interval = setInterval(() => setDate(new Date()), 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="flex items-center gap-3">
@@ -25,7 +31,7 @@ const DateDropdown = ({
               : "text-white"
           }
         />
-        <span className="font-medium text-sm">{formatTime(currentDate)}</span>
+        <span className="font-medium text-sm">{formatTime(date)}</span>
         <span
           className={`mx-1 ${
             shouldShowGlassmorphism ? "text-gray-400" : "text-white/50"
@@ -41,7 +47,7 @@ const DateDropdown = ({
               : "text-white"
           }
         />
-        <span className="font-medium text-sm">{formatDate(currentDate)}</span>
+        <span className="font-medium text-sm">{formatDate(date)}</span>
       </div>
 
       {/* <div className="flex items-center gap-1">
