@@ -131,12 +131,12 @@ export const EditExpense = () => {
   };
 
   return (
-    <div className="p-6 max-w-2xl mx-auto pt-20 text-light mt-10">
+    <div className="p-6 max-w-2xl mx-auto pt-20 text-gray-800 dark:text-light/90 mt-10">
       <div className="flex items-center mb-6">
         <h1 className="text-2xl font-semibold">Edit Expense</h1>
       </div>
 
-      <div className="dark:bg-white/10 bg-primary-dark/10 backdrop-blur rounded-lg border border-white/10 p-6 space-y-4">
+      <div className="dark:bg-white/10 bg-white/50 backdrop-blur rounded-lg border border-white/10 p-6 space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm mb-1">Amount</label>
@@ -146,7 +146,7 @@ export const EditExpense = () => {
               step="0.01"
               value={local.amount !== undefined ? String(local.amount) : ""}
               onChange={onChange}
-              className="w-full rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
+              className="w-full rounded-md dark:bg-white/10 bg-white/75 border border-white/10 px-3 py-2 outline-none"
             />
           </div>
           <div>
@@ -168,7 +168,7 @@ export const EditExpense = () => {
             type="text"
             value={local.description || ""}
             onChange={onChange}
-            className="w-full rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
+            className="w-full rounded-md dark:bg-white/10 bg-white/75 border border-white/10 px-3 py-2 outline-none"
           />
         </div>
 
@@ -179,7 +179,7 @@ export const EditExpense = () => {
               name="type"
               value={local.type}
               onChange={onChange}
-              className="w-full rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
+              className="w-full rounded-md dark:bg-white/10 bg-white/75 border border-white/10 px-3 py-2 outline-none"
             >
               <option value="one-time">One-time</option>
               <option value="recurring">Recurring</option>
@@ -194,7 +194,7 @@ export const EditExpense = () => {
                 value={local.date?.slice(0, 10) || ""}
                 onChange={onChange}
                 required
-                className="w-full rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
+                className="w-full rounded-md dark:bg-white/10 bg-white/75 border border-white/10 px-3 py-2 outline-none"
               />
             </div>
           )}
@@ -208,7 +208,7 @@ export const EditExpense = () => {
                   value={local.startDate?.slice(0, 10) || ""}
                   onChange={onChange}
                   required
-                  className="w-full rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
+                  className="w-full rounded-md dark:bg-white/10 bg-white/75 border border-white/10 px-3 py-2 outline-none"
                 />
               </div>
               <div>
@@ -218,7 +218,7 @@ export const EditExpense = () => {
                   type="date"
                   value={local.endDate?.slice(0, 10) || ""}
                   onChange={onChange}
-                  className="w-full rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
+                  className="w-full rounded-md dark:bg-white/10 bg-white/75 border border-white/10 px-3 py-2 outline-none"
                 />
               </div>
             </>
@@ -235,23 +235,31 @@ export const EditExpense = () => {
               type="text"
               value={local.receipt_url || ""}
               onChange={onChange}
-              className="w-full rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
+              className="w-full rounded-md dark:bg-white/10 bg-white/75 border border-white/10 px-3 py-2 outline-none"
             />
           </div>
         ) : null}
         <div>
           <label className="block text-sm mb-1">Receipt (replace)</label>
-          <input type="file" onChange={onFile} />
+          <input
+            type="file"
+            onChange={onFile}
+            className="w-full rounded-md dark:bg-white/10 bg-white/75 border border-dashed border-gray-300 px-3 py-2 outline-none"
+          />
         </div>
 
-
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 justify-end">
-          <Button onClick={handleCancel} className="bg-white/15 hover:bg-white/10 border dark:bg-white/10 dark:hover:bg-white/15 dark:border-light/10 border-light/10 hover:border-light/50 hover:shadow-lg">
+          <Button
+            onClick={handleCancel}
+            className="bg-white border dark:bg-white/10 dark:hover:bg-white/15 dark:border-light/10 border-light/10 hover:border-light/50 hover:shadow-lg"
+            disabled={updateLoading}
+          >
             Cancel
           </Button>
-          <Button onClick={onSubmit}
-          className="border-accent/10 text-accent bg-white/80 bg-gradient-to-br from-accent/10 to-accent/20 hover:shadow-lg hover:bg-white/90 dark:bg-accent/10 dark:from-accent/10 dark:to-accent/10 dark:hover:bg-accent/15 dark:border-accent/10 font-semibold">
+          <Button
+            onClick={onSubmit}
+            className="border-accent/10 text-accent bg-white/80 bg-gradient-to-br from-accent/10 to-accent/20 hover:shadow-lg hover:bg-white/90 dark:bg-accent/10 dark:from-accent/10 dark:to-accent/10 dark:hover:bg-accent/15 dark:border-accent/10 font-semibold"
+          >
             {updateLoading ? (
               <div className="flex items-center gap-3">
                 <Loader2 className="animate-spin" />

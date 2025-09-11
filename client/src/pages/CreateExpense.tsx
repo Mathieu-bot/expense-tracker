@@ -100,12 +100,12 @@ export const CreateExpense = () => {
   };
 
   return (
-    <div className="p-6 max-w-2xl mx-auto pt-20 text-light mt-10">
+    <div className="p-6 max-w-2xl mx-auto pt-20 text-gray-800 dark:text-light mt-10">
       <div className="flex items-center mb-6">
         <h1 className="text-2xl font-semibold">Create New Expense</h1>
       </div>
 
-      <div className="dark:bg-white/10 bg-primary-dark/10 backdrop-blur rounded-lg border border-white/10 p-6 space-y-4">
+      <div className="dark:bg-white/10 bg-white/50 backdrop-blur rounded-lg border border-white/10 p-6 space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm mb-1">Amount</label>
@@ -115,7 +115,7 @@ export const CreateExpense = () => {
               step="0.01"
               value={form.amount}
               onChange={onChange}
-              className="w-full rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
+              className="w-full rounded-md dark:bg-white/10 bg-white/75 border border-white/10 px-3 py-2 outline-none"
               placeholder="0.00"
             />
           </div>
@@ -133,7 +133,7 @@ export const CreateExpense = () => {
               placeholder="Select a category"
               disabled={categoriesLoading}
               classes={{
-                option: "bg-white/10! border! border-white/10!",
+                option: "!bg-white dark:!bg-white/10 !border !border-white/10",
               }}
             />
           </div>
@@ -146,7 +146,7 @@ export const CreateExpense = () => {
             type="text"
             value={form.description || ""}
             onChange={onChange}
-            className="w-full rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
+            className="w-full rounded-md dark:bg-white/10 bg-white/75 border border-white/10 px-3 py-2 outline-none"
             placeholder="Optional"
           />
         </div>
@@ -158,7 +158,7 @@ export const CreateExpense = () => {
               name="type"
               value={form.type}
               onChange={onChange}
-              className="w-full rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
+              className="w-full rounded-md dark:bg-white/10 bg-white/75 border border-white/10 px-3 py-2 outline-none"
             >
               <option value="one-time">One-time</option>
               <option value="recurring">Recurring</option>
@@ -172,7 +172,7 @@ export const CreateExpense = () => {
                 type="date"
                 value={form.date || ""}
                 onChange={onChange}
-                className="w-full rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
+                className="w-full rounded-md dark:bg-white/10 bg-white/75 border border-white/10 px-3 py-2 outline-none"
               />
             </div>
           )}
@@ -185,7 +185,7 @@ export const CreateExpense = () => {
                   type="date"
                   value={form.startDate || ""}
                   onChange={onChange}
-                  className="w-full rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
+                  className="w-full rounded-md dark:bg-white/10 bg-white/75 border border-white/10 px-3 py-2 outline-none"
                 />
               </div>
               <div>
@@ -195,7 +195,7 @@ export const CreateExpense = () => {
                   type="date"
                   value={form.endDate || ""}
                   onChange={onChange}
-                  className="w-full rounded-md bg-white/10 border border-white/10 px-3 py-2 outline-none"
+                  className="w-full rounded-md dark:bg-white/10 bg-white/75 border border-white/10 px-3 py-2 outline-none"
                 />
               </div>
             </>
@@ -204,11 +204,11 @@ export const CreateExpense = () => {
 
         <div>
           <label className="block text-sm mb-1">Receipt (optional)</label>
-          <input type="file" onChange={onFile} />
+          <input type="file" onChange={onFile} className="w-full rounded-md dark:bg-white/10 bg-white/75 border border-dashed border-gray-300 px-3 py-2 outline-none" />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 justify-end">
-          <Button onClick={handleCancel} className="bg-white/15 hover:bg-white/10 border dark:bg-white/10 dark:hover:bg-white/15 dark:border-light/10 border-light/10 hover:border-light/50 hover:shadow-lg">
+          <Button onClick={handleCancel} className="bg-white  border dark:bg-white/10 dark:hover:bg-white/15 dark:border-light/10 border-light/10 hover:border-light/50 hover:shadow-lg">
             Cancel
           </Button>
           <Button onClick={handleSave}
