@@ -25,8 +25,8 @@ const DataHeader = ({ viewMode, onToggleView, sortOrder, onSortChange }: DataHea
         <Button
           onClick={onToggleView}
           aria-pressed={viewMode === "grid"}
-          startIcon={<TitleIcon className="text-green-300" size={20} />}
-          className="hover:text-green-300 transition-colors bg-black/20 dark:bg-white/10 font-semibold text-xl border !border-white/20 !px-4 !py-2"
+          startIcon={<TitleIcon className="text-accent" size={20} />}
+          className="text-accent dark:text-light hover:text-accent transition-colors bg-accent/20 dark:bg-white/10 font-semibold text-xl border !border-white/20 !px-4 !py-2 shadow-sm shadow-black/20 dark:shadow-black/30 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-accent/40"
         >
           {title}
         </Button>
@@ -34,7 +34,7 @@ const DataHeader = ({ viewMode, onToggleView, sortOrder, onSortChange }: DataHea
       <div className="flex justify-end w-full gap-2">
         <div className="relative w-[150px]">
           <span className="pointer-events-none absolute top-1/2 -translate-y-1/2 px-3">
-            <ListFilter className="w-4 h-4 text-white" />
+            <ListFilter className="w-4 h-4 text-amber-500 dark:text-white" />
           </span>
           <Select<SortOrder>
             value={sortOrder}
@@ -48,7 +48,7 @@ const DataHeader = ({ viewMode, onToggleView, sortOrder, onSortChange }: DataHea
             placeholder="Sort by"
             classes={{
               trigger:
-                "!w-full !bg-black/20 dark:!bg-white/5 !text-white rounded-lg !ring-0  h-full !text-sm pl-9",
+                "!w-full !bg-accent/20 !dark:!bg-white/5 text-primary-dark dark:!text-white rounded-lg !ring-0  h-full !text-sm pl-9",
               icon: "hidden",
               list: "dark:!bg-white/5 backdrop-blur-2xl !border-none",
               option:
