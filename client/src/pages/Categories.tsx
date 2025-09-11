@@ -18,6 +18,9 @@ import DeleteConfirmationModal from "../components/categories/modals/DeleteConfi
 import BulkDeleteModal from "../components/categories/modals/BulkDeleteModal";
 import { useSelection } from "../hooks/useSelection";
 import CategoryDetailsModal from "../components/categories/modals/CategoryDetailsModal";
+import DataHeader from "../components/categories/DataHeader";
+import Pagination from "../components/categories/Pagination";
+import BulkFloatingAction from "../components/categories/BulkFloatingAction";
 
 export default function Categories() {
   const toast = useToast();
@@ -159,10 +162,6 @@ export default function Categories() {
   return (
     <div className="relative z-2 mb-10 mt-30 mx-auto text-light max-w-6xl px-4 sm:px-6 md:pl-10">
       <CategoriesHeader
-        viewMode={viewMode}
-        onToggleView={() => setViewMode((v) => (v === "list" ? "grid" : "list"))}
-        sortOrder={sortOrder}
-        onSortChange={setSortOrder}
         bulkMode={bulkMode}
         onToggleBulkMode={() => toggleBulkMode()}
         selectedCount={selectedIds.length}
@@ -187,77 +186,75 @@ export default function Categories() {
           <div className="absolute top-0 right-0 w-32 h-32 rounded-full -translate-y-16 translate-x-16 bg-accent/10 dark:bg-accent/5"></div>
           <div className="absolute bottom-0 left-0 w-24 h-24 rounded-full translate-y-12 -translate-x-12 bg-cyan-400/10 dark:bg-cyan-400/5"></div>
 
+          <DataHeader
+            viewMode={viewMode}
+            onToggleView={() => setViewMode((v) => (v === "list" ? "grid" : "list"))}
+            sortOrder={sortOrder}
+            onSortChange={(v) => setSortOrder(v)}
+          />
+
           {filteredCategories.length === 0 ? (
             <CategoriesEmptyState
               onRefresh={fetch}
               message={searchQuery.trim() ? 'No categories match your search' : 'No categories found'}
             />
           ) : (
-            viewMode === "list" ? (
-              <ListView
-                categories={displayedCategories}
-                editingId={editingId}
-                editName={editName}
-                onEditNameChange={setEditName}
-                onStartEdit={startEdit}
-                onSaveEdit={saveEdit}
-                onCancelEdit={cancelEdit}
-                onRemove={remove}
-                saving={saving}
-                highlightQuery={debouncedQuery}
-                totalsThisMonth={totalsThisMonth}
-                bulkMode={bulkMode}
-                selectedIds={selectedIds as number[]}
-                onToggleSelect={(id) => toggleSelect(id)}
-                onOpenDetails={openDetails}
-              />
-            ) : (
-              <GridView
-                categories={displayedCategories}
-                editingId={editingId}
-                editName={editName}
-                onEditNameChange={setEditName}
-                onStartEdit={startEdit}
-                onSaveEdit={saveEdit}
-                onCancelEdit={cancelEdit}
-                onRemove={remove}
-                saving={saving}
-                highlightQuery={debouncedQuery}
-                totalsThisMonth={totalsThisMonth}
-                bulkMode={bulkMode}
-                selectedIds={selectedIds as number[]}
-                onToggleSelect={(id) => toggleSelect(id)}
-                onOpenDetails={openDetails}
-              />
-            )
+            <>
+              {viewMode === "list" ? (
+                <ListView
+                  categories={displayedCategories}
+                  editingId={editingId}
+                  editName={editName}
+                  onEditNameChange={setEditName}
+                  onStartEdit={startEdit}
+                  onSaveEdit={saveEdit}
+                  onCancelEdit={cancelEdit}
+                  onRemove={remove}
+                  saving={saving}
+                  highlightQuery={debouncedQuery}
+                  totalsThisMonth={totalsThisMonth}
+                  bulkMode={bulkMode}
+                  selectedIds={selectedIds as number[]}
+                  onToggleSelect={(id) => toggleSelect(id)}
+                  onOpenDetails={openDetails}
+                />
+              ) : (
+                <GridView
+                  categories={displayedCategories}
+                  editingId={editingId}
+                  editName={editName}
+                  onEditNameChange={setEditName}
+                  onStartEdit={startEdit}
+                  onSaveEdit={saveEdit}
+                  onCancelEdit={cancelEdit}
+                  onRemove={remove}
+                  saving={saving}
+                  highlightQuery={debouncedQuery}
+                  totalsThisMonth={totalsThisMonth}
+                  bulkMode={bulkMode}
+                  selectedIds={selectedIds as number[]}
+                  onToggleSelect={(id) => toggleSelect(id)}
+                  onOpenDetails={openDetails}
+                />
+              )}
+              {displayedCategories.length > 0 && (
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPrev={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  onNext={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                />
+              )}
+            </>
           )}
         </div>
       )}
 
-      {!loading && displayedCategories.length > 0 && (
-        <div className="flex justify-center items-center pt-6">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
-              className="px-3 py-1 rounded-lg bg-gradient-to-r from-cyan-100 to-blue-100 hover:from-cyan-200 hover:to-blue-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors text-cyan-700 dark:bg-white/5 dark:hover:bg-white/10 dark:text-light/90"
-            >
-              Prev
-            </button>
-            <span className="text-sm text-cyan-600 dark:text-light/60">
-              Page {currentPage} of {totalPages}
-            </span>
-            <button
-              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-              disabled={currentPage === totalPages}
-              className="px-3 py-1 rounded-lg bg-gradient-to-r from-cyan-100 to-blue-100 hover:from-cyan-200 hover:to-blue-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors text-cyan-700 dark:bg-white/5 dark:hover:bg-white/10 dark:text-light/90"
-            >
-              Next
-            </button>
-          </div>
-        </div>
-      )}
-
+      <BulkFloatingAction
+        bulkMode={bulkMode}
+        selectedCount={selectedIds.length}
+        onClick={() => setBulkOpen(true)}
+      />
       <DeleteConfirmationModal
         open={deleteOpen}
         onClose={() => setDeleteOpen(false)}
@@ -265,7 +262,6 @@ export default function Categories() {
         loading={saving}
         categoryName={pendingDeleteName}
       />
-
       <BulkDeleteModal
         open={bulkOpen}
         onClose={() => setBulkOpen(false)}
