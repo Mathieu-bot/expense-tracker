@@ -30,6 +30,7 @@ export default function GoogleButton({
       onClick={() => {
         window.location.href = redirectUrl;
       }}
+      classes={{label:"text-black"}}
     >
       {label}
     </Button>
