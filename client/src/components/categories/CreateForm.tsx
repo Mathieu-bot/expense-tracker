@@ -5,7 +5,8 @@ import type { CreateFormProps } from "../../types/Category";
 const CreateForm = ({ name, saving, onNameChange, onCreate, searchQuery, onSearchChange }: CreateFormProps) => {
   return (
     <div className="mb-6 grid grid-cols-1 md:grid-cols-12 gap-3">
-      <div className="md:col-span-4">
+      <div className="md:col-span-6"/>
+      <div className="md:col-span-3">
         <TextField
           placeholder="Search categories..."
           value={searchQuery}
@@ -14,14 +15,13 @@ const CreateForm = ({ name, saving, onNameChange, onCreate, searchQuery, onSearc
           variant="filled"
           size="medium"
           classes={{
-            input: "!bg-white/10 dark:!bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-xl focus:!ring focus:!ring-primary-light focus:!border-primary-light placeholder-white/60",
+            input: "!bg-black/20 dark:!bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-xl focus:!ring focus:!ring-accent placeholder-white/60",
             label: "hidden",
             startAdornment: "z-10",
           }}
         />
       </div>
-      <div className="md:col-span-4"/>
-      <div className="md:col-span-4 flex flex-col sm:flex-row gap-2 md:justify-end">
+      <div className="md:col-span-3 flex flex-col sm:flex-row gap-2 md:justify-end">
         <div className="flex-1 md:max-w-md">
           <TextField
             value={name}
@@ -40,7 +40,7 @@ const CreateForm = ({ name, saving, onNameChange, onCreate, searchQuery, onSearc
                 type="button"
                 onClick={onCreate}
                 disabled={saving || !name.trim()}
-                className="p-1.5 rounded-md bg-accent/20 hover:bg-accent/30 border border-accent/30 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                className="p-1.5 rounded-md bg-blue-200 dark:bg-accent/20 border border-accent/30 text-accent disabled:opacity-50 disabled:cursor-not-allowed"
                 aria-label="Create category"
                 title="Create category"
               >
@@ -49,7 +49,7 @@ const CreateForm = ({ name, saving, onNameChange, onCreate, searchQuery, onSearc
             }
             classes={{
               input:
-                "!bg-white/10 dark:!bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-xl focus:!ring focus:!ring-primary-light focus:!border-primary-light placeholder-white/60",
+                "!bg-black/20 dark:!bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-xl focus:!ring focus:!ring-accent placeholder-white/60",
               label: "hidden",
             }}
           />
