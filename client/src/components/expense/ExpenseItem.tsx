@@ -69,7 +69,7 @@ const ExpenseItem = ({ e, refetch }: ExpenseListProps) => {
           ) : null}
           <Button
             onClick={() => navigate(`/expenses/${e.expense_id}/edit`)}
-            className="bg-primary/10 text-primary border-primary/15 hover:bg-primary/15 aspect-square px-2 py-1 text-xs sm:text-sm rounded-md dark:bg-white/10 dark:hover:bg-white/15 border dark:border-white/10 dark:text-light"
+            className="bg-cyan-100 text-cyan-700 border-cyan-200 hover:bg-cyan-200 aspect-square px-2 py-1 text-xs sm:text-sm rounded-md dark:bg-white/10 dark:hover:bg-white/15 border dark:border-white/10 dark:text-light"
             aria-label="Edit expense"
             size="small"
           >

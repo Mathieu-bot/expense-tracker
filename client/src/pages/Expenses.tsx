@@ -4,7 +4,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useCategories } from "../hooks/useCategories";
 import ExpenseItem from "../components/expense/ExpenseItem";
 import { Button } from "../ui";
-import { Calendar, Plus, RefreshCcw, X, List } from "lucide-react";
+import { Filter, Plus, RefreshCcw, X, List } from "lucide-react";
 import GlassSelect from "../components/expense/GlassSelect";
 import { GlassDatePicker } from "../components/common/GlassDatePicker";
 export default function Expenses() {
@@ -63,7 +63,7 @@ export default function Expenses() {
         <div className="md:col-span-3"></div>
         <Button
           size="large"
-          startIcon={<Calendar size={15} />}
+          startIcon={<Filter size={15} />}
           className="px-3 py-2 bg-white/80 dark:bg-white/5 dark:hover:bg-white/5 hover:bg-gray-100 border border-gray-300 dark:border-white/10 text-gray-800 dark:text-light/90 transition-all duration-300 hover:shadow-lg shadow-sm"
           onClick={() => setShowFilter(!showFilter)}
         >
@@ -83,7 +83,7 @@ export default function Expenses() {
         <div className="p-5 bg-white/25 border-light/10 backdrop-blur-xl border dark:bg-transparent dark:bg-gradient-to-br dark:from-primary-light/10 dark:to-primary-dark/10 dark:border-white/5 rounded-xl mb-5">
           <div className="flex gap-3 mb-5 items-center">
             <div className="text-accent bg-accent/10 flex justify-center items-center p-3 rounded-lg">
-              <Calendar size={20}></Calendar>
+              <Filter size={20}></Filter>
             </div>
             <h2 className="text-xl font-semibold ">Filters</h2>
           </div>
