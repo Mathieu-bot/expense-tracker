@@ -57,7 +57,6 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-// Serve receipt uploads statically
 app.use("/uploads", express.static(path.resolve("uploads")));
 
 app.use("/api/auth", authRoutes);
@@ -67,7 +66,6 @@ app.use("/api/user", requireAuth, userRoutes);
 app.use("/api/expenses", expenseRoutes);
 app.use("/api/summary", requireAuth, summaryRoutes);
 
-// Initialize a single Prisma client instance
 const prisma = new PrismaClient();
 
 app.get("/", (req, res) => {
@@ -78,11 +76,9 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "OK" });
 });
 
-// DB health check using Prisma raw query; does not require any models
 app.get("/api/db-check", async (_req, res) => {
   try {
     const result = await prisma.$queryRaw`SELECT NOW() as now`;
-    // Result shape differs by driver; normalize to { now }
     const now = Array.isArray(result)
       ? result[0]?.now ?? result[0]?.NOW ?? result[0]
       : result?.now ?? result;
