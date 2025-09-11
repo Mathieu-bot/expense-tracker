@@ -49,7 +49,7 @@ export default function Expenses() {
   };
 
   return (
-    <div className="relative z-2 mb-10 mt-30 px-6 xl:ml-29 lg:ml-20 2xl:mx-auto text-gray-800 dark:text-light/90 max-w-6xl px-6">
+    <div className="relative z-2 mb-10 mt-30 xl:ml-29 lg:ml-20 2xl:mx-auto text-gray-800 dark:text-light/90 max-w-6xl px-6">
       <div className="flex items-center justify-between mb-6">
         <div className="flex flex-col gap-2">
           <h1 className="text-4xl font-bold">Expenses</h1>
@@ -167,7 +167,7 @@ export default function Expenses() {
           </div>
         )}
         {!loading && !error && expenses.length === 0 && (
-          <div className="text-light/70">No expenses found.</div>
+          <div className="dark:text-light/90 text-gray-800">No expenses found.</div>
         )}
         {!loading && !error && expenses.length > 0 && (
           <ul className="divide-y divide-gray-300 dark:divide-white/10 bg-gradient-to-br from-primary-light/10 to-primary-dark/10 backdrop-blur-xl rounded-2xl border border-white/5 shadow-lg overflow-hidden">
