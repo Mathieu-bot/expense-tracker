@@ -1,4 +1,4 @@
-import { Dialog, Button, Skeleton } from "../../../ui";
+import { Dialog, Button } from "../../../ui";
 import type { Category } from "../../../types/Auth";
 import { Tag, ArrowUpRight, ArrowDownRight, ExternalLink } from "lucide-react";
 import { formatCurrency, formatCurrencyFull, formatDate } from "../../../utils/formatters";
@@ -38,9 +38,9 @@ const CategoryDetailsModal = ({ open, onClose, category, totalThisMonth, onEdit,
   };
 
   // fetch data
-  const { expenses: catAll, loading: loadingCatAll, refetch: refetchCatAll } = useExpenses(undefined, undefined, category?.category_name);
-  const { expenses: allThisMonth, loading: loadingAllThis, refetch: refetchAllThis } = useExpenses(fmtLocal(monthStart), fmtLocal(monthEnd));
-  const { expenses: catPrevMonth, loading: loadingPrev, refetch: refetchCatPrev } = useExpenses(fmtLocal(prevStart), fmtLocal(prevEnd), category?.category_name);
+  const { expenses: catAll, refetch: refetchCatAll } = useExpenses(undefined, undefined, category?.category_name);
+  const { expenses: allThisMonth, refetch: refetchAllThis } = useExpenses(fmtLocal(monthStart), fmtLocal(monthEnd));
+  const { expenses: catPrevMonth, refetch: refetchCatPrev } = useExpenses(fmtLocal(prevStart), fmtLocal(prevEnd), category?.category_name);
 
   useEffect(() => {
     if (!open || !category) return;
@@ -62,8 +62,6 @@ const CategoryDetailsModal = ({ open, onClose, category, totalThisMonth, onEdit,
       .slice(0, 5);
     return { tAllThis, tCatThis, tCatPrev, share, variation, lastFive };
   }, [allThisMonth, totalThisMonth, catPrevMonth, catAll]);
-
-  const isLoading = loadingCatAll || loadingAllThis || loadingPrev;
 
   if (!open || !category) return null;
 
@@ -117,38 +115,29 @@ const CategoryDetailsModal = ({ open, onClose, category, totalThisMonth, onEdit,
         </div>
 
         <div className="flex flex-wrap gap-2">
-          {isLoading ? (
-            <>
-              <Skeleton width={150} height={28} rounded="rounded-md" className="bg-white/40 dark:bg-white/10 border border-black/10 dark:border-white/10" />
-              <Skeleton width={140} height={28} rounded="rounded-md" className="bg-white/40 dark:bg-white/10 border border-black/10 dark:border-white/10" />
-            </>
-          ) : (
-            <>
-              <span className="px-3 py-1 rounded-md bg-accent/15 text-black dark:text-white border border-accent/25 text-xs">
-                Total this month: {formatCurrencyFull(totals.tCatThis || 0)}
-              </span>
-              {totals.share >= 0 && (
-                <span className="px-3 py-1 rounded-md bg-black/5 dark:bg-white/10 text-xs border border-black/10 dark:border-white/10">
-                  Share: {totals.share.toFixed(1)}%
-                </span>
-              )}
-              {Number.isFinite(totals.variation) && (
-                <span className={[
-                  "px-3 py-1 rounded-md text-xs border inline-flex items-center gap-1",
-                  totals.variation >= 0
-                    ? "bg-green-500/10 border-green-500/20 text-green-600"
-                    : "bg-red-500/10 border-red-500/20 text-red-600",
-                ].join(" ")}>
-                  {totals.variation >= 0 ? <ArrowUpRight className="w-3 h-3"/> : <ArrowDownRight className="w-3 h-3"/>}
-                  {Math.abs(totals.variation).toFixed(1)}% vs last month
-                </span>
-              )}
-              {category.user_id == null && (
-                <span className="px-3 py-1 rounded-md bg-black/5 dark:bg-white/10 text-xs border border-black/10 dark:border-white/10">
-                  Default category
-                </span>
-              )}
-            </>
+          <span className="px-3 py-1 rounded-md bg-accent/15 text-black dark:text-white border border-accent/25 text-xs">
+            Total this month: {formatCurrencyFull(totals.tCatThis || 0)}
+          </span>
+          {totals.share >= 0 && (
+            <span className="px-3 py-1 rounded-md bg-black/5 dark:bg-white/10 text-xs border border-black/10 dark:border-white/10">
+              Share: {totals.share.toFixed(1)}%
+            </span>
+          )}
+          {Number.isFinite(totals.variation) && (
+            <span className={[
+              "px-3 py-1 rounded-md text-xs border inline-flex items-center gap-1",
+              totals.variation >= 0
+                ? "bg-green-500/10 border-green-500/20 text-green-600"
+                : "bg-red-500/10 border-red-500/20 text-red-600",
+            ].join(" ")}>
+              {totals.variation >= 0 ? <ArrowUpRight className="w-3 h-3"/> : <ArrowDownRight className="w-3 h-3"/>}
+              {Math.abs(totals.variation).toFixed(1)}% vs last month
+            </span>
+          )}
+          {category.user_id == null && (
+            <span className="px-3 py-1 rounded-md bg-black/5 dark:bg-white/10 text-xs border border-black/10 dark:border-white/10">
+              Default category
+            </span>
           )}
         </div>
 
@@ -162,19 +151,7 @@ const CategoryDetailsModal = ({ open, onClose, category, totalThisMonth, onEdit,
               Go to expenses <ExternalLink className="w-3 h-3" />
             </button>
           </div>
-          {isLoading ? (
-            <ul className="divide-y divide-gray-200/70 dark:divide-white/10">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <li key={i} className="py-2 flex items-center justify-between text-sm">
-                  <Skeleton variant="rect" width="50%" height={16} rounded="rounded" className="mr-2 bg-white/50 dark:bg-white/10" />
-                  <div className="flex items-center gap-3 whitespace-nowrap text-right">
-                    <Skeleton variant="rect" width={80} height={16} rounded="rounded" className="bg-white/50 dark:bg-white/10" />
-                    <Skeleton variant="rect" width={96} height={16} rounded="rounded" className="bg-white/50 dark:bg-white/10" />
-                  </div>
-                </li>
-              ))}
-            </ul>
-          ) : totals.lastFive.length === 0 ? (
+          {totals.lastFive.length === 0 ? (
             <div className="text-sm text-gray-500 dark:text-light/60">No expenses yet for this category.</div>
           ) : (
             <ul className="divide-y divide-gray-200/70 dark:divide-white/10">
