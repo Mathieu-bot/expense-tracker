@@ -182,7 +182,7 @@ API note: the generated SDK uses `OpenAPI.BASE` (`src/api/core/OpenAPI.ts`) with
 
 ```mermaid
 flowchart TD
-  U[User Browser] --> Client[Client (React + Vite + Tailwind)]
+  U[User Browser] --> Client[Client React Vite Tailwind]
 
   subgraph Frontend
     Client --> UI[Reusable UI Components]
