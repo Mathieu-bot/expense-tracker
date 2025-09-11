@@ -89,13 +89,17 @@ const getFrontendBase = () =>
   process.env.CORS_ORIGIN ||
   "http://localhost:5173";
 
+const getRedirectUri = (req) =>
+  process.env.GOOGLE_REDIRECT_URI || `${req.protocol}://${req.get("host")}/api/auth/google/callback`;
+
 const oauthCookieOpts = () => {
   const isProd = process.env.NODE_ENV === 'production';
   return { httpOnly: true, secure: isProd, sameSite: 'lax', path: '/', maxAge: 10 * 60 * 1000 };
 }
 
-export const googleAuth = asyncHandler(async (_req, res) => {
-  const { url, state } = buildGoogleAuthUrl({ redirectUri: REDIRECT_URI });
+export const googleAuth = asyncHandler(async (req, res) => {
+  const redirectUri = getRedirectUri(req);
+  const { url, state } = buildGoogleAuthUrl({ redirectUri });
   res.cookie("g_state", state, oauthCookieOpts());
   return res.redirect(url);
 });
@@ -110,10 +114,8 @@ export const googleCallback = asyncHandler(async (req, res) => {
 
   res.clearCookie("g_state", { ...oauthCookieOpts(), maxAge: undefined });
 
-  const profile = await exchangeGoogleCodeForProfile({
-    code: String(code),
-    redirectUri: REDIRECT_URI,
-  });
+  const redirectUri = getRedirectUri(req);
+  const profile = await exchangeGoogleCodeForProfile({ code: String(code), redirectUri });
 
   const email = profile?.email;
   if (!email) throw new BadRequestError("Email not available from Google");
@@ -127,6 +129,6 @@ export const googleCallback = asyncHandler(async (req, res) => {
 
   setAuthCookie(res, { user_id: publicUser.user_id, email: publicUser.email });
 
-  const frontend = getFrontendBase(); // pointera sur FRONTEND_URL défini plus haut
+  const frontend = getFrontendBase();
   return res.redirect(302, `${frontend.replace(/\/$/, "")}/auth/callback`);
 });
