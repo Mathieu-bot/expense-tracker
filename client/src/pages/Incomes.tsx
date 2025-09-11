@@ -5,27 +5,27 @@ import { useIncomes } from "../hooks/useIncomes";
 import { useIncomeFilters } from "../hooks/useIncomeFilters";
 import { useIncomeCharts } from "../hooks/useIncomeCharts";
 import { useIncomeModals } from "../hooks/useIncomeModals";
-import {
-  IncomeHeader,
-  IncomeChart,
-  IncomeFilters,
-  DeleteConfirmationModal,
-  ReceiptModal,
-} from "../components/Income";
 import { motion } from "framer-motion";
-import { IncomeList } from "../components/Income/IncomeList";
-import Receipt from "../components/Income/Receipt";
 import { Plus, Wallet, X, Download } from "lucide-react";
-import { StatsCards } from "../components/Income/IncomeHeader/StatsCards";
 import type { Income } from "../types/Income";
 import { useState, useMemo, useRef } from "react";
-import { ReceiptPdf } from "../components/Income/IncomePdf/ReceiptPdf";
 import {
   PdfExportService,
   Resolution,
   Margin,
 } from "../services/PdfExportService";
-import { ExportModal } from "../components/Income/IncomePdf/ExportModal";
+import {
+  DeleteConfirmationModal,
+  ExportModal,
+  IncomeChart,
+  IncomeFilters,
+  IncomeHeader,
+  IncomeList,
+  Receipt,
+  ReceiptModal,
+  ReceiptPdf,
+} from "../components/income";
+import { StatsCards } from "../components/income/IncomeHeader/StatsCards";
 export const Incomes = () => {
   const navigate = useNavigate();
   const toast = useToast();
