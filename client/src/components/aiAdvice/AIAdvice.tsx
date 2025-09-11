@@ -9,7 +9,7 @@ type AIAdviceProps = {
 };
 export default function AIAdvice({ open, setOpen }: AIAdviceProps) {
   const { data, loading, error, refetch } = useAIAdvice();
-  const { speak, ready } = usePuterTTS();
+  // const { speak, ready } = usePuterTTS();
 
   const [minimized, setMinimized] = useState(false);
   const [showMore, setShowMore] = useState(false);
@@ -45,7 +45,7 @@ export default function AIAdvice({ open, setOpen }: AIAdviceProps) {
 
         {/* Actions */}
         <div className="flex items-center gap-1">
-          {!loading && (
+          {/* {!loading && (
             <button
               disabled={!ready}
               onClick={async () => {
@@ -58,7 +58,7 @@ export default function AIAdvice({ open, setOpen }: AIAdviceProps) {
             >
               <Volume2 />
             </button>
-          )}
+          )} */}
 
           <button
             type="button"
