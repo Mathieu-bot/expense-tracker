@@ -371,8 +371,6 @@ paths:
       responses:
         "200":
           description: Password updated
-<<<<<<< HEAD
-=======
 
   /auth/me:
     get:
@@ -414,4 +412,3 @@ components:
         created_at:
           type: string
           format: date-time
->>>>>>> 4f1ff1098e64f7feee04c94977f358fa4b1c0bb6

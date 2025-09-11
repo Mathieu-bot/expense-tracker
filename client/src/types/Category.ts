@@ -34,11 +34,6 @@ export type ListViewProps = {
 export type GridViewProps = ListViewProps;
 
 export type HeaderProps = {
-  viewMode: ViewMode;
-  onToggleView: () => void;
-  sortOrder: SortOrder;
-  onSortChange: (v: SortOrder) => void;
-  
   bulkMode?: boolean;
   onToggleBulkMode?: () => void;
   selectedCount?: number;
