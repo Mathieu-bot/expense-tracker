@@ -11,6 +11,6 @@ jobs:
     steps:
       - name: Curl health
         run: |
-          URL="https://pennypal-backend-9v97.onrender.com/api/health"
+          URL="https://pennypal-ya7b.onrender.com/api/health"
           echo "GET $URL"
           curl -fsS --retry 2 --retry-delay 2 --retry-connrefused --max-time 20 "$URL" >/dev/null
