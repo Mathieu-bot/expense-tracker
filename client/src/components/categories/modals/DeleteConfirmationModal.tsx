@@ -1,4 +1,5 @@
 import { Button, Dialog } from "../../../ui";
+import { motion } from "framer-motion";
 
 type Props = {
   open: boolean;
@@ -14,10 +15,15 @@ const DeleteConfirmationModal = ({ open, onClose, onConfirm, loading, categoryNa
       open={open}
       onClose={onClose}
       title={
-        <div className="flex items-center gap-2">
+        <motion.div
+          className="flex items-center gap-2"
+          initial={{ opacity: 0, y: -6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.18, ease: "easeOut" }}
+        >
           <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-red-500/15 text-red-500">!</span>
           <span>Confirm Delete</span>
-        </div>
+        </motion.div>
       }
       classes={{
         panel: "bg-white/95 dark:bg-primary-light/20 border border-gray-300 dark:border-gray-700 rounded-xl shadow-2xl",
@@ -29,35 +35,43 @@ const DeleteConfirmationModal = ({ open, onClose, onConfirm, loading, categoryNa
         overlay: "backdrop-blur-md",
       }}
       footer={
-        <>
-          <Button
-            onClick={onClose}
-            className="border border-gray-300 text-gray-700 bg-gray-100 hover:bg-gray-200 dark:border-gray-600 dark:text-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700"
-            size="small"
-            disabled={loading}
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={onConfirm}
-            className="bg-red-600 border-none text-white hover:bg-red-700"
-            size="small"
-            disabled={loading}
-          >
-            {loading ? "Deleting..." : "Delete Category"}
-          </Button>
-        </>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15 }}>
+          <div className="flex gap-2">
+            <Button
+              onClick={onClose}
+              className="border border-gray-300 text-gray-700 bg-gray-100 hover:bg-gray-200 dark:border-gray-600 dark:text-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700"
+              size="small"
+              disabled={loading}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={onConfirm}
+              className="bg-red-600 border-none text-white hover:bg-red-700"
+              size="small"
+              disabled={loading}
+            >
+              {loading ? "Deleting..." : "Delete Category"}
+            </Button>
+          </div>
+        </motion.div>
       }
     >
-      <p>
-        {categoryName ? (
-          <>
-            Are you sure you want to delete the category <strong>{categoryName}</strong>? This action cannot be undone.
-          </>
-        ) : (
-          <>Are you sure you want to delete this category? This action cannot be undone.</>
-        )}
-      </p>
+      <motion.div
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: open ? 1 : 0, y: open ? 0 : 6 }}
+        transition={{ duration: 0.18, ease: "easeOut" }}
+      >
+        <p>
+          {categoryName ? (
+            <>
+              Are you sure you want to delete the category <strong>{categoryName}</strong>? This action cannot be undone.
+            </>
+          ) : (
+            <>Are you sure you want to delete this category? This action cannot be undone.</>
+          )}
+        </p>
+      </motion.div>
     </Dialog>
   );
 };
