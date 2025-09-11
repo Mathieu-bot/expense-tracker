@@ -183,7 +183,7 @@ export const Incomes = () => {
 
   return (
     <>
-      <div className="relative z-2 mb-10 2xl:mx-auto mt-30 text-gray-800 dark:text-light max-w-7xl px-6 xl:ml-29 lg:ml-20">
+      <div className="relative z-2 mb-10 mt-30 text-gray-800 dark:text-light max-w-7xl px-6 xl:ml-29 lg:ml-20 2xl:mx-auto">
         <IncomeHeader
           totalIncome={totalIncome}
           onNewIncome={handleNewIncome}

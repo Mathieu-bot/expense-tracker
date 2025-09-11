@@ -180,7 +180,7 @@ export default function Categories() {
   };
 
   return (
-    <div className="relative z-2 mb-10 mt-30 mx-auto text-gray-800 dark:text-light/90 max-w-6xl px-4 sm:px-6 md:pl-10">
+    <div className="relative z-2 mb-10 mt-30 xl:ml-29 lg:ml-20 2xl:mx-auto text-gray-800 dark:text-light/90 max-w-6xl px-4 sm:px-6 md:pl-10">
       <CategoriesHeader
         viewMode={viewMode}
         onToggleView={() =>

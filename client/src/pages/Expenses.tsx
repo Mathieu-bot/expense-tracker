@@ -49,7 +49,7 @@ export default function Expenses() {
   };
 
   return (
-    <div className="relative z-2 mb-10 mt-30 mx-auto text-gray-800 dark:text-light/90 max-w-6xl px-6">
+    <div className="relative z-2 mb-10 mt-30 px-6 xl:ml-29 lg:ml-20 2xl:mx-auto text-gray-800 dark:text-light/90 max-w-6xl px-6">
       <div className="flex items-center justify-between mb-6">
         <div className="flex flex-col gap-2">
           <h1 className="text-4xl font-bold">Expenses</h1>
