@@ -10,6 +10,7 @@ import {
   LogOut,
   X,
   Menu,
+  FolderTree,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useUserStore } from "../../../stores/userStore";
@@ -31,6 +32,7 @@ const DashboardHeader = () => {
   const navItems = [
     { label: "Dashboard", icon: LayoutDashboard, href: "/" },
     { label: "Expenses", icon: CreditCard, href: "/expenses" },
+    { label: "Categories", icon: FolderTree, href: "/categories" },
     { label: "Incomes", icon: DollarSign, href: "/incomes" },
     { label: "Profile", icon: User, href: "/profile" },
   ];
@@ -51,7 +53,7 @@ const DashboardHeader = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      setIsScrolled(window.scrollY > 5);
     };
 
     window.addEventListener("scroll", handleScroll);

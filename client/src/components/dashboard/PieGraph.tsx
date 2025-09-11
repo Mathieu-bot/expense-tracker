@@ -47,6 +47,7 @@ export default function PieGraph({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, ease: "easeOut" }}
+      className="w-full"
     >
       <Layout
         title={title}
