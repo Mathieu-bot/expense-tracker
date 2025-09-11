@@ -7,7 +7,7 @@ import { Button } from "../ui";
 import { Filter, Plus, RefreshCcw, X, List } from "lucide-react";
 import GlassSelect from "../components/expense/GlassSelect";
 import { GlassDatePicker } from "../components/common/GlassDatePicker";
-import { motion, type Variants } from "framer-motion";
+import { motion, type Variants, AnimatePresence } from "framer-motion";
 
 export default function Expenses() {
   const [start, setStart] = useState<Date | null>(null);
@@ -97,7 +97,8 @@ const itemVariants = {
           New Expense
         </Button>
       </div>
-
+      
+    <AnimatePresence initial={false}>
       {showFilter && (
         <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -160,6 +161,7 @@ const itemVariants = {
           </div>
         </motion.div>
       )}
+      </AnimatePresence>
 
       <motion.div
       initial={{ opacity: 0, y: 20, }}
@@ -168,12 +170,17 @@ const itemVariants = {
       transition={{ duration: .5, ease:"easeInOut" }}
        className="p-5 border bg-white/25 border-light/10 dark:bg-transparent dark:border-white/5 rounded-xl dark:bg-gradient-to-br dark:from-primary-light/10 dark:to-primary/10 backdrop-blur-2xl">
         <div className="flex mb-5">
-          <div className="flex gap-3 items-center">
+          <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: .5, ease:"easeInOut", delay: .5 }}
+
+           className="flex gap-3 items-center">
             <div className="text-green-500 bg-green-500/10 p-3 rounded-lg">
               <List size={20}></List>
             </div>
             <h2 className="text-xl font-semibold">List</h2>
-          </div>
+          </motion.div>
           <div className="flex justify-end w-full">
             <Button
               onClick={refetch}
