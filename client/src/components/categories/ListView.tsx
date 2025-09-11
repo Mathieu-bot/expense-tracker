@@ -1,4 +1,5 @@
 import { Button, TextField } from "../../ui";
+import { motion } from "framer-motion";
 import { Check, X, Edit3, Trash2, Tag } from "lucide-react";
 import { formatDate, formatTime, formatCurrencyFull } from "../../utils/formatters";
 import { highlightMatch } from "../../utils/highlight";
@@ -22,11 +23,24 @@ const ListView = ({
   onOpenDetails,
 }: ListViewProps) => {
   return (
-    <ul className="space-y-3">
+    <motion.ul
+      className="space-y-3"
+      initial="hidden"
+      animate="show"
+      variants={{ hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.05 } } }}
+    >
       {categories.map((c) => {
         const selected = !!selectedIds?.includes(c.category_id);
         return (
-          <li key={c.category_id} className="p-0">
+          <motion.li
+            key={c.category_id}
+            className="p-0"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            layout
+          >
             <div
               role={bulkMode ? "button" : undefined}
               aria-pressed={bulkMode ? selected : undefined}
@@ -40,14 +54,15 @@ const ListView = ({
                 }
               }}
               className={[
-                "text-primary-dark dark:text-light bg-white/80 dark:bg-white/10 backdrop-blur-lg rounded-xl p-4 border transition-all duration-300 hover:shadow-lg",
+                "text-primary-dark dark:text-light bg-gradient-to-br from-white/20 to-white/60 dark:from-primary-light/10 dark:to-primary-dark/10 backdrop-blur-lg rounded-xl p-4 border transition-all duration-300 hover:shadow-lg",
                 selected
-                  ? "border-accent/50 ring-1 ring-accent/40 bg-accent/10 dark:bg-accent/10"
-                  : "border-cyan-100/50 dark:border-white/15 hover:border-cyan-300/50 dark:hover:border-accent/30",
-                "hover:ring-1 hover:ring-accent/30 hover:bg-accent/5",
+                  ? "border-accent/50 ring-1 ring-accent/40 !bg-accent/5 dark:!bg-accent/10"
+                  : "border-cyan-100/50 dark:border-white/15 hover:border-accent/30",
+                "hover:ring-1 hover:ring-accent/30 overflow-hidden",
                 "cursor-pointer",
               ].join(" ")}
             >
+              <div className="pointer-events-none absolute top-0 left-0 w-12 h-12 rounded-full -translate-y-5 -translate-x-5 bg-accent/15 dark:bg-accent/10" />
               <div className="grid grid-cols-1 md:grid-cols-12 items-start md:items-center gap-3">
                 <div className="md:col-span-4 flex items-center gap-2">
                   {editingId === c.category_id ? (
@@ -59,7 +74,7 @@ const ListView = ({
                       variant="filled"
                       classes={{
                         input:
-                          "!bg-white/10 dark:!bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-xl focus:!ring focus:!ring-primary-light focus:!border-primary-light",
+                          "!bg-black/20 dark:!bg-white/5 backdrop-blur-md border border-white/10 !text-primary-dark dark:!text-white rounded-xl focus:!ring focus:!ring-accent",
                         label: "hidden",
                       }}
                     />
@@ -68,7 +83,7 @@ const ListView = ({
                       <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-cyan-200 border border-cyan-300 text-cyan-800 dark:bg-white/10 dark:border-white/15 dark:text-light/90">
                         <Tag className="w-3.5 h-3.5" />
                       </span>
-                      <span className="font-medium">{highlightMatch(c.category_name, highlightQuery)}{bulkMode && selected ? <span className="ml-2 px-1.5 py-0.5 text-[10px] rounded bg-accent/20 text-white border border-accent/30">Selected</span> : null}</span>
+                      <span className="font-medium">{highlightMatch(c.category_name, highlightQuery)}{bulkMode && selected ? <span className="ml-2 px-1.5 py-0.5 text-[10px] rounded bg-accent/20 text-primary-dark dark:text-white border border-accent/30">Selected</span> : null}</span>
                     </div>
                   )}
                 </div>
@@ -101,7 +116,7 @@ const ListView = ({
                       </Button>
                       <Button
                         size="small"
-                        className="!px-2 bg-gray-200/10 hover:bg-gray-200/20 border border-white/10"
+                        className="!px-2 bg-black/10 dark:bg-gray-200/10 hover:bg-gray-200/20 border border-white/10"
                         onClick={onCancelEdit}
                         startIcon={<X className="w-4 h-4" />}
                       >
@@ -133,10 +148,10 @@ const ListView = ({
                 </div>
               </div>
             </div>
-          </li>
+          </motion.li>
         );
       })}
-    </ul>
+    </motion.ul>
   );
 };
 
