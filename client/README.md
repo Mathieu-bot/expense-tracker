@@ -182,19 +182,19 @@ API note: the generated SDK uses `OpenAPI.BASE` (`src/api/core/OpenAPI.ts`) with
 
 ```mermaid
 flowchart TD
-  U[User Browser] -->|HTTP| Client[Client (React + Vite + Tailwind)]
+  U[User Browser] --> Client[Client (React + Vite + Tailwind)]
 
-  subgraph Client
+  subgraph Frontend
     Client --> UI[Reusable UI Components (src/ui)]
     Client --> Hooks[Hooks & Stores (auth, expenses, incomes, categories)]
     Client --> SDK[OpenAPI SDK (src/api)]
     Client --> Svc[Domain Services (IncomeService, CategoryService, PdfExportService)]
     Client --> Guard[RequireAuth]
     Client --> Gate[PostAuthGate]
-    Client -. optional .-> AI[Gemini AI (VITE_GEMINI_API_KEY)]
+    Client -.-> AI[Gemini AI (VITE_GEMINI_API_KEY)]
   end
 
-  SDK -->|REST| API[(Backend API /api)]
+  SDK --> API[Backend API api]
   API --> DB[(Database)]
 
   Guard --> Client

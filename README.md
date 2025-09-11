@@ -62,14 +62,14 @@ expense-tracker/
 
 ```mermaid
 flowchart LR
-  User[User Browser] --> Client[Client (React + Vite + Tailwind)]
-  Client --> SDK[OpenAPI SDK]
-  Client --> Hooks[Hooks/Stores]
-  Client --> Svc[Domain Services]
-  Client --> Auth[RequireAuth / PostAuthGate]
-  SDK --> API[Server (Express API)]
-  API --> DB[(PostgreSQL)]
-  API -. receipts .-> SUPA[(Supabase Storage)]
+  user[User Browser] --> client[Client: React Vite Tailwind]
+  client --> sdk[OpenAPI SDK]
+  client --> hooks[Hooks and Stores]
+  client --> services[Domain Services]
+  client --> auth[RequireAuth PostAuthGate]
+  sdk --> api[Server (Express API)]
+  api --> db[(PostgreSQL)]
+  api -.-> supabase[(Supabase Storage)]
 ```
 
 <h2>Quick Start</h2>

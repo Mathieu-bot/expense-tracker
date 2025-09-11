@@ -100,24 +100,24 @@ Additional variables (see `.env.example`):
 
 ```mermaid
 flowchart TD
-  U[Client (Web)] -->|HTTP| API[Express Server]
+  client[Client Web] --> api[Express Server]
 
   subgraph Server
-    API --> MW[Middlewares (helmet, cors, cookies)]
-    API --> Routes[/Routes: /api/*/]
-    Routes --> Auth[/auth]
-    Routes --> User[/user]
-    Routes --> Expenses[/expenses]
-    Routes --> Incomes[/incomes]
-    Routes --> Categories[/categories]
-    Routes --> Summary[/summary]
-    Routes --> Reports[/reports]
-    API --> Uploads[Static /uploads]
-    API --> Prisma[(Prisma Client)]
-    API -. receipts .-> Supabase[(Supabase Storage)]
+    api --> mw[Middlewares]
+    api --> routes[Routes api]
+    routes --> auth[auth]
+    routes --> user[user]
+    routes --> expenses[expenses]
+    routes --> incomes[incomes]
+    routes --> categories[categories]
+    routes --> summary[summary]
+    routes --> reports[reports]
+    api --> uploads[Static uploads]
+    api --> prisma[(Prisma Client)]
+    api -.-> supabase[(Supabase Storage)]
   end
 
-  Prisma --> PG[(PostgreSQL)]
+  prisma --> pg[(PostgreSQL)]
 ```
 
 <h2>API Base URL</h2>
