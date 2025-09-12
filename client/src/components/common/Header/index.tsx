@@ -29,9 +29,9 @@ const DashboardHeader = () => {
 
   const navItems = [
     { label: "Dashboard", icon: LayoutDashboard, href: "/" },
-    { label: "Expenses", icon: CreditCard, href: "/expenses" },
-    { label: "Categories", icon: FolderTree, href: "/categories" },
     { label: "Incomes", icon: DollarSign, href: "/incomes" },
+    { label: "Categories", icon: FolderTree, href: "/categories" },
+    { label: "Expenses", icon: CreditCard, href: "/expenses" },
     { label: "Profile", icon: User, href: "/profile" },
   ];
 

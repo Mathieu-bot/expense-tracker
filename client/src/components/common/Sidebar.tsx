@@ -10,9 +10,9 @@ import LogoutButton from "./LogoutButton";
 
 const items = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/" },
+  { label: "Incomes", icon: DollarSign, href: "/incomes" },
   { label: "Expenses", icon: CreditCard, href: "/expenses" },
   { label: "Categories", icon: FolderTree, href: "/categories" },
-  { label: "Incomes", icon: DollarSign, href: "/incomes" },
   { label: "Profile", icon: User, href: "/profile" },
 ];
 
