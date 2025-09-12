@@ -7,6 +7,7 @@ import { useCategories } from "../hooks/useCategories";
 import type { CreateExpenseRequest, ExpenseType } from "../types/Expense";
 import { Loader2 } from "lucide-react";
 import GlassSelect from "../components/expense/GlassSelect";
+import { GlassDatePicker } from "../components/common/GlassDatePicker";
 
 export const CreateExpense = () => {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ export const CreateExpense = () => {
     startDate: "",
     endDate: "",
     categoryId: "",
-    receipt: null,
+    receipt: undefined,
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -30,6 +31,14 @@ export const CreateExpense = () => {
   ) => {
     const { name, value } = e.target;
     setForm((f) => ({ ...f, [name]: value }));
+  };
+
+  const formatDate = (d: Date | null): string => {
+    if (!d) return "";
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
   };
 
   const onFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -154,25 +163,27 @@ export const CreateExpense = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm mb-1">Type</label>
-            <select
-              name="type"
-              value={form.type}
-              onChange={onChange}
-              className="w-full rounded-md dark:bg-white/10 bg-white/75 border border-white/10 px-3 py-2 outline-none"
-            >
-              <option value="one-time">One-time</option>
-              <option value="recurring">Recurring</option>
-            </select>
+            <GlassSelect
+              value={form.type ?? null}
+              onChange={(v) =>
+                setForm((f) => ({ ...f, type: String(v) as ExpenseType }))
+              }
+              options={[
+                { label: "One-time", value: "one-time" },
+                { label: "Recurring", value: "recurring" },
+              ]}
+              placeholder="Select type"
+            />
           </div>
           {form.type === "one-time" && (
             <div>
               <label className="block text-sm mb-1">Date</label>
-              <input
-                name="date"
-                type="date"
-                value={form.date || ""}
-                onChange={onChange}
-                className="w-full rounded-md dark:bg-white/10 bg-white/75 border border-white/10 px-3 py-2 outline-none"
+              <GlassDatePicker
+                value={form.date ? new Date(form.date) : null}
+                onChange={(d) =>
+                  setForm((f) => ({ ...f, date: formatDate(d) }))
+                }
+                placeholder="Select date"
               />
             </div>
           )}
@@ -180,22 +191,22 @@ export const CreateExpense = () => {
             <>
               <div>
                 <label className="block text-sm mb-1">Start Date</label>
-                <input
-                  name="startDate"
-                  type="date"
-                  value={form.startDate || ""}
-                  onChange={onChange}
-                  className="w-full rounded-md dark:bg-white/10 bg-white/75 border border-white/10 px-3 py-2 outline-none"
+                <GlassDatePicker
+                  value={form.startDate ? new Date(form.startDate) : null}
+                  onChange={(d) =>
+                    setForm((f) => ({ ...f, startDate: formatDate(d) }))
+                  }
+                  placeholder="Start date"
                 />
               </div>
               <div>
                 <label className="block text-sm mb-1">End Date</label>
-                <input
-                  name="endDate"
-                  type="date"
-                  value={form.endDate || ""}
-                  onChange={onChange}
-                  className="w-full rounded-md dark:bg-white/10 bg-white/75 border border-white/10 px-3 py-2 outline-none"
+                <GlassDatePicker
+                  value={form.endDate ? new Date(form.endDate) : null}
+                  onChange={(d) =>
+                    setForm((f) => ({ ...f, endDate: formatDate(d) }))
+                  }
+                  placeholder="End date"
                 />
               </div>
             </>

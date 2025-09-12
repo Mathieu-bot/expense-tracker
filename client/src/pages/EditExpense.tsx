@@ -7,6 +7,7 @@ import { Loader2 } from "lucide-react";
 import { useCategories } from "../hooks/useCategories";
 import type { Expense, UpdateExpenseRequest, ExpenseType } from "../types/Expense";
 import GlassSelect from "../components/expense/GlassSelect";
+import { GlassDatePicker } from "../components/common/GlassDatePicker";
 
 
 export const EditExpense = () => {
@@ -106,6 +107,14 @@ export const EditExpense = () => {
     setLocal((f) => ({ ...f, receipt: file }));
   };
 
+  const formatDate = (d: Date | null): string | undefined => {
+    if (!d) return undefined;
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  };
+
   const onSubmit = async () => {
     // Client-side validation mirroring server rules
     if (local.type === "one-time" && !local.date) {
@@ -175,26 +184,28 @@ export const EditExpense = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm mb-1">Type</label>
-            <select
-              name="type"
-              value={local.type}
-              onChange={onChange}
-              className="w-full rounded-md dark:bg-white/10 bg-white/75 border border-white/10 px-3 py-2 outline-none"
-            >
-              <option value="one-time">One-time</option>
-              <option value="recurring">Recurring</option>
-            </select>
+            <GlassSelect
+              value={local.type ?? null}
+              onChange={(v) =>
+                setLocal((f) => ({ ...f, type: String(v) as ExpenseType }))
+              }
+              options={[
+                { label: "One-time", value: "one-time" },
+                { label: "Recurring", value: "recurring" },
+              ]}
+              placeholder="Select type"
+            />
           </div>
           {local.type === "one-time" && (
             <div>
               <label className="block text-sm mb-1">Date</label>
-              <input
-                name="date"
-                type="date"
-                value={local.date?.slice(0, 10) || ""}
-                onChange={onChange}
+              <GlassDatePicker
+                value={local.date ? new Date(local.date) : null}
+                onChange={(d) =>
+                  setLocal((f) => ({ ...f, date: formatDate(d) }))
+                }
                 required
-                className="w-full rounded-md dark:bg-white/10 bg-white/75 border border-white/10 px-3 py-2 outline-none"
+                placeholder="Select date"
               />
             </div>
           )}
@@ -202,23 +213,23 @@ export const EditExpense = () => {
             <>
               <div>
                 <label className="block text-sm mb-1">Start Date</label>
-                <input
-                  name="startDate"
-                  type="date"
-                  value={local.startDate?.slice(0, 10) || ""}
-                  onChange={onChange}
+                <GlassDatePicker
+                  value={local.startDate ? new Date(local.startDate) : null}
+                  onChange={(d) =>
+                    setLocal((f) => ({ ...f, startDate: formatDate(d) }))
+                  }
                   required
-                  className="w-full rounded-md dark:bg-white/10 bg-white/75 border border-white/10 px-3 py-2 outline-none"
+                  placeholder="Start date"
                 />
               </div>
               <div>
                 <label className="block text-sm mb-1">End Date</label>
-                <input
-                  name="endDate"
-                  type="date"
-                  value={local.endDate?.slice(0, 10) || ""}
-                  onChange={onChange}
-                  className="w-full rounded-md dark:bg-white/10 bg-white/75 border border-white/10 px-3 py-2 outline-none"
+                <GlassDatePicker
+                  value={local.endDate ? new Date(local.endDate) : null}
+                  onChange={(d) =>
+                    setLocal((f) => ({ ...f, endDate: formatDate(d) }))
+                  }
+                  placeholder="End date"
                 />
               </div>
             </>
