@@ -204,7 +204,8 @@ function Dashboard() {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
-      whileInView={{ opacity: 1, scale: 1 }}
+      animate={{opacity:1, scale:1}}
+      // whileInView={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
       className="min-w-screen max-h-[95vh] pt-26 md:pl-28 md:pr-10 flex flex-col items-center gap-10 md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
     >

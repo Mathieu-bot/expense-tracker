@@ -27,7 +27,7 @@ function App() {
   return (
     <ThemeProvider>
       <ToastProvider
-        max={4}
+        max={2}
         dense={false}
         pauseOnHover={true}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
