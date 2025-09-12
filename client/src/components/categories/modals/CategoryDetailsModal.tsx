@@ -3,7 +3,7 @@ import type { Category } from "../../../types/Auth";
 import { Tag, ArrowUpRight, ArrowDownRight, ExternalLink } from "lucide-react";
 import { formatCurrency, formatCurrencyFull, formatDate } from "../../../utils/formatters";
 import { useExpenses } from "../../../hooks/useExpenses";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom"; 
 import type { Expense } from "../../../types/Expense";
 
@@ -38,15 +38,27 @@ const CategoryDetailsModal = ({ open, onClose, category, totalThisMonth, onEdit,
   };
 
   // fetch data
-  const { expenses: catAll, loading: loadingCatAll, refetch: refetchCatAll } = useExpenses(undefined, undefined, category?.category_name);
-  const { expenses: allThisMonth, loading: loadingAllThis, refetch: refetchAllThis } = useExpenses(fmtLocal(monthStart), fmtLocal(monthEnd));
-  const { expenses: catPrevMonth, loading: loadingPrev, refetch: refetchCatPrev } = useExpenses(fmtLocal(prevStart), fmtLocal(prevEnd), category?.category_name);
+  const { expenses: catAll, refetch: refetchCatAll } = useExpenses(undefined, undefined, category?.category_name);
+  const { expenses: allThisMonth, refetch: refetchAllThis } = useExpenses(fmtLocal(monthStart), fmtLocal(monthEnd));
+  const { expenses: catPrevMonth, refetch: refetchCatPrev } = useExpenses(fmtLocal(prevStart), fmtLocal(prevEnd), category?.category_name);
 
+  const [fetching, setFetching] = useState<boolean>(false);
   useEffect(() => {
     if (!open || !category) return;
-    void refetchCatAll();
-    void refetchAllThis();
-    void refetchCatPrev();
+    let active = true;
+    (async () => {
+      try {
+        setFetching(true);
+        await Promise.all([
+          refetchCatAll(),
+          refetchAllThis(),
+          refetchCatPrev(),
+        ]);
+      } finally {
+        if (active) setFetching(false);
+      }
+    })();
+    return () => { active = false; };
     // intentionally rely on the refetch functions from hooks
   }, [open, category, refetchAllThis, refetchCatAll, refetchCatPrev]);
 
@@ -62,8 +74,6 @@ const CategoryDetailsModal = ({ open, onClose, category, totalThisMonth, onEdit,
       .slice(0, 5);
     return { tAllThis, tCatThis, tCatPrev, share, variation, lastFive };
   }, [allThisMonth, totalThisMonth, catPrevMonth, catAll]);
-
-  const isLoading = loadingCatAll || loadingAllThis || loadingPrev;
 
   if (!open || !category) return null;
 
@@ -117,10 +127,10 @@ const CategoryDetailsModal = ({ open, onClose, category, totalThisMonth, onEdit,
         </div>
 
         <div className="flex flex-wrap gap-2">
-          {isLoading ? (
+          {fetching ? (
             <>
-              <Skeleton width={150} height={28} rounded="rounded-md" className="bg-white/40 dark:bg-white/10 border border-black/10 dark:border-white/10" />
-              <Skeleton width={140} height={28} rounded="rounded-md" className="bg-white/40 dark:bg-white/10 border border-black/10 dark:border-white/10" />
+              <Skeleton width={150} height={28} rounded="rounded-md" className="bg-black/40 dark:bg-white/10 border border-black/10 dark:border-white/10" />
+              <Skeleton width={140} height={28} rounded="rounded-md" className="bg-black/40 dark:bg-white/10 border border-black/10 dark:border-white/10" />
             </>
           ) : (
             <>
@@ -162,14 +172,14 @@ const CategoryDetailsModal = ({ open, onClose, category, totalThisMonth, onEdit,
               Go to expenses <ExternalLink className="w-3 h-3" />
             </button>
           </div>
-          {isLoading ? (
+          {fetching ? (
             <ul className="divide-y divide-gray-200/70 dark:divide-white/10">
               {Array.from({ length: 3 }).map((_, i) => (
                 <li key={i} className="py-2 flex items-center justify-between text-sm">
-                  <Skeleton variant="rect" width="50%" height={16} rounded="rounded" className="mr-2 bg-white/50 dark:bg-white/10" />
+                  <Skeleton variant="rect" width="50%" height={16} rounded="rounded" className="mr-2 bg-black/50 dark:bg-white/10" />
                   <div className="flex items-center gap-3 whitespace-nowrap text-right">
-                    <Skeleton variant="rect" width={80} height={16} rounded="rounded" className="bg-white/50 dark:bg-white/10" />
-                    <Skeleton variant="rect" width={96} height={16} rounded="rounded" className="bg-white/50 dark:bg-white/10" />
+                    <Skeleton variant="rect" width={80} height={16} rounded="rounded" className="bg-black/50 dark:bg-white/10" />
+                    <Skeleton variant="rect" width={96} height={16} rounded="rounded" className="bg-black/50 dark:bg-white/10" />
                   </div>
                 </li>
               ))}

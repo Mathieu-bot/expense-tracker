@@ -1,4 +1,4 @@
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, X } from "lucide-react";
 import { TextField } from "../../ui";
 import type { CreateFormProps } from "../../types/Category";
 
@@ -11,13 +11,27 @@ const CreateForm = ({ name, saving, onNameChange, onCreate, searchQuery, onSearc
           placeholder="Search categories..."
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          startAdornment={<Search className="w-4 h-4 text-white" />}
+          startAdornment={<Search className="w-4 h-4 text-primary-dark dark:text-white" />}
+          endAdornment={
+            searchQuery.trim() ? (
+              <button
+                type="button"
+                onClick={() => onSearchChange("")}
+                className="p-1.5 rounded-md bg-blue-200 dark:bg-accent/20 border !border-primary-dark/80 !text-primary-dark dark:!text-white hover:opacity-90"
+                aria-label="Clear search"
+                title="Clear search"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            ) : null
+          }
           variant="filled"
           size="medium"
           classes={{
-            input: "!bg-black/20 dark:!bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-xl focus:!ring focus:!ring-accent placeholder-white/60",
+            input: "!bg-black/5 dark:!bg-white/5 backdrop-blur-lg border !border-primary-dark/80 dark:!border-white/10 !text-primary-dark dark:!text-white rounded-xl focus:!ring focus:!ring-gray-500 !placeholder-primary-dark/80 dark:!placeholder-white/60",
             label: "hidden",
             startAdornment: "z-10",
+            endAdornment: "z-10",
           }}
         />
       </div>
@@ -40,7 +54,7 @@ const CreateForm = ({ name, saving, onNameChange, onCreate, searchQuery, onSearc
                 type="button"
                 onClick={onCreate}
                 disabled={saving || !name.trim()}
-                className="p-1.5 rounded-md bg-blue-200 dark:bg-accent/20 border border-accent/30 text-accent disabled:opacity-50 disabled:cursor-not-allowed"
+                className="p-1.5 rounded-md bg-blue-200 dark:bg-accent/20 border !border-primary-dark/80 !text-primary-dark dark:!text-white disabled:opacity-50 disabled:cursor-not-allowed"
                 aria-label="Create category"
                 title="Create category"
               >
@@ -49,7 +63,7 @@ const CreateForm = ({ name, saving, onNameChange, onCreate, searchQuery, onSearc
             }
             classes={{
               input:
-                "!bg-black/20 dark:!bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-xl focus:!ring focus:!ring-accent placeholder-white/60",
+                "!bg-black/5 dark:!bg-white/5 backdrop-blur-md border !border-primary-dark/80 dark:!border-white/10 !text-primary-dark dark:!text-white rounded-xl focus:!ring focus:!ring-gray-500 !placeholder-primary-dark/80 dark:!placeholder-white/60",
               label: "hidden",
             }}
           />

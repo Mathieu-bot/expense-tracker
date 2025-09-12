@@ -6,7 +6,7 @@ import type {
   UpdateExpenseRequest,
 } from "../types/Expense";
 
-const API_URL = import.meta.env.VITE_API_BASE || "http://localhost:8080";
+const API_URL = import.meta.env.VITE_API_BASE || "http://localhost:8080/api";
 type ApiEnvelope<T> = { success: boolean; data: T };
 function hasData<T>(r: unknown): r is { data: T } {
   return (

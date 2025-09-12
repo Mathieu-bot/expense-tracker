@@ -89,21 +89,16 @@ const getFrontendBase = () =>
   process.env.CORS_ORIGIN ||
   "http://localhost:5173";
 
+const getRedirectUri = (req) =>
+  process.env.GOOGLE_REDIRECT_URI || `${req.protocol}://${req.get("host")}/api/auth/google/callback`;
+
 const oauthCookieOpts = () => {
-  const isProd = process.env.NODE_ENV === "production";
-  return {
-    httpOnly: true,
-    secure: isProd,
-    sameSite: isProd ? "none" : "lax",
-    path: "/",
-    maxAge: 10 * 60 * 1000,
-  };
-};
+  const isProd = process.env.NODE_ENV === 'production';
+  return { httpOnly: true, secure: isProd, sameSite: 'lax', path: '/', maxAge: 10 * 60 * 1000 };
+}
 
 export const googleAuth = asyncHandler(async (req, res) => {
-  const redirectUri = `${req.protocol}://${req.get(
-    "host"
-  )}/api/auth/google/callback`;
+  const redirectUri = getRedirectUri(req);
   const { url, state } = buildGoogleAuthUrl({ redirectUri });
   res.cookie("g_state", state, oauthCookieOpts());
   return res.redirect(url);
@@ -112,15 +107,16 @@ export const googleAuth = asyncHandler(async (req, res) => {
 export const googleCallback = asyncHandler(async (req, res) => {
   const { code, state } = req.query;
   const savedState = req.cookies?.g_state;
+
   if (!code || !state || !savedState || state !== savedState) {
     throw new BadRequestError("Invalid OAuth state");
   }
-  res.clearCookie("g_state", { path: "/" });
 
-  const redirectUri = `${req.protocol}://${req.get(
-    "host"
-  )}/api/auth/google/callback`;
-  const profile = await exchangeGoogleCodeForProfile({ code, redirectUri });
+  res.clearCookie("g_state", { ...oauthCookieOpts(), maxAge: undefined });
+
+  const redirectUri = getRedirectUri(req);
+  const profile = await exchangeGoogleCodeForProfile({ code: String(code), redirectUri });
+
   const email = profile?.email;
   if (!email) throw new BadRequestError("Email not available from Google");
 
@@ -132,6 +128,7 @@ export const googleCallback = asyncHandler(async (req, res) => {
   });
 
   setAuthCookie(res, { user_id: publicUser.user_id, email: publicUser.email });
+
   const frontend = getFrontendBase();
   return res.redirect(302, `${frontend.replace(/\/$/, "")}/auth/callback`);
 });
