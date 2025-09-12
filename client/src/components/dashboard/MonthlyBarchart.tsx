@@ -103,7 +103,7 @@ const MonthlyBarChart: React.FC<MonthlyBarChartProps> = ({ data }) => {
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={data}
-          margin={{ top: 20, right: 30 }}
+          margin={{left:20, top: 20, right: 30 }}
           barCategoryGap="30%"
         >
           <CartesianGrid
