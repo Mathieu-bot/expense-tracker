@@ -12,7 +12,7 @@ export default function LoginPage() {
     state?: { from?: string } | null;
   };
   const toast = useToast();
-  const from = (location.state && typeof location.state === 'object' && location.state?.from) || "/";
+  const from = (location.state && typeof location.state === 'object' && location.state?.from) || "/dashboard";
 
   async function onSubmit({ email, password }: LoginFormData) {
     try {

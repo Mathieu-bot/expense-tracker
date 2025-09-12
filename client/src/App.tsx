@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { ToastProvider } from "./ui";
 import { Incomes } from "./pages/Incomes";
 import Sidebar from "./components/common/Sidebar";
@@ -57,7 +57,7 @@ function App() {
 
             {/* Protected routes */}
             <Route element={<RequireAuth />}>
-              <Route path="/" element={<Dashboard />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/expenses" element={<Expenses />} />
               <Route path="/expenses/new" element={<CreateExpense />} />
               <Route path="/expenses/:id/edit" element={<EditExpense />} />
@@ -68,6 +68,7 @@ function App() {
               <Route path="/incomes/:id/edit" element={<EditIncome />} />
               <Route path="/profile" element={<Profile />} />
             </Route>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </div>
       </ToastProvider>

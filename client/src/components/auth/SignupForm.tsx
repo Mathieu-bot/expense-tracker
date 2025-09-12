@@ -184,7 +184,7 @@ export default function SignupForm({
       <CategoriesOnboardingModal
         open={postCategoriesOpen}
         onClose={() => { setPostCategoriesOpen(false); setPostSignupOpen(true); }}
-        onDone={() => { setPostCategoriesOpen(false); navigate('/', { replace: true }); }}
+        onDone={() => { setPostCategoriesOpen(false); navigate('/dashboard', { replace: true }); }}
       />
     </form>
   );
